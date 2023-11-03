@@ -41,7 +41,7 @@ export default function TeacherCard({ isLiked }) {
             <View style={styles.HeaderRight}>
               <Image style={styles.avtimg} source={IMGS.user} />
               <View style={styles.nameContainer}>
-                <Text style={styles.name}>Teacher Seeeee</Text>
+                <Text style={styles.name}>Keegan</Text>
                 <Rating
                   name='simple-controlled'
                   value={value}
@@ -80,6 +80,12 @@ export default function TeacherCard({ isLiked }) {
               living in and traveling around Southeast Asia.
             </Text>
           </View>
+          <View style={{ alignItems: 'flex-end' }}>
+            <TouchableOpacity style={styles.Button}>
+              {/* <OndemandVideoOutlinedIcon/> */}
+              <Text style={styles.ButtonText}>Đặt lịch</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Pressable>
     </View>
@@ -93,7 +99,7 @@ const styles = StyleSheet.create({
 
   outerContainer: {
     flex: 1,
-    height: 240,
+    height: 465,
     borderRadius: 8,
     elevation: 4,
     shadowColor: 'black',
@@ -110,7 +116,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   HeaderRight: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     flex: 4,
     marginTop: 20,
     marginLeft: 20
@@ -172,5 +178,28 @@ const styles = StyleSheet.create({
   flag: {
     width: 30,
     height: 20
+  },
+  Button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '30%',
+    height: 40,
+    backgroundColor: COLORS.white,
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 2,
+    borderRadius: 100,
+    margin: 30,
+    borderColor: COLORS.primary,
+    borderWidth: 1
+  },
+  ButtonText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: COLORS.primary
   }
 });

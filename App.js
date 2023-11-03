@@ -5,6 +5,7 @@ import { RegisterScreen } from './src/screens/register';
 import { Tutor } from './src/screens/tutor';
 import { Header } from './src/components/header/Header';
 import { Grid } from '@mui/material';
+import TeacherDetail from './src/screens/teacher-detail';
 
 export default function App() {
   return (
@@ -12,7 +13,8 @@ export default function App() {
       <Header></Header>
       {/* <LoginScreen /> */}
       {/* <RegisterScreen /> */}
-      <Tutor />
+      {/* <Tutor /> */}
+      <TeacherDetail />
       <StatusBar style='auto' />
     </View>
   );
