@@ -1,6 +1,16 @@
 export default {
+  //auth
   LOGIN: 'Login',
   REGISTER: 'Register',
+  FORGOT_PASSWORD: 'ForgotPassword',
+
+  //main
+  TEACHERS: 'Teachers',
+  COURSES: 'Courses',
+  SCHEDULE: 'Schedule',
+  HOME: 'Home',
+  HOME_TAB: 'Home Tab',
+  CHAT: 'Chat',
 
   // Drawer
   HOME_DRAWER: 'Home Drawer',
@@ -11,5 +21,9 @@ export default {
   HISTORY_COURSES: 'History Courses',
   PROFILE: 'Profile',
 
-  TEACHER_DETAIL: 'Teacher_Detail'
+  //Detail
+  COURSE_DETAIL: 'Course Detail',
+  TEACHER_DETAIL: 'teacher-detail',
+  VIDEO: 'Video',
+  PDF_VIEW: 'PDF View'
 };

@@ -24,7 +24,6 @@ import { Grid, Rating } from '@mui/material';
 
 export const TeacherDetail = () => {
   const video = React.useRef(null);
-  const sheetRef = React.useRef(null);
   const [value, setValue] = useState(5);
   const [visible, setVisible] = useState(false);
   const [report, setReport] = useState('');

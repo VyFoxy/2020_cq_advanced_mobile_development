@@ -91,7 +91,7 @@ export const RegisterScreen = ({ navigation }) => {
                 <View style={styles.registerText}>
                   <Text>Đã có tài khoản? </Text>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate(ROUTES.REGISTER)}
+                    onPress={() => navigation.navigate(ROUTES.LOGIN)}
                   >
                     <Text style={styles.forgotPassText}>Đăng nhập</Text>
                   </TouchableOpacity>

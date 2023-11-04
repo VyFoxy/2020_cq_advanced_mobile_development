@@ -12,10 +12,10 @@ import { AntDesign } from '@expo/vector-icons';
 import { COLORS, IMGS, ROUTES } from '../../constants';
 import { Rating } from '@mui/material';
 //import { Rating } from 'react-native-elements';
-//import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 export default function TeacherCard({ isLiked }) {
-  //const navigation = useNavigation();
+  const navigation = useNavigation();
   const [value, setValue] = useState(5);
   const [followStatus, setFollowStatus] = useState(isLiked);
   const listSpecialies = [

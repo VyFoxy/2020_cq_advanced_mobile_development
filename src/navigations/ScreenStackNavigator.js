@@ -2,7 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { LoginScreen } from '../screens/login';
 import { RegisterScreen } from '../screens/register';
-import { TeacherDetail } from '../screens/teacher-detail';
+import { TeacherDetail } from '../screens/teacherdetail';
 import { Tutor } from '../screens/tutor';
 import { ROUTES } from '../constants';
 const Stack = createStackNavigator();
