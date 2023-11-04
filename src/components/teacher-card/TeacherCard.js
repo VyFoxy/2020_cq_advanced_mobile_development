@@ -16,7 +16,6 @@ import { Rating } from '@mui/material';
 
 export default function TeacherCard({ isLiked }) {
   //const navigation = useNavigation();
-  const navigation = '';
   const [value, setValue] = useState(5);
   const [followStatus, setFollowStatus] = useState(isLiked);
   const listSpecialies = [
@@ -39,7 +38,12 @@ export default function TeacherCard({ isLiked }) {
         <View style={styles.container}>
           <View style={styles.header}>
             <View style={styles.HeaderRight}>
-              <Image style={styles.avtimg} source={IMGS.user} />
+              <Image
+                style={styles.avtimg}
+                source={
+                  'https://sandbox.api.lettutor.com/avatar/4d54d3d7-d2a9-42e5-97a2-5ed38af5789aavatar1684484879187.jpg'
+                }
+              />
               <View style={styles.nameContainer}>
                 <Text style={styles.name}>Keegan</Text>
                 <Rating

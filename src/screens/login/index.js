@@ -76,14 +76,18 @@ export const LoginScreen = ({ navigation }) => {
                   <TouchableOpacity>
                     <Image
                       style={styles.otherLoginIcon}
-                      source={require('../../../assets/img/facebookLogo.png')}
+                      source={
+                        'https://sandbox.app.lettutor.com/static/media/facebook-logo.3bac8064.svg'
+                      }
                       resizeMode='contain'
                     />
                   </TouchableOpacity>
                   <TouchableOpacity>
                     <Image
                       style={styles.otherLoginIcon}
-                      source={require('../../../assets/img/googleLogo.png')}
+                      source={
+                        'https://sandbox.app.lettutor.com/static/media/google-logo.5f53496e.svg'
+                      }
                       resizeMode='contain'
                     />
                   </TouchableOpacity>

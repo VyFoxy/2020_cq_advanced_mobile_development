@@ -22,7 +22,7 @@ import { Modal, Portal, Provider, TextInput } from 'react-native-paper';
 import { Grid, Rating } from '@mui/material';
 //import TimeTable from '@mikezzb/react-native-timetable';
 
-export default function TeacherDetail() {
+export const TeacherDetail = () => {
   const video = React.useRef(null);
   const sheetRef = React.useRef(null);
   const [value, setValue] = useState(5);
@@ -87,7 +87,12 @@ export default function TeacherDetail() {
                 <View style={{ padding: 20 }}>
                   <Grid container>
                     <Grid item xs={3}>
-                      <Image style={styles.avtimg} source={IMGS.user} />
+                      <Image
+                        style={styles.avtimg}
+                        source={
+                          'https://sandbox.api.lettutor.com/avatar/4d54d3d7-d2a9-42e5-97a2-5ed38af5789aavatar1684484879187.jpg'
+                        }
+                      />
                     </Grid>
                     <Grid item xs={9}>
                       <View style={styles.nameContainer}>
@@ -211,7 +216,7 @@ export default function TeacherDetail() {
       </Provider>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   coverImage: { height: 200, width: '100%' },

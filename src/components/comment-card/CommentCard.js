@@ -6,7 +6,12 @@ import { Rating } from '@mui/material';
 export default function CommentCard() {
   return (
     <View style={styles.container}>
-      <Image style={styles.avtimg} source={IMGS.user} />
+      <Image
+        style={styles.avtimg}
+        source={
+          'https://sandbox.api.lettutor.com/avatar/f569c202-7bbf-4620-af77-ecc1419a6b28avatar1686033849227.jpeg'
+        }
+      />
       <View style={styles.innnerContainer}>
         <View style={{ flexDirection: 'row' }}>
           <Text style={styles.name}>Phhai </Text>
