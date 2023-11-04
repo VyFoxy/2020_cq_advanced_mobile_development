@@ -6,15 +6,34 @@ import {
   TouchableOpacity,
   SafeAreaView
 } from 'react-native';
+import { COLORS } from '../../constants';
 
 export const HistoryScreen = () => {
   return (
-    <View style={{ flex: 1, backgroundColor: '#fff' }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: '#fff',
+        paddingVertical: 100,
+        paddingHorizontal: 40
+      }}
+    >
       <Image
         source={
           'https://sandbox.app.lettutor.com/static/media/history.1e097d10.svg'
         }
+        style={styles.image}
       ></Image>
+      <Text style={styles.headingParagraph}>Lịch sử các buổi học</Text>
+      <View style={styles.blockquote}>
+        <Text style={styles.paragraph}>
+          Đây là danh sách các bài học bạn đã tham gia
+        </Text>
+        <Text style={styles.paragraph}>
+          Bạn có thể xem lại thông tin chi tiết về các buổi học đã tham gia đã
+          tham gia
+        </Text>
+      </View>
     </View>
   );
 };
@@ -26,12 +45,24 @@ const styles = StyleSheet.create({
     marginTop: 30
   },
   image: {
-    width: '100%',
-    aspectRatio: 1,
-    marginBottom: 30
+    width: '40%',
+    aspectRatio: 1
   },
-  error: {
-    color: 'red'
+  headingParagraph: {
+    fontSize: 30,
+    fontWeight: 700,
+    color: COLORS.black,
+    marginVertical: 10
+  },
+  paragraph: {
+    fontSize: 17
+  },
+  blockquote: {
+    borderLeftWidth: 3, // Adjust the width of the grey line as needed
+    borderLeftColor: '4px solid hsla(0,0%,39.2%,.2)',
+    opacity: '0.85',
+    paddingLeft: 10, // Adjust the left padding for the text
+    marginBottom: 10 // Adjust the margin between blockquotes
   },
   text: {
     fontSize: 25,
@@ -56,7 +87,7 @@ const styles = StyleSheet.create({
   loginText: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: COLORS.primary,
+    //color: COLORS.primary,
     alignSelf: 'center'
   },
   loginArea: {
@@ -93,14 +124,14 @@ const styles = StyleSheet.create({
     marginVertical: 20
   },
   forgotPassText: {
-    color: COLORS.primary
+    //color: COLORS.primary
   },
   loginButton: {
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
     height: 50,
-    backgroundColor: COLORS.primary,
+    //backgroundColor: COLORS.primary,
     shadowOffset: {
       width: 0,
       height: 2
@@ -138,7 +169,7 @@ const styles = StyleSheet.create({
     width: 50,
     borderWidth: 1,
     borderRadius: 25,
-    borderColor: COLORS.primary,
+    //borderColor: COLORS.primary,
     alignItems: 'center'
   },
   registerText: {

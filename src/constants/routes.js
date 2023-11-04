@@ -1,16 +1,9 @@
 export default {
   //auth
-  LOGIN: 'Login',
-  REGISTER: 'Register',
-  FORGOT_PASSWORD: 'ForgotPassword',
+  LOGIN: 'login',
+  REGISTER: 'register',
 
-  //main
-  TEACHERS: 'Teachers',
-  COURSES: 'Courses',
-  SCHEDULE: 'Schedule',
   HOME: 'Home',
-  HOME_TAB: 'Home Tab',
-  CHAT: 'Chat',
 
   // Drawer
   HOME_DRAWER: 'Home Drawer',
@@ -18,12 +11,8 @@ export default {
   BECOME_TEACHER: 'Become Teacher',
   SETTINGS: 'Settings',
   LOGOUT: 'Logout',
-  HISTORY_COURSES: 'History Courses',
+  HISTORY: 'history',
   PROFILE: 'Profile',
 
-  //Detail
-  COURSE_DETAIL: 'Course Detail',
-  TEACHER_DETAIL: 'teacher-detail',
-  VIDEO: 'Video',
-  PDF_VIEW: 'PDF View'
+  TEACHER_DETAIL: 'teacher-detail'
 };

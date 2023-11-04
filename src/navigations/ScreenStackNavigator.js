@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { LoginScreen } from '../screens/login';
 import { RegisterScreen } from '../screens/register';
 import { TeacherDetail } from '../screens/teacherdetail';
+import { HistoryScreen } from '../screens/history';
 import { Tutor } from '../screens/tutor';
 import { ROUTES } from '../constants';
 const Stack = createStackNavigator();
@@ -28,6 +29,11 @@ function ScreenStackNavigator() {
       <Stack.Screen
         name={ROUTES.TEACHER_DETAIL}
         component={TeacherDetail}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={ROUTES.HISTORY}
+        component={HistoryScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
