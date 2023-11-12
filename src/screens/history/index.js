@@ -4,13 +4,14 @@ import {
   Text,
   View,
   TouchableOpacity,
-  SafeAreaView
+  SafeAreaView,
+  ScrollView
 } from 'react-native';
 import { COLORS } from '../../constants';
 
 export const HistoryScreen = () => {
   return (
-    <View
+    <ScrollView
       style={{
         flex: 1,
         backgroundColor: '#fff',
@@ -34,7 +35,7 @@ export const HistoryScreen = () => {
           tham gia
         </Text>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

@@ -3,7 +3,8 @@ import {
   Text,
   FlatList,
   StyleSheet,
-  TouchableOpacity
+  TouchableOpacity,
+  ScrollView
 } from 'react-native';
 import React from 'react';
 import TeacherCard from '../../components/teacher-card/TeacherCard';
@@ -24,7 +25,7 @@ export const Tutor = ({ navigation }) => {
   const [nation, setNation] = useState('');
   const arr = [1, 2, 3, 4];
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.banner}>
         <Text style={styles.welcomeText}>Buổi học sắp diễn ra</Text>
         <Grid container style={{ marginTop: 20 }}>
@@ -124,7 +125,7 @@ export const Tutor = ({ navigation }) => {
         renderItem={({ item }) => <TeacherCard />}
         keyExtractor={(item) => item.toString()}
       />
-    </View>
+    </ScrollView>
   );
 };
 

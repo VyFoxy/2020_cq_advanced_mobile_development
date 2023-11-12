@@ -4,6 +4,7 @@ import { LoginScreen } from '../screens/login';
 import { RegisterScreen } from '../screens/register';
 import { TeacherDetail } from '../screens/teacherdetail';
 import { HistoryScreen } from '../screens/history';
+import DrawerNavigator from './DrawerNavigator';
 import { Tutor } from '../screens/tutor';
 import { ROUTES } from '../constants';
 const Stack = createStackNavigator();
@@ -21,9 +22,14 @@ function ScreenStackNavigator() {
         component={RegisterScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name={ROUTES.HOME}
         component={Tutor}
+        options={{ headerShown: false }}
+      /> */}
+      <Stack.Screen
+        name={ROUTES.HOME_DRAWER}
+        component={DrawerNavigator}
         options={{ headerShown: false }}
       />
       <Stack.Screen
@@ -31,11 +37,11 @@ function ScreenStackNavigator() {
         component={TeacherDetail}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name={ROUTES.HISTORY}
         component={HistoryScreen}
         options={{ headerShown: false }}
-      />
+      /> */}
     </Stack.Navigator>
   );
 }

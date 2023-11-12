@@ -10,11 +10,13 @@ import {
 import { TextField } from '@mui/material';
 
 import { COLORS, ROUTES } from '../../constants';
-export const LoginScreen = ({ navigation }) => {
+import { useNavigation } from '@react-navigation/native';
+export const LoginScreen = () => {
+  const navigation = useNavigation();
   const [passwordVisible, setPasswordVisible] = useState(true);
 
   async function handleLogin() {
-    navigation.navigate(ROUTES.HOME);
+    navigation.navigate(ROUTES.HOME_DRAWER);
   }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
