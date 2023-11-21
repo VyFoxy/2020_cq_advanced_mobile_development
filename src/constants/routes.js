@@ -12,6 +12,7 @@ export default {
   SETTINGS: 'Settings',
   LOGOUT: 'Logout',
   HISTORY: 'history',
+  BOOKINGSTUDENT: 'bookingstudent',
   PROFILE: 'Profile',
 
   TEACHER_DETAIL: 'teacher-detail'

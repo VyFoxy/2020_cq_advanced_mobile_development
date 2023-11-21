@@ -11,7 +11,7 @@ import {
 import { COLORS } from '../../constants';
 import { CourseCard } from '../../components/course-card/CourseCard';
 
-export const HistoryScreen = () => {
+export const BookingStudentScreen = () => {
   const arr = [1, 2, 3, 4];
   return (
     <ScrollView
@@ -25,18 +25,18 @@ export const HistoryScreen = () => {
       <View>
         <Image
           source={
-            'https://sandbox.app.lettutor.com/static/media/history.1e097d10.svg'
+            'https://sandbox.app.lettutor.com/static/media/calendar-check.7cf3b05d.svg'
           }
           style={styles.image}
         ></Image>
-        <Text style={styles.headingParagraph}>Lịch sử các buổi học</Text>
+        <Text style={styles.headingParagraph}>Lịch đã đặt</Text>
         <View style={styles.blockquote}>
           <Text style={styles.paragraph}>
-            Đây là danh sách các bài học bạn đã tham gia
+            Đây là danh sách những khung giờ bạn đã đặt
           </Text>
           <Text style={styles.paragraph}>
-            Bạn có thể xem lại thông tin chi tiết về các buổi học đã tham gia đã
-            tham gia
+            Bạn có thể theo dõi khi nào buổi học bắt đầu, tham gia buổi học bằng
+            một cú nhấp chuột hoặc có thể hủy buổi học trước 2 tiếng.
           </Text>
         </View>
       </View>

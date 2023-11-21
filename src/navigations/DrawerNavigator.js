@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { HistoryScreen } from '../screens/history';
+import { BookingStudentScreen } from '../screens/booking-student';
 import { Tutor } from '../screens/tutor';
 import { ScreenStackNavigator } from './ScreenStackNavigator';
 import { ROUTES, COLORS } from '../constants';
@@ -32,6 +33,10 @@ function DrawerNavigator() {
     >
       <Drawer.Screen name={ROUTES.HOME} component={Tutor} />
       <Drawer.Screen name={ROUTES.HISTORY} component={HistoryScreen} />
+      <Drawer.Screen
+        name={ROUTES.BOOKINGSTUDENT}
+        component={BookingStudentScreen}
+      />
     </Drawer.Navigator>
   );
 }
