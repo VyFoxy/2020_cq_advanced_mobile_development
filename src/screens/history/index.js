@@ -18,7 +18,7 @@ export const HistoryScreen = () => {
       style={{
         flex: 1,
         backgroundColor: '#fff',
-        paddingVertical: 100,
+        paddingVertical: 40,
         paddingHorizontal: 40
       }}
     >

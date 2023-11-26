@@ -9,7 +9,7 @@ import {
   FlatList
 } from 'react-native';
 import { COLORS } from '../../constants';
-import { CourseCard } from '../../components/course-card/CourseCard';
+import { BookingCard } from '../../components/booking-card/BookingCard';
 
 export const BookingStudentScreen = () => {
   const arr = [1, 2, 3, 4];
@@ -18,7 +18,7 @@ export const BookingStudentScreen = () => {
       style={{
         flex: 1,
         backgroundColor: '#fff',
-        paddingVertical: 100,
+        paddingVertical: 40,
         paddingHorizontal: 40
       }}
     >
@@ -41,10 +41,9 @@ export const BookingStudentScreen = () => {
         </View>
       </View>
       <View>
-        {/* <CourseCard /> */}
         <FlatList
           data={arr}
-          renderItem={({ item }) => <CourseCard />}
+          renderItem={({ item }) => <BookingCard />}
           keyExtractor={(item) => item.toString()}
         />
       </View>

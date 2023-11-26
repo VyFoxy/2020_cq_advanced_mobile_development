@@ -73,7 +73,13 @@ export const Header = () => {
                 <HistoryIcon style={styles.navIcon}></HistoryIcon>
                 <Text style={styles.navText}>Lịch sử</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.menuNav}>
+              <TouchableOpacity
+                style={styles.menuNav}
+                onPress={() => {
+                  navigation.navigate(ROUTES.BOOKINGSTUDENT);
+                  setShowMenu(!showMenu);
+                }}
+              >
                 <SchoolIcon style={styles.navIcon}></SchoolIcon>
                 <Text style={styles.navText}>Khóa học</Text>
               </TouchableOpacity>
