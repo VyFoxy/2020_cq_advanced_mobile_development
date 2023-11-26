@@ -59,7 +59,13 @@ export const Header = () => {
                 ></CastForEducationIcon>
                 <Text style={styles.navText}>Gia sư</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.menuNav}>
+              <TouchableOpacity
+                style={styles.menuNav}
+                onPress={() => {
+                  navigation.navigate(ROUTES.BOOKINGSTUDENT);
+                  setShowMenu(!showMenu);
+                }}
+              >
                 <EventAvailableIcon style={styles.navIcon}></EventAvailableIcon>
                 <Text style={styles.navText}>Lịch học</Text>
               </TouchableOpacity>
@@ -76,7 +82,7 @@ export const Header = () => {
               <TouchableOpacity
                 style={styles.menuNav}
                 onPress={() => {
-                  navigation.navigate(ROUTES.BOOKINGSTUDENT);
+                  navigation.navigate(ROUTES.COURSE);
                   setShowMenu(!showMenu);
                 }}
               >

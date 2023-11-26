@@ -13,6 +13,7 @@ export default {
   LOGOUT: 'Logout',
   HISTORY: 'history',
   BOOKINGSTUDENT: 'bookingstudent',
+  COURSE: 'course',
   PROFILE: 'Profile',
 
   TEACHER_DETAIL: 'teacher-detail'
