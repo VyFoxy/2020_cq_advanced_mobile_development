@@ -49,7 +49,18 @@ export const CoursesSreeen = () => {
       <View>
         <FlatList
           data={arr}
-          renderItem={({ item }) => <CourseCard />}
+          renderItem={({ item }) => (
+            <CourseCard>
+              <Text style={styles.nameCourse}>CourseCard</Text>
+              <Text style={styles.subtitle}>
+                This is a subtitle pla pla pla pla pla pla pla pla pla pla
+              </Text>
+              <View style={styles.levelContainer}>
+                <Text style={styles.levelText}>Beginner</Text>
+                <Text style={styles.levelText}>9 bài học</Text>
+              </View>
+            </CourseCard>
+          )}
           keyExtractor={(item) => item.toString()}
         />
       </View>
@@ -195,5 +206,24 @@ const styles = StyleSheet.create({
   registerText: {
     flexDirection: 'row',
     alignSelf: 'center'
+  },
+  nameCourse: {
+    fontSize: 16,
+    fontWeight: 'bold'
+  },
+  subtitle: {
+    fontSize: 12,
+    fontWeight: '300'
+  },
+  levelText: {
+    fontSize: 14,
+    fontWeight: '600',
+    marginHorizontal: 5
+  },
+  levelContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%'
   }
 });

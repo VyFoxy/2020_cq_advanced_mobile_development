@@ -3,10 +3,10 @@ import React from 'react';
 import { ROUTES, COLORS } from '../../constants';
 import { useNavigation } from '@react-navigation/native';
 
-export default function CourseCard({ style }) {
+export default function CourseCard(props) {
   const navigation = useNavigation();
   return (
-    <View style={[styles.gridItem, style]}>
+    <View style={styles.gridItem}>
       <Pressable
         onPress={() => {
           console.log('Press card');
@@ -22,14 +22,15 @@ export default function CourseCard({ style }) {
             style={styles.courseImg}
           />
 
-          <Text style={styles.nameCourse}>CourseCard</Text>
+          {/* <Text style={styles.nameCourse}>CourseCard</Text>
           <Text style={styles.subtitle}>
             This is a subtitle pla pla pla pla pla pla pla pla pla pla
           </Text>
           <View style={styles.levelContainer}>
             <Text style={styles.levelText}>Beginner</Text>
             <Text style={styles.levelText}>9 bài học</Text>
-          </View>
+          </View> */}
+          {props.children}
         </View>
       </Pressable>
     </View>
