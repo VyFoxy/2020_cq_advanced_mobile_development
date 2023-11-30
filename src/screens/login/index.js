@@ -5,19 +5,45 @@ import {
   Text,
   View,
   TouchableOpacity,
-  SafeAreaView
+  SafeAreaView,
+  Alert
 } from 'react-native';
-import { TextField } from '@mui/material';
-
+import { TextField, InputAdornment, IconButton } from '@mui/material';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COLORS, ROUTES } from '../../constants';
 import { useNavigation } from '@react-navigation/native';
+import { useAuth } from '../../context/AuthContext';
 export const LoginScreen = () => {
   const navigation = useNavigation();
   const [passwordVisible, setPasswordVisible] = useState(true);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const { login } = useAuth();
+  const handleLogin = async () => {
+    // Simulate authentication (replace with actual authentication logic)
+    if (username && password) {
+      // Check if the user exists
+      const userData = await AsyncStorage.getItem(username);
+      console.log(userData);
+      if (userData) {
+        const { password: storedPassword } = JSON.parse(userData);
 
-  async function handleLogin() {
-    navigation.navigate(ROUTES.HOME_DRAWER);
-  }
+        if (password === storedPassword) {
+          login(username);
+          Alert.alert('Login Successful');
+          navigation.navigate(ROUTES.HOME_DRAWER);
+        } else {
+          Alert.alert('Invalid password');
+        }
+      } else {
+        Alert.alert('User not found. Please sign up.');
+      }
+    } else {
+      Alert.alert('Please enter a username and password');
+    }
+  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={styles.container}>
@@ -42,19 +68,32 @@ export const LoginScreen = () => {
                   size='small'
                   name='email'
                   placeholder='mail@example.com'
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                 />
                 <Text style={styles.label}>MẬT KHẨU</Text>
                 <TextField
                   style={styles.input}
                   name='password'
-                  type='password'
+                  type={passwordVisible ? 'password' : null}
                   size='small'
-                  // right={
-                  //   <TextInput.Icon
-                  //     icon={passwordVisible ? 'eye' : 'eye-off'}
-                  //     onPress={() => setPasswordVisible(!passwordVisible)}
-                  //   />
-                  // }
+                  onChange={(e) => setPassword(e.target.value)}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position='end'>
+                        <IconButton
+                          onClick={() => setPasswordVisible(!passwordVisible)}
+                          edge='end'
+                        >
+                          {passwordVisible ? (
+                            <VisibilityOffOutlinedIcon />
+                          ) : (
+                            <VisibilityOutlinedIcon />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
                 />
 
                 <TouchableOpacity
@@ -66,7 +105,7 @@ export const LoginScreen = () => {
 
                 <TouchableOpacity
                   style={styles.loginButton}
-                  onPress={handleLogin}
+                  onPress={() => handleLogin()}
                 >
                   <Text style={styles.loginButtonText}> ĐĂNG NHẬP </Text>
                 </TouchableOpacity>

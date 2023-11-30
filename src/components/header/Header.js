@@ -100,7 +100,13 @@ export const Header = () => {
                 <AutoStoriesIcon style={styles.navIcon}></AutoStoriesIcon>
                 <Text style={styles.navText}>Khóa học của tôi</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.menuNav}>
+              <TouchableOpacity
+                style={styles.menuNav}
+                onPress={() => {
+                  navigation.navigate(ROUTES.LOGIN);
+                  setShowMenu(!showMenu);
+                }}
+              >
                 <LogoutIcon style={styles.navIcon}></LogoutIcon>
                 <Text style={styles.navText}>Đăng xuất</Text>
               </TouchableOpacity>

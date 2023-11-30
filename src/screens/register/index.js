@@ -5,17 +5,45 @@ import {
   Text,
   View,
   TouchableOpacity,
-  SafeAreaView
+  SafeAreaView,
+  Alert
 } from 'react-native';
-import { TextField } from '@mui/material';
-
+import { TextField, InputAdornment, IconButton } from '@mui/material';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COLORS, ROUTES } from '../../constants';
+import { isEmpty } from 'lodash';
 export const RegisterScreen = ({ navigation }) => {
   const [passwordVisible, setPasswordVisible] = useState(true);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
-  async function handleLogin() {
-    navigation.navigate(ROUTES.HOME);
-  }
+  const handleSignUp = async () => {
+    if (username && password) {
+      const existingUser = await AsyncStorage.getItem(username);
+      let usernames = await AsyncStorage.getItem('usernames');
+      if (isEmpty(usernames)) {
+        usernames = [];
+      }
+      if (existingUser) {
+        Alert.alert('Username already exists');
+      } else {
+        // Store user information locally
+        await AsyncStorage.setItem(username, JSON.stringify({ password }));
+
+        await AsyncStorage.setItem(
+          'usernames',
+          JSON.stringify([...usernames, username])
+        );
+        console.log(123);
+        Alert.alert('Registration Successful');
+        navigation.navigate(ROUTES.LOGIN);
+      }
+    } else {
+      Alert.alert('Please enter a username and password');
+    }
+  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={styles.container}>
@@ -40,19 +68,32 @@ export const RegisterScreen = ({ navigation }) => {
                   size='small'
                   name='email'
                   placeholder='mail@example.com'
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                 />
                 <Text style={styles.label}>MẬT KHẨU</Text>
                 <TextField
                   style={styles.input}
                   name='password'
-                  type='password'
+                  type={passwordVisible ? 'password' : null}
                   size='small'
-                  // right={
-                  //   <TextInput.Icon
-                  //     icon={passwordVisible ? 'eye' : 'eye-off'}
-                  //     onPress={() => setPasswordVisible(!passwordVisible)}
-                  //   />
-                  // }
+                  onChange={(e) => setPassword(e.target.value)}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position='end'>
+                        <IconButton
+                          onClick={() => setPasswordVisible(!passwordVisible)}
+                          edge='end'
+                        >
+                          {passwordVisible ? (
+                            <VisibilityOffOutlinedIcon />
+                          ) : (
+                            <VisibilityOutlinedIcon />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
                 />
                 {/* 
                 <TouchableOpacity
@@ -64,7 +105,7 @@ export const RegisterScreen = ({ navigation }) => {
 
                 <TouchableOpacity
                   style={styles.loginButton}
-                  onPress={handleLogin}
+                  onPress={() => handleSignUp()}
                 >
                   <Text style={styles.loginButtonText}> ĐĂNG KÝ </Text>
                 </TouchableOpacity>

@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Pressable, Image } from 'react-native';
 import React from 'react';
 import { ROUTES, COLORS } from '../../constants';
 import { useNavigation } from '@react-navigation/native';
+import { Grid } from '@mui/material';
 
 export default function CourseCard(props) {
   const navigation = useNavigation();
@@ -9,20 +10,21 @@ export default function CourseCard(props) {
     <View style={styles.gridItem}>
       <Pressable
         onPress={() => {
-          console.log('Press card');
           navigation.navigate(ROUTES.COURSE_DETAIL);
         }}
         style={{ flex: 1 }}
       >
-        <View style={styles.innerContainer}>
-          <Image
-            source={
-              'https://camblycurriculumicons.s3.amazonaws.com/5e0e8b212ac750e7dc9886ac?h=d41d8cd98f00b204e9800998ecf8427e'
-            }
-            style={styles.courseImg}
-          />
-          {props.children}
-        </View>
+        <Grid container>
+          <View style={styles.innerContainer}>
+            <Image
+              source={
+                'https://camblycurriculumicons.s3.amazonaws.com/5e0e8b212ac750e7dc9886ac?h=d41d8cd98f00b204e9800998ecf8427e'
+              }
+              style={styles.courseImg}
+            />
+            {props.children}
+          </View>
+        </Grid>
       </Pressable>
     </View>
   );
@@ -51,24 +53,5 @@ const styles = StyleSheet.create({
     padding: 5,
     justifyContent: 'flex-start',
     alignItems: 'center'
-  },
-  nameCourse: {
-    fontSize: 16,
-    fontWeight: 'bold'
-  },
-  subtitle: {
-    fontSize: 12,
-    fontWeight: '300'
-  },
-  levelText: {
-    fontSize: 14,
-    fontWeight: '600',
-    marginHorizontal: 5
-  },
-  levelContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%'
   }
 });

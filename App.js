@@ -1,18 +1,21 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { Header } from './src/components/header/Header';
 import { CoursesSreeen } from './src/screens/courses';
 import { CourseDetail } from './src/screens/courses/detail';
 import ScreenStackNavigator from './src/navigations/ScreenStackNavigator';
-import DrawerNavigator from './src/navigations/DrawerNavigator';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AuthProvider } from './src/context/AuthContext';
 export default function App() {
   return (
-    <NavigationContainer>
-      <Header />
-      {/* <CourseDetail /> */}
-      {/* <CoursesSreeen /> */}
-      <ScreenStackNavigator />
-    </NavigationContainer>
+    <AuthProvider>
+      <NavigationContainer>
+        <Header />
+        {/* <CourseDetail /> */}
+        {/* <CoursesSreeen /> */}
+        <ScreenStackNavigator />
+      </NavigationContainer>
+    </AuthProvider>
   );
 }
