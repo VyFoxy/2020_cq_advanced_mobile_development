@@ -10,9 +10,9 @@ export default function App() {
   return (
     <NavigationContainer>
       <Header />
-      <CourseDetail />
+      {/* <CourseDetail /> */}
       {/* <CoursesSreeen /> */}
-      {/* <ScreenStackNavigator /> */}
+      <ScreenStackNavigator />
     </NavigationContainer>
   );
 }

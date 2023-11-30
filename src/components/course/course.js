@@ -21,15 +21,6 @@ export default function CourseCard(props) {
             }
             style={styles.courseImg}
           />
-
-          {/* <Text style={styles.nameCourse}>CourseCard</Text>
-          <Text style={styles.subtitle}>
-            This is a subtitle pla pla pla pla pla pla pla pla pla pla
-          </Text>
-          <View style={styles.levelContainer}>
-            <Text style={styles.levelText}>Beginner</Text>
-            <Text style={styles.levelText}>9 bài học</Text>
-          </View> */}
           {props.children}
         </View>
       </Pressable>

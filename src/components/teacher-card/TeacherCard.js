@@ -10,7 +10,7 @@ import React, { useState } from 'react';
 import { ListTag } from '../list-tag/ListTag';
 import { AntDesign } from '@expo/vector-icons';
 import { COLORS, IMGS, ROUTES } from '../../constants';
-import { Rating } from '@mui/material';
+import { Grid, Rating } from '@mui/material';
 //import { Rating } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 
@@ -72,7 +72,9 @@ export default function TeacherCard({ isLiked }) {
             </View>
           </View>
           <View style={styles.tagItem}>
-            <ListTag tags={listSpecialies} />
+            <Grid>
+              <ListTag tags={listSpecialies} />
+            </Grid>
           </View>
           <View style={styles.descript}>
             <Text numberOfLines={4} style={styles.textDescript}>

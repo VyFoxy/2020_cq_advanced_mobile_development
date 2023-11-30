@@ -14,6 +14,7 @@ module.exports = {
     // "ecosystem.config.js",
     'index.js'
   ],
+  plugins: ['react', 'react-native', 'import'],
   rules: {
     // '@typescript-eslint/interface-name-prefix': 'off',
     // '@typescript-eslint/explicit-module-boundary-types': 'off',

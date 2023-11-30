@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text, StyleSheet, Vibration } from "react-native";
+import React from 'react';
+import { View, Text, StyleSheet, Vibration } from 'react-native';
 
 export default function TagItem({ item }) {
   return (
@@ -11,12 +11,12 @@ export default function TagItem({ item }) {
 
 const styles = StyleSheet.create({
   TagItem: {
-    backgroundColor: "#DDEAFF",
-    color: "#0071F0",
+    backgroundColor: '#DDEAFF',
+    color: '#0071F0',
     paddingHorizontal: 20,
     paddingVertical: 5,
     borderRadius: 50,
     marginRight: 2,
-    marginVertical: 2,
-  },
+    marginVertical: 5
+  }
 });

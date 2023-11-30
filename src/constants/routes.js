@@ -14,6 +14,7 @@ export default {
   HISTORY: 'history',
   BOOKINGSTUDENT: 'bookingstudent',
   COURSE: 'course',
+  COURSE_DETAIL: 'course-detail',
   PROFILE: 'Profile',
 
   TEACHER_DETAIL: 'teacher-detail'

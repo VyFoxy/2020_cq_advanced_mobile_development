@@ -4,6 +4,7 @@ import { HistoryScreen } from '../screens/history';
 import { BookingStudentScreen } from '../screens/booking-student';
 import { Tutor } from '../screens/tutor';
 import { CoursesSreeen } from '../screens/courses';
+import { CourseDetail } from '../screens/courses/detail';
 import { ROUTES, COLORS } from '../constants';
 
 const Drawer = createDrawerNavigator();
@@ -18,6 +19,7 @@ function DrawerNavigator() {
         component={BookingStudentScreen}
       />
       <Drawer.Screen name={ROUTES.COURSE} component={CoursesSreeen} />
+      <Drawer.Screen name={ROUTES.COURSE_DETAIL} component={CourseDetail} />
     </Drawer.Navigator>
   );
 }
