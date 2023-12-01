@@ -14,6 +14,7 @@ import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COLORS, ROUTES } from '../../constants';
 import { isEmpty } from 'lodash';
+
 export const RegisterScreen = ({ navigation }) => {
   const [passwordVisible, setPasswordVisible] = useState(true);
   const [username, setUsername] = useState('');

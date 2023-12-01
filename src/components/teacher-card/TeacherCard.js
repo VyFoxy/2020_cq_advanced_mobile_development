@@ -14,10 +14,14 @@ import { Grid, Rating } from '@mui/material';
 //import { Rating } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 
-export default function TeacherCard({ isLiked }) {
+export default function TeacherCard(props) {
+  const { item } = props;
+  console.log(item, 'item');
   const navigation = useNavigation();
   const [value, setValue] = useState(5);
-  const [followStatus, setFollowStatus] = useState(isLiked);
+  const [followStatus, setFollowStatus] = useState(
+    item?.isFavoriteTutor || false
+  );
   const listSpecialies = [
     'English',
     'Math',
@@ -38,12 +42,7 @@ export default function TeacherCard({ isLiked }) {
         <View style={styles.container}>
           <View style={styles.header}>
             <View style={styles.HeaderRight}>
-              <Image
-                style={styles.avtimg}
-                source={
-                  'https://sandbox.api.lettutor.com/avatar/4d54d3d7-d2a9-42e5-97a2-5ed38af5789aavatar1684484879187.jpg'
-                }
-              />
+              <Image style={styles.avtimg} source={item?.avatar || ''} />
               <View style={styles.nameContainer}>
                 <Text style={styles.name}>Keegan</Text>
                 <Rating
@@ -66,7 +65,7 @@ export default function TeacherCard({ isLiked }) {
                 <AntDesign
                   name={followStatus ? 'heart' : 'hearto'}
                   size={24}
-                  color='blue'
+                  color={followStatus ? 'red' : 'blue'}
                 />
               </Pressable>
             </View>

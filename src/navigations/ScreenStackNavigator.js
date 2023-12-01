@@ -4,6 +4,7 @@ import { LoginScreen } from '../screens/login';
 import { RegisterScreen } from '../screens/register';
 import { TeacherDetail } from '../screens/teacherdetail';
 import { HistoryScreen } from '../screens/history';
+import { ForgotPassWordScreen } from '../screens/forgot-password';
 import DrawerNavigator from './DrawerNavigator';
 import { Tutor } from '../screens/tutor';
 import { ROUTES } from '../constants';
@@ -22,6 +23,11 @@ function ScreenStackNavigator() {
         component={RegisterScreen}
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name={ROUTES.FORGOT_PASSWORD}
+        component={ForgotPassWordScreen}
+        options={{ headerShown: false }}
+      />
       {/* <Stack.Screen
         name={ROUTES.HOME}
         component={Tutor}
@@ -37,11 +43,6 @@ function ScreenStackNavigator() {
         component={TeacherDetail}
         options={{ headerShown: false }}
       />
-      {/* <Stack.Screen
-        name={ROUTES.HISTORY}
-        component={HistoryScreen}
-        options={{ headerShown: false }}
-      /> */}
     </Stack.Navigator>
   );
 }

@@ -26,7 +26,7 @@ export const LoginScreen = () => {
     if (username && password) {
       // Check if the user exists
       const userData = await AsyncStorage.getItem(username);
-      console.log(userData);
+
       if (userData) {
         const { password: storedPassword } = JSON.parse(userData);
 
