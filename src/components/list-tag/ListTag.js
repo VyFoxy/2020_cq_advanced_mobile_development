@@ -12,7 +12,7 @@ export const ListTag = ({ tags }) => {
       data={tags}
       renderItem={TagItem}
       keyExtractor={(item) => item}
-      style={styles.listTag}
+      //style={styles.listTag}
     />
   );
 };

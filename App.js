@@ -5,7 +5,7 @@ import { Header } from './src/components/header/Header';
 import { CoursesSreeen } from './src/screens/courses';
 import { CourseDetail } from './src/screens/courses/detail';
 import ScreenStackNavigator from './src/navigations/ScreenStackNavigator';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Tutor } from './src/screens/tutor';
 import { AuthProvider } from './src/context/AuthContext';
 export default function App() {
   return (
@@ -14,7 +14,8 @@ export default function App() {
         <Header />
         {/* <CourseDetail /> */}
         {/* <CoursesSreeen /> */}
-        <ScreenStackNavigator />
+        <Tutor />
+        {/* <ScreenStackNavigator /> */}
       </NavigationContainer>
     </AuthProvider>
   );

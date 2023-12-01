@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   ScrollView
 } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import TeacherCard from '../../components/teacher-card/TeacherCard';
 import { COLORS, ROUTES } from '../../constants';
 import {
@@ -18,6 +18,7 @@ import {
   Select,
   TextField
 } from '@mui/material';
+import { mappingSpecialties } from '../../utils/mapping';
 import { useState } from 'react';
 
 export const Tutor = ({ navigation }) => {
@@ -205,6 +206,37 @@ export const Tutor = ({ navigation }) => {
       price: 0
     }
   ];
+  const initSearchQuery = {
+    name: '',
+    country: ''
+  };
+  const [tutors, setTutors] = useState(data);
+  const [searchQuery, setSearchQuery] = useState(initSearchQuery);
+
+  const handleSearch = (field) => {
+    const filteredTutors = data.filter((tutor) =>
+      tutor?.[field].toLowerCase().includes(searchQuery?.[field].toLowerCase())
+    );
+
+    setTutors(filteredTutors);
+  };
+
+  const sortedTutors = tutors.sort((a, b) => {
+    // Sort by isFavoriteTutor (true comes first)
+    if (b.isFavoriteTutor && !a.isFavoriteTutor) return 1;
+    if (a.isFavoriteTutor && !b.isFavoriteTutor) return -1;
+
+    // If isFavoriteTutor is the same, sort by rating
+    return (b.rating || 0) - (a.rating || 0);
+  });
+  const mappingSpecialtiesTag = (value) => {
+    return mappingSpecialties.find((item) => item?.value === value)?.label;
+  };
+
+  const mappedTutors = sortedTutors.map((tutor) => ({
+    ...tutor,
+    specialties: tutor.specialties.split(',').map(mappingSpecialtiesTag)
+  }));
   return (
     <ScrollView style={styles.container}>
       <View style={styles.banner}>
@@ -234,14 +266,41 @@ export const Tutor = ({ navigation }) => {
               borderRadius: 50
             }
           }}
+          style={{ width: 200, marginBottom: 10 }}
+          value={searchQuery.name}
+          onChange={(e) =>
+            setSearchQuery({ ...searchQuery, name: e.target.value })
+          }
+          onKeyPress={(e) => {
+            e.key === 'Enter' && handleSearch('name');
+          }}
+        />
+        <TextField
+          placeholder={'Nhập quốc tịch'}
+          size='small'
+          InputProps={{
+            style: {
+              borderRadius: 50
+            }
+          }}
           style={{ width: 200 }}
+          value={searchQuery.country}
+          onChange={(e) =>
+            setSearchQuery({ ...searchQuery, country: e.target.value })
+          }
+          onKeyPress={(e) => {
+            e.key === 'Enter' && handleSearch('country');
+          }}
         />
       </View>
-      <FlatList
-        data={data}
-        renderItem={({ item }) => <TeacherCard item={item} />}
-        keyExtractor={(item) => item.toString()}
-      />
+      <View style={styles.filterContainer}>
+        <Text style={styles.teacherHeader}>Gia sư được đề xuất</Text>
+        <FlatList
+          data={mappedTutors}
+          renderItem={({ item }) => <TeacherCard item={item} />}
+          keyExtractor={(item) => item.toString()}
+        />
+      </View>
     </ScrollView>
   );
 };
@@ -319,9 +378,14 @@ const styles = StyleSheet.create({
   filterHeader: {
     fontSize: 30,
     fontWeight: 700,
-    marginBottom: 40
+    marginBottom: 30
   },
   filerInput: {
     borderRadius: 50
+  },
+  teacherHeader: {
+    fontSize: 20,
+    fontWeight: 600,
+    marginBottom: 10
   }
 });
