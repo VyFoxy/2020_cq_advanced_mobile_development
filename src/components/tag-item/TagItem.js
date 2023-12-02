@@ -1,11 +1,19 @@
 import React from 'react';
-import { View, Text, StyleSheet, Vibration } from 'react-native';
+import { View, Text, StyleSheet, Vibration, Pressable } from 'react-native';
 
-export default function TagItem({ item }) {
+export default function TagItem({ item, handFilterSpecialties }) {
   return (
-    <View>
-      <Text style={styles.TagItemActive}>{item}</Text>
-    </View>
+    <Pressable onPress={() => handFilterSpecialties(item?.value)}>
+      <View>
+        <Text
+          style={
+            item?.status === 'active' ? styles.TagItemActive : styles.TagItem
+          }
+        >
+          {item.label}
+        </Text>
+      </View>
+    </Pressable>
   );
 }
 
@@ -20,8 +28,8 @@ const styles = StyleSheet.create({
     marginVertical: 5
   },
   TagItem: {
-    backgroundColor: '#DDEAFF',
-    color: '#0071F0',
+    backgroundColor: '#E4E6EB',
+    color: '#646464',
     paddingHorizontal: 20,
     paddingVertical: 5,
     borderRadius: 50,

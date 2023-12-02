@@ -1,5 +1,5 @@
 export const mappingSpecialties = [
-  { value: 'ALL', label: 'Tất cả' },
+  { value: 'ALL', label: 'Tất cả', status: 'active' },
   {
     value: 'english-for-kids',
     label: 'Tiếng Anh cho trẻ em'

@@ -24,6 +24,11 @@ export default function TeacherCard(props) {
     item?.isFavoriteTutor || false
   );
 
+  const listSpecialties = item?.specialties.map((item) => ({
+    label: item,
+    status: 'active'
+  }));
+
   return (
     <View style={styles.outerContainer}>
       <Pressable
@@ -71,7 +76,7 @@ export default function TeacherCard(props) {
           </View>
           <View style={styles.tagItem}>
             <Grid>
-              <ListTag tags={item?.specialties || []} />
+              <ListTag tags={listSpecialties || []} />
             </Grid>
           </View>
           <View style={styles.descript}>

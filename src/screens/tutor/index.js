@@ -19,6 +19,7 @@ import {
   TextField
 } from '@mui/material';
 import { mappingSpecialties } from '../../utils/mapping';
+import { ListTag } from '../../components/list-tag/ListTag';
 import { useState } from 'react';
 
 export const Tutor = ({ navigation }) => {
@@ -212,7 +213,13 @@ export const Tutor = ({ navigation }) => {
   };
   const [tutors, setTutors] = useState(data);
   const [searchQuery, setSearchQuery] = useState(initSearchQuery);
-
+  const [specialties, setSpecialties] = useState(
+    mappingSpecialties.map((item) => ({
+      label: item.label,
+      value: item?.value,
+      status: item?.status || null
+    })) || []
+  );
   const handleSearch = (field) => {
     const filteredTutors = data.filter((tutor) =>
       tutor?.[field].toLowerCase().includes(searchQuery?.[field].toLowerCase())
@@ -237,6 +244,35 @@ export const Tutor = ({ navigation }) => {
     ...tutor,
     specialties: tutor.specialties.split(',').map(mappingSpecialtiesTag)
   }));
+
+  const handFilterSpecialties = (value) => {
+    if (value === 'ALL') {
+      setTutors(data);
+    } else {
+      const filterSpecialties = data.filter(
+        (tutor) => tutor.specialties && tutor.specialties.includes(value)
+      );
+      setTutors(filterSpecialties);
+    }
+    setSpecialties((prevSpecialties) =>
+      prevSpecialties.map((item) => ({
+        ...item,
+        status: item.value === value ? 'active' : null
+      }))
+    );
+  };
+
+  const handleReset = () => {
+    setSearchQuery({ name: '', country: '' });
+    setSpecialties((prevSpecialties) =>
+      prevSpecialties.map((item) => ({
+        ...item,
+        status: item.value === 'ALL' ? 'active' : null
+      }))
+    );
+    setTutors(data);
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.banner}>
@@ -283,7 +319,7 @@ export const Tutor = ({ navigation }) => {
               borderRadius: 50
             }
           }}
-          style={{ width: 200 }}
+          style={{ width: 200, marginBottom: 10 }}
           value={searchQuery.country}
           onChange={(e) =>
             setSearchQuery({ ...searchQuery, country: e.target.value })
@@ -292,6 +328,18 @@ export const Tutor = ({ navigation }) => {
             e.key === 'Enter' && handleSearch('country');
           }}
         />
+        <Grid>
+          <ListTag
+            tags={specialties}
+            handFilterSpecialties={handFilterSpecialties}
+          />
+        </Grid>
+        <TouchableOpacity
+          style={styles.ButtonReset}
+          onPress={() => handleReset()}
+        >
+          <Text style={styles.ButtonText}>Đặt lại bộ tìm kiếm</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.filterContainer}>
         <Text style={styles.teacherHeader}>Gia sư được đề xuất</Text>
@@ -354,6 +402,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: COLORS.primary
   },
+  ButtonReset: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 10,
+    width: '50%',
+    height: 30,
+    backgroundColor: COLORS.white,
+    elevation: 2,
+    borderRadius: 100,
+    borderColor: COLORS.primary,
+    borderWidth: 1
+  },
   title: {
     fontSize: 15,
     fontWeight: 'bold'
@@ -372,7 +432,7 @@ const styles = StyleSheet.create({
     marginBottom: 5
   },
   filterContainer: {
-    marginTop: 30,
+    marginTop: 10,
     padding: 20
   },
   filterHeader: {
