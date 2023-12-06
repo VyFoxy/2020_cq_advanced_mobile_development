@@ -18,6 +18,8 @@ import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS, IMGS, ROUTES } from '../../constants';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faChalkboardUser } from '@fortawesome/free-solid-svg-icons/faChalkboardUser';
 export const Header = () => {
   const navigation = useNavigation();
   const [showMenu, setShowMenu] = useState(false);
@@ -99,6 +101,13 @@ export const Header = () => {
               <TouchableOpacity style={styles.menuNav}>
                 <AutoStoriesIcon style={styles.navIcon}></AutoStoriesIcon>
                 <Text style={styles.navText}>Khóa học của tôi</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.menuNav}>
+                <FontAwesomeIcon
+                  icon={faChalkboardUser}
+                  style={styles.navIcon}
+                />
+                <Text style={styles.navText}>Đăng ký thành giáo viên</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.menuNav}

@@ -45,3 +45,5 @@ export const mappingSpecialties = [
     label: 'TOEIC'
   }
 ];
+
+export const mappingLanguage = [{ value: 'en', label: 'English' }];
