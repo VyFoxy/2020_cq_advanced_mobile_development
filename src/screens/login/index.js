@@ -15,6 +15,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COLORS, ROUTES } from '../../constants';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../../context/AuthContext';
+import * as WebBrowser from 'expo-web-browser';
+import * as Google from 'expo-auth-session/providers/google';
+import { GoogleLoginAuth } from '../../services/authentication';
 export const LoginScreen = () => {
   const navigation = useNavigation();
   const [passwordVisible, setPasswordVisible] = useState(true);
@@ -114,18 +117,18 @@ export const LoginScreen = () => {
               <View style={styles.otherLogin}>
                 <Text>Hoặc tiếp tục với</Text>
                 <View style={styles.otherLoginIcons}>
-                  <TouchableOpacity>
+                  <TouchableOpacity style={styles.otherLoginIcon}>
                     <Image
-                      style={styles.otherLoginIcon}
+                      style={styles.flagIcon}
                       source={
                         'https://sandbox.app.lettutor.com/static/media/facebook-logo.3bac8064.svg'
                       }
                       resizeMode='contain'
                     />
                   </TouchableOpacity>
-                  <TouchableOpacity>
+                  <TouchableOpacity style={styles.otherLoginIcon}>
                     <Image
-                      style={styles.otherLoginIcon}
+                      style={styles.flagIcon}
                       source={
                         'https://sandbox.app.lettutor.com/static/media/google-logo.5f53496e.svg'
                       }
@@ -275,5 +278,12 @@ const styles = StyleSheet.create({
   registerText: {
     flexDirection: 'row',
     alignSelf: 'center'
+  },
+  flagIcon: {
+    opacity: 1,
+    width: 40,
+    height: 40,
+    borderRadius: '50%',
+    overflow: 'hidden'
   }
 });

@@ -3,9 +3,10 @@ const PATH = {
   LOGIN: '/auth/login',
   REGISTER: '/auth/register',
   GOOGLE_LOGIN: '/auth/google',
+  FACEBOOK_LOGIN: '/auth/facebook',
   FORGOT_PASSWORD: '/user/forgotPassword'
 };
-export const login = async ({ email, password }) => {
+export const Login = async ({ email, password }) => {
   try {
     const response = await api.post(PATH.LOGIN, { email, password });
     return response;
@@ -14,7 +15,7 @@ export const login = async ({ email, password }) => {
     throw Error(error);
   }
 };
-export const register = async ({ email, password }) => {
+export const Register = async ({ email, password }) => {
   try {
     const response = await api.post(PATH.REGISTER, { email, password });
     return response;
@@ -23,7 +24,7 @@ export const register = async ({ email, password }) => {
   }
 };
 
-export const forgotPassword = async ({ email }) => {
+export const ForgotPassword = async ({ email }) => {
   try {
     const response = await api.post(PATH.FORGOT_PASSWORD, { email });
     return response;
@@ -32,9 +33,21 @@ export const forgotPassword = async ({ email }) => {
   }
 };
 
-export const googleLoginAuth = async ({ accessToken }) => {
+export const GoogleLoginAuth = async ({ accessToken }) => {
   try {
     const response = await api.post(PATH.GOOGLE_LOGIN, {
+      access_token: accessToken
+    });
+    return response;
+  } catch (error) {
+    console.log(error.data);
+    throw Error(error);
+  }
+};
+
+export const FacebookLoginAuth = async ({ accessToken }) => {
+  try {
+    const response = await api.post(PATH.FACEBOOK_LOGIN, {
       access_token: accessToken
     });
     return response;
