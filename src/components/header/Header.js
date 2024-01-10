@@ -7,7 +7,7 @@ import {
   StyleSheet,
   Pressable
 } from 'react-native';
-import { Box, Button, Grid, IconButton, Toolbar } from '@mui/material';
+import { Ionicons } from '@expo/vector-icons';
 import MenuIcon from '@mui/icons-material/Menu';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import CastForEducationIcon from '@mui/icons-material/CastForEducation';
@@ -18,40 +18,34 @@ import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS, IMGS, ROUTES } from '../../constants';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faChalkboardUser } from '@fortawesome/free-solid-svg-icons/faChalkboardUser';
 export const Header = () => {
   const navigation = useNavigation();
   const [showMenu, setShowMenu] = useState(false);
   return (
     <>
       <View style={styles.header}>
-        <Grid container>
-          <Grid item xs={6} md={6}>
-            <Image
-              source={require('../../../assets/img/logo.svg')}
-              style={styles.logo}
-            />
-          </Grid>
-          <Grid item xs={6} md={6}>
-            <div style={styles.headerRight}>
-              <TouchableOpacity style={styles.button}>
-                <Image source={IMGS.vi} style={styles.flagIcon} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.menuIcon}
-                onPress={() => setShowMenu(!showMenu)}
-              >
-                <MenuIcon></MenuIcon>
-              </TouchableOpacity>
-            </div>
-          </Grid>
-        </Grid>
+        <View>
+          <Image
+            source={require('../../../assets/img/logo.svg')}
+            style={styles.logo}
+          />
+        </View>
+        <View style={styles.headerRight}>
+          <TouchableOpacity style={styles.button}>
+            <Image source={IMGS.vi} style={styles.flagIcon} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.menuIcon}
+            onPress={() => setShowMenu(!showMenu)}
+          >
+            <Ionicons name='menu-outline' size={24} color='black' />
+          </TouchableOpacity>
+        </View>
       </View>
-      <div style={showMenu ? styles.filter : styles.jselshow}>
-        <div style={styles.wrap}>
-          <div style={styles.inner}>
-            <div style={styles.body}>
+      <View style={showMenu ? styles.filter : styles.jselshow}>
+        <View style={styles.wrap}>
+          <View style={styles.inner}>
+            <View style={styles.body}>
               <TouchableOpacity style={styles.menuNav}>
                 <CalendarTodayIcon style={styles.navIcon}></CalendarTodayIcon>
                 <Text style={styles.navText}>Lịch học định kỳ</Text>
@@ -103,10 +97,10 @@ export const Header = () => {
                 <Text style={styles.navText}>Khóa học của tôi</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.menuNav}>
-                <FontAwesomeIcon
+                {/* <FontAwesomeIcon
                   icon={faChalkboardUser}
                   style={styles.navIcon}
-                />
+                /> */}
                 <Text style={styles.navText}>Đăng ký thành giáo viên</Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -119,10 +113,10 @@ export const Header = () => {
                 <LogoutIcon style={styles.navIcon}></LogoutIcon>
                 <Text style={styles.navText}>Đăng xuất</Text>
               </TouchableOpacity>
-            </div>
-          </div>
-        </div>
-      </div>
+            </View>
+          </View>
+        </View>
+      </View>
     </>
   );
 };
@@ -149,6 +143,7 @@ const styles = StyleSheet.create({
     boxShadow: 'rgba(0, 0, 0, 0.2) 0px -1px 13px 2px'
   },
   headerRight: {
+    flexDirection: 'row',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end'
@@ -201,7 +196,7 @@ const styles = StyleSheet.create({
     left: 0,
     width: '100%',
     height: '100%',
-    marginTop: 70,
+    marginTop: 30,
     zIndex: 1300
   },
   wrap: {
@@ -239,7 +234,6 @@ const styles = StyleSheet.create({
   },
   menuNav: {
     flexDirection: 'row',
-    marginLeft: 30,
     marginVertical: 25,
     alignItems: 'center',
     flex: 1

@@ -1,5 +1,11 @@
-import { Grid, Button } from '@mui/material';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Button
+} from 'react-native';
 import { ROUTES, COLORS } from '../../constants';
 import { Collapse, Panel } from 'antd';
 
@@ -19,54 +25,44 @@ export const BookingCard = () => {
   ];
   return (
     <View style={styles.container}>
-      <Grid container>
-        <Grid item xs={12}>
-          <View style={styles.margin}>
-            <Text style={styles.headingParagraph}>CN, 05 Thg 11 23 </Text>
-            <Text style={styles.paragraph}>1 week ago</Text>
-          </View>
-        </Grid>
-        <Grid item xs={12}>
-          <View style={styles.contentProfile}>
+      <View style={styles.margin}>
+        <Text style={styles.headingParagraph}>CN, 05 Thg 11 23 </Text>
+        <Text style={styles.paragraph}>1 week ago</Text>
+      </View>
+      <View style={styles.contentProfile}>
+        <Image
+          style={styles.avtimg}
+          source={
+            'https://sandbox.api.lettutor.com/avatar/4d54d3d7-d2a9-42e5-97a2-5ed38af5789aavatar1684484879187.jpg'
+          }
+        />
+        <View>
+          <Text style={styles.teacherName}>Keegan</Text>
+          <View style={styles.row}>
             <Image
-              style={styles.avtimg}
               source={
-                'https://sandbox.api.lettutor.com/avatar/4d54d3d7-d2a9-42e5-97a2-5ed38af5789aavatar1684484879187.jpg'
+                'https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.3/flags/4x3/tn.svg'
               }
+              style={styles.flagIcon}
             />
-            <View>
-              <Text style={styles.teacherName}>Keegan</Text>
-              <View style={styles.row}>
-                <Image
-                  source={
-                    'https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.3/flags/4x3/tn.svg'
-                  }
-                  style={styles.flagIcon}
-                />
-                <Text>Tunisia</Text>
-                <TouchableOpacity></TouchableOpacity>
-              </View>
-            </View>
+            <Text>Tunisia</Text>
+            <TouchableOpacity></TouchableOpacity>
           </View>
-        </Grid>
-        <Grid item xs={12}>
-          <View style={styles.containerContent}>
-            <Text style={{ fontSize: 20 }}>Thời gian học: </Text>
-            <Text style={{ fontSize: 20, marginBottom: 20 }}>
-              19:30 - 19:55
-            </Text>
-            <Collapse items={items} defaultActiveKey={['1']} />
-          </View>
-        </Grid>
-        <Grid item xs={12}>
-          <View xs={12} style={styles.buttonContainer}>
-            <View />
-            <Button size='large' style={styles.buttonIn}>
-              <Text style={{ color: COLORS.white }}>Vào buổi học</Text>
-            </Button>
-          </View>
-        </Grid>
-      </Grid>
+        </View>
+      </View>
+      <View style={styles.containerContent}>
+        <Text style={{ fontSize: 20 }}>Thời gian học: </Text>
+        <Text style={{ fontSize: 20, marginBottom: 20 }}>19:30 - 19:55</Text>
+        <Collapse items={items} defaultActiveKey={['1']} />
+      </View>
+      <View xs={12} style={styles.buttonContainer}>
+        <View />
+        <Button
+          title='Vào buổi học'
+          onPress={() => Alert.alert('Cannot press this one')}
+          style={styles.buttonIn}
+        />
+      </View>
     </View>
   );
 };
@@ -151,6 +147,8 @@ const styles = StyleSheet.create({
     marginVertical: 20
   },
   buttonIn: {
-    backgroundColor: '#1890ff'
+    backgroundColor: '#1890ff',
+    height: 40,
+    width: '70%'
   }
 });

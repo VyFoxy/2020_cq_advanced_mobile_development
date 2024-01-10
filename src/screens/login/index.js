@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   Image,
   StyleSheet,
@@ -6,7 +6,8 @@ import {
   View,
   TouchableOpacity,
   SafeAreaView,
-  Alert
+  Alert,
+  TextInput
 } from 'react-native';
 import { TextField, InputAdornment, IconButton } from '@mui/material';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
@@ -17,35 +18,85 @@ import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../../context/AuthContext';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
-import { GoogleLoginAuth } from '../../services/authentication';
+import { GoogleLoginAuth, login } from '../../services/authentication';
+import AuthContext from '../../context/AuthContext';
+WebBrowser.maybeCompleteAuthSession();
+
 export const LoginScreen = () => {
+  const { setAuth } = useContext(AuthContext);
   const navigation = useNavigation();
   const [passwordVisible, setPasswordVisible] = useState(true);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useAuth();
-  const handleLogin = async () => {
-    // Simulate authentication (replace with actual authentication logic)
-    if (username && password) {
-      // Check if the user exists
-      const userData = await AsyncStorage.getItem(username);
-
-      if (userData) {
-        const { password: storedPassword } = JSON.parse(userData);
-
-        if (password === storedPassword) {
-          login(username);
-          Alert.alert('Login Successful');
-          navigation.navigate(ROUTES.HOME_DRAWER);
-        } else {
-          Alert.alert('Invalid password');
-        }
-      } else {
-        Alert.alert('User not found. Please sign up.');
+  const [accessToken, setAccessToken] = useState(null);
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    clientId:
+      '237722397720-hkdm7tjfm427d97fnv5d9dqbrh8pgknb.apps.googleusercontent.com',
+    androidClientId:
+      '237722397720-49fdld1mvtihjsg044gjlheljmhgfdru.apps.googleusercontent.com'
+  });
+  useEffect(() => {
+    async function getAccessToken() {
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      if (accessToken) {
+        navigation.navigate(ROUTES.HOME);
       }
-    } else {
-      Alert.alert('Please enter a username and password');
     }
+    getAccessToken();
+  }, []);
+
+  useEffect(() => {
+    async function ggLogin() {
+      if (response?.type === 'success') {
+        const { authentication } = response;
+        if (authentication?.accessToken) {
+          const response = await googleLoginAuth({
+            accessToken: authentication.accessToken
+          });
+          setAuth(response.data);
+          navigation.navigate(ROUTES.HOME);
+        }
+      }
+    }
+    ggLogin();
+  }, [accessToken, response]);
+  async function handleLogin() {
+    setemailError('');
+    setPasswordError('');
+    setloginError('');
+
+    if (email === '') setemailError('Email không được để trống');
+    else {
+      let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+      if (reg.test(email) === false) setemailError('Email không đúng');
+    }
+    if (password === '') setPasswordError('Mật khẩu không được để trống');
+
+    if (
+      emailError === '' &&
+      passwordError === '' &&
+      email !== '' &&
+      password !== ''
+    ) {
+      try {
+        const response = await login({ email, password });
+        if (response.data) {
+          setAuth(response.data);
+
+          navigation.navigate(ROUTES.HOME);
+        } else {
+          setloginError('Đăng nhập thất bại');
+        }
+      } catch (error) {
+        console.log(error);
+
+        setloginError('Đăng nhập thất bại');
+      }
+    }
+  }
+
+  const googleLogin = () => {
+    promptAsync();
   };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
@@ -66,37 +117,27 @@ export const LoginScreen = () => {
               </Text>
               <View style={styles.formLogin}>
                 <Text style={styles.label}>ĐỊA CHỈ EMAIL</Text>
-                <TextField
+                <TextInput
                   style={styles.input}
-                  size='small'
-                  name='email'
                   placeholder='mail@example.com'
                   value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  onChangeText={(text) => setUsername(text)}
                 />
                 <Text style={styles.label}>MẬT KHẨU</Text>
-                <TextField
+
+                <TextInput
                   style={styles.input}
+                  value={password}
+                  onChangeText={(e) => setPassword(e.target.value)}
                   name='password'
-                  type={passwordVisible ? 'password' : null}
-                  size='small'
-                  onChange={(e) => setPassword(e.target.value)}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position='end'>
-                        <IconButton
-                          onClick={() => setPasswordVisible(!passwordVisible)}
-                          edge='end'
-                        >
-                          {passwordVisible ? (
-                            <VisibilityOffOutlinedIcon />
-                          ) : (
-                            <VisibilityOutlinedIcon />
-                          )}
-                        </IconButton>
-                      </InputAdornment>
-                    )
-                  }}
+                  label='MẬT KHẨU '
+                  secureTextEntry={passwordVisible}
+                  right={
+                    <TextInput.Icon
+                      icon={passwordVisible ? 'eye' : 'eye-off'}
+                      onPress={() => setPasswordVisible(!passwordVisible)}
+                    />
+                  }
                 />
 
                 <TouchableOpacity
@@ -126,7 +167,10 @@ export const LoginScreen = () => {
                       resizeMode='contain'
                     />
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.otherLoginIcon}>
+                  <TouchableOpacity
+                    style={styles.otherLoginIcon}
+                    onPress={() => googleLogin()}
+                  >
                     <Image
                       style={styles.flagIcon}
                       source={
@@ -211,16 +255,12 @@ const styles = StyleSheet.create({
 
   input: {
     backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 2,
+    borderColor: COLORS.grayLight,
+    borderWidth: 1,
+    borderRadius: 5,
     marginVertical: 10,
-    marginBottom: 20
+    marginBottom: 20,
+    height: 40
   },
   label: { marginBottom: 10, color: '#A4B0BE' },
   forgotPass: {

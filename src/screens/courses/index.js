@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import React from 'react';
 import CourseCard from '../../components/course/course';
-import { TextField } from '@mui/material';
 import { COLORS } from '../../constants';
 
 export const CoursesSreeen = () => {

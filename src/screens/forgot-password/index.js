@@ -7,7 +7,6 @@ import {
   TouchableOpacity
 } from 'react-native';
 import { COLORS, ROUTES } from '../../constants';
-import { TextField } from '@mui/material';
 
 export const ForgotPassWordScreen = () => {
   const [mail, setMail] = useState('');
@@ -39,10 +38,9 @@ export const ForgotPassWordScreen = () => {
             Vui lòng nhập email để tìm kiếm tài khoản của bạn.
           </Text>
           <Text style={styles.leftText}>Email</Text>
-          <TextField
-            size='small'
+          <TextInput
             value={mail}
-            onChange={(e) => setMail(e.target.value)}
+            onChangeText={(e) => setMail(e.target.value)}
           />
           <TouchableOpacity
             style={styles.loginButton}

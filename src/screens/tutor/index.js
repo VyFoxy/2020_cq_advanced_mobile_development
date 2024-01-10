@@ -31,7 +31,7 @@ export const Tutor = ({ navigation }) => {
       country: 'PH',
       id: '45f8709e-2e84-46f2-b238-817a85cc2b29',
       name: 'Jill Leano',
-      bio: "Hi, My name is Jill I am an experienced English Teacher from Philippine. I would like to share my enthusiasm with the learners in this platform. I've been working with diverse learners of all levels for many years. I am greatly passionate about about profession. I love teaching because I can help others improve their skills and it gives me joy and excitement meeting different learners around the world. In my class I worked with wonderful enthusiasm and positivity, and I'm happy to focus on my learner's goal.",
+      bio: "Hi, My name is Jill I am an experienced English Teacher from Philippine. I would like to share my enthusiasm with the learners in this platform. I've been working with Viewerse learners of all levels for many years. I am greatly passionate about about profession. I love teaching because I can help others improve their skills and it gives me joy and excitement meeting different learners around the world. In my class I worked with wonderful enthusiasm and positivity, and I'm happy to focus on my learner's goal.",
       isNative: null,
       specialties: 'business-english,english-for-kids,toefl,toeic',
       rating: null,
@@ -122,7 +122,7 @@ export const Tutor = ({ navigation }) => {
       country: 'PH',
       id: 'f64bca88-80fb-479d-a9d1-66fd326cfa45',
       name: 'April Baldo',
-      bio: 'Hello! My name is April Baldo, you can just call me Teacher April. I am an English teacher and currently teaching in senior high school. I have been teaching grammar and literature for almost 10 years. I am fond of reading and teaching literature as one way of knowing one’s beliefs and culture. I am friendly and full of positivity. I love teaching because I know each student has something to bring on. Molding them to become an individual is a great success.',
+      bio: 'Hello! My name is April Baldo, you can just call me Teacher April. I am an English teacher and currently teaching in senior high school. I have been teaching grammar and literature for almost 10 years. I am fond of reading and teaching literature as one way of knowing one’s beliefs and culture. I am friendly and full of positivity. I love teaching because I know each student has something to bring on. Molding them to become an inViewidual is a great success.',
       isNative: null,
       specialties: 'business-english,ielts,pet,ket',
       rating: 4.217391304347826,
@@ -286,7 +286,6 @@ export const Tutor = ({ navigation }) => {
           </Grid>
           <Grid item xs={6} md={6}>
             <TouchableOpacity style={styles.Button}>
-              {/* <OndemandVideoOutlinedIcon/> */}
               <Text style={styles.ButtonText}>Vào lớp học</Text>
             </TouchableOpacity>
           </Grid>
@@ -294,21 +293,24 @@ export const Tutor = ({ navigation }) => {
       </View>
       <View style={styles.filterContainer}>
         <Text style={styles.filterHeader}>Tìm kiếm gia sư</Text>
-        <TextField
+        <TextInput
           placeholder={'Nhập tên gia sư'}
-          size='small'
-          InputProps={{
-            style: {
-              borderRadius: 50
-            }
+          style={{
+            width: 200,
+            height: 40,
+            borderColor: 'gray',
+            borderWidth: 1,
+            borderRadius: 20, // Adjust this value as needed
+            paddingLeft: 10
           }}
-          style={{ width: 200, marginBottom: 10 }}
           value={searchQuery.name}
-          onChange={(e) =>
-            setSearchQuery({ ...searchQuery, name: e.target.value })
+          onChangeText={(text) =>
+            setSearchQuery({ ...searchQuery, name: text })
           }
           onKeyPress={(e) => {
-            e.key === 'Enter' && handleSearch('name');
+            if (e.nativeEvent.key === 'Enter') {
+              handleSearch('name');
+            }
           }}
         />
         <TextField
