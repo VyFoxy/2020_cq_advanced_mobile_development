@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Image } from 'react-native';
 import React, { useState } from 'react';
 import { COLORS, IMGS, ROUTES } from '../../constants';
-import { Rating } from '@mui/material';
+
 
 export default function CommentCard() {
   return (

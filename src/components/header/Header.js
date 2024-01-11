@@ -7,15 +7,7 @@ import {
   StyleSheet,
   Pressable
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import MenuIcon from '@mui/icons-material/Menu';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import CastForEducationIcon from '@mui/icons-material/CastForEducation';
-import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import HistoryIcon from '@mui/icons-material/History';
-import SchoolIcon from '@mui/icons-material/School';
-import AutoStoriesIcon from '@mui/icons-material/AutoStories';
-import LogoutIcon from '@mui/icons-material/Logout';
+import { Ionicons, MaterialIcons, AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS, IMGS, ROUTES } from '../../constants';
 export const Header = () => {
@@ -38,7 +30,7 @@ export const Header = () => {
             style={styles.menuIcon}
             onPress={() => setShowMenu(!showMenu)}
           >
-            <Ionicons name='menu-outline' size={24} color='black' />
+            <Ionicons name='menu-outline' size={26} color='black' />
           </TouchableOpacity>
         </View>
       </View>
@@ -47,7 +39,11 @@ export const Header = () => {
           <View style={styles.inner}>
             <View style={styles.body}>
               <TouchableOpacity style={styles.menuNav}>
-                <CalendarTodayIcon style={styles.navIcon}></CalendarTodayIcon>
+                <MaterialIcons
+                  name='calendar-today'
+                  size={32}
+                  style={styles.navIcon}
+                />
                 <Text style={styles.navText}>Lịch học định kỳ</Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -57,9 +53,11 @@ export const Header = () => {
                   setShowMenu(!showMenu);
                 }}
               >
-                <CastForEducationIcon
+                <MaterialIcons
+                  name='cast-for-education'
+                  size={32}
                   style={styles.navIcon}
-                ></CastForEducationIcon>
+                />
                 <Text style={styles.navText}>Gia sư</Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -69,7 +67,11 @@ export const Header = () => {
                   setShowMenu(!showMenu);
                 }}
               >
-                <EventAvailableIcon style={styles.navIcon}></EventAvailableIcon>
+                <MaterialIcons
+                  name='event-available'
+                  size={32}
+                  style={styles.navIcon}
+                />
                 <Text style={styles.navText}>Lịch học</Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -79,7 +81,11 @@ export const Header = () => {
                   setShowMenu(!showMenu);
                 }}
               >
-                <HistoryIcon style={styles.navIcon}></HistoryIcon>
+                <MaterialIcons
+                  name='history'
+                  size={32}
+                  style={styles.navIcon}
+                />
                 <Text style={styles.navText}>Lịch sử</Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -89,18 +95,19 @@ export const Header = () => {
                   setShowMenu(!showMenu);
                 }}
               >
-                <SchoolIcon style={styles.navIcon}></SchoolIcon>
+                <MaterialIcons name='school' size={32} style={styles.navIcon} />
                 <Text style={styles.navText}>Khóa học</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.menuNav}>
-                <AutoStoriesIcon style={styles.navIcon}></AutoStoriesIcon>
+                <MaterialIcons
+                  name='auto-stories'
+                  size={32}
+                  style={styles.navIcon}
+                />
                 <Text style={styles.navText}>Khóa học của tôi</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.menuNav}>
-                {/* <FontAwesomeIcon
-                  icon={faChalkboardUser}
-                  style={styles.navIcon}
-                /> */}
+                <AntDesign name='swap' size={32} style={styles.navIcon} />
                 <Text style={styles.navText}>Đăng ký thành giáo viên</Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -110,7 +117,7 @@ export const Header = () => {
                   setShowMenu(!showMenu);
                 }}
               >
-                <LogoutIcon style={styles.navIcon}></LogoutIcon>
+                <MaterialIcons name='logout' size={32} style={styles.navIcon} />
                 <Text style={styles.navText}>Đăng xuất</Text>
               </TouchableOpacity>
             </View>
@@ -196,8 +203,8 @@ const styles = StyleSheet.create({
     left: 0,
     width: '100%',
     height: '100%',
-    marginTop: 30,
-    zIndex: 1300
+    marginTop: 32,
+    zIndex: 1320
   },
   wrap: {
     position: 'absolute',
@@ -219,7 +226,7 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     overflowY: 'auto',
-    paddingVertical: 30
+    paddingVertical: 32
   },
   overlay: {
     position: 'absolute',
@@ -234,7 +241,6 @@ const styles = StyleSheet.create({
   },
   menuNav: {
     flexDirection: 'row',
-    marginVertical: 25,
     alignItems: 'center',
     flex: 1
   },

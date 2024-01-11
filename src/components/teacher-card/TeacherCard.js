@@ -10,9 +10,8 @@ import React, { useEffect, useState } from 'react';
 import { ListTag } from '../list-tag/ListTag';
 import { AntDesign } from '@expo/vector-icons';
 import { COLORS, IMGS, ROUTES } from '../../constants';
-import { Grid, Rating } from '@mui/material';
-import { mappingSpecialties } from '../../utils/mapping';
-import EventNoteOutlinedIcon from '@mui/icons-material/EventNoteOutlined';
+import { Rating } from 'react-native-ratings';
+import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { round } from 'lodash';
 
@@ -47,11 +46,11 @@ export default function TeacherCard(props) {
               <View style={styles.nameContainer}>
                 <Text style={styles.name}>{item?.name}</Text>
                 <Rating
-                  name='simple-controlled'
-                  value={value}
-                  onChange={(event, newValue) => {
+                  showRating
+                  onFinishRating={(event, newValue) => {
                     setValue(newValue);
                   }}
+                  style={styles.rating}
                 />
                 <View style={{ flexDirection: 'row' }}>
                   <Image style={styles.flag} source={IMGS.vi} />{' '}
@@ -75,9 +74,7 @@ export default function TeacherCard(props) {
             </View>
           </View>
           <View style={styles.tagItem}>
-            <Grid>
-              <ListTag tags={listSpecialties || []} />
-            </Grid>
+            <ListTag tags={listSpecialties || []} />
           </View>
           <View style={styles.descript}>
             <Text numberOfLines={4} style={styles.textDescript}>
@@ -86,7 +83,11 @@ export default function TeacherCard(props) {
           </View>
           <View style={{ alignItems: 'flex-end' }}>
             <TouchableOpacity style={styles.Button}>
-              <EventNoteOutlinedIcon style={{ color: COLORS.primary }} />
+              <MaterialIcons
+                name='event-note'
+                size={30}
+                style={{ color: COLORS.primary }}
+              />
               <Text style={styles.ButtonText}>Đặt lịch</Text>
             </TouchableOpacity>
           </View>

@@ -2,7 +2,6 @@ import { StyleSheet, Text, View, Pressable, Image } from 'react-native';
 import React from 'react';
 import { ROUTES, COLORS } from '../../constants';
 import { useNavigation } from '@react-navigation/native';
-import { Grid } from '@mui/material';
 
 export default function CourseCard(props) {
   const navigation = useNavigation();
@@ -14,17 +13,15 @@ export default function CourseCard(props) {
         }}
         style={{ flex: 1 }}
       >
-        <Grid container>
-          <View style={styles.innerContainer}>
-            <Image
-              source={
-                'https://camblycurriculumicons.s3.amazonaws.com/5e0e8b212ac750e7dc9886ac?h=d41d8cd98f00b204e9800998ecf8427e'
-              }
-              style={styles.courseImg}
-            />
-            {props.children}
-          </View>
-        </Grid>
+        <View style={styles.innerContainer}>
+          <Image
+            source={
+              'https://camblycurriculumicons.s3.amazonaws.com/5e0e8b212ac750e7dc9886ac?h=d41d8cd98f00b204e9800998ecf8427e'
+            }
+            style={styles.courseImg}
+          />
+          {props.children}
+        </View>
       </Pressable>
     </View>
   );

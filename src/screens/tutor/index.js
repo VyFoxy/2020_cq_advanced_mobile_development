@@ -9,15 +9,6 @@ import {
 import React, { useEffect } from 'react';
 import TeacherCard from '../../components/teacher-card/TeacherCard';
 import { COLORS, ROUTES } from '../../constants';
-import {
-  Autocomplete,
-  FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField
-} from '@mui/material';
 import { mappingSpecialties } from '../../utils/mapping';
 import { ListTag } from '../../components/list-tag/ListTag';
 import { useState } from 'react';
@@ -277,19 +268,19 @@ export const Tutor = ({ navigation }) => {
     <ScrollView style={styles.container}>
       <View style={styles.banner}>
         <Text style={styles.welcomeText}>Buổi học sắp diễn ra</Text>
-        <Grid container style={{ marginTop: 20 }}>
-          <Grid item xs={6} md={6} style={{ textAlign: 'center' }}>
+        <View style={{ marginTop: 20 }}>
+          <View item xs={6} md={6} style={{ textAlign: 'center' }}>
             <Text style={styles.welcomeText}>
               T7, 04 Thg 11 23 18:00 - 18:25
             </Text>
             <Text style={styles.remainingText}>{' (còn 43:26:09)'}</Text>
-          </Grid>
-          <Grid item xs={6} md={6}>
+          </View>
+          <View item xs={6} md={6}>
             <TouchableOpacity style={styles.Button}>
               <Text style={styles.ButtonText}>Vào lớp học</Text>
             </TouchableOpacity>
-          </Grid>
-        </Grid>
+          </View>
+        </View>
       </View>
       <View style={styles.filterContainer}>
         <Text style={styles.filterHeader}>Tìm kiếm gia sư</Text>
@@ -313,7 +304,7 @@ export const Tutor = ({ navigation }) => {
             }
           }}
         />
-        <TextField
+        {/* <TextField
           placeholder={'Nhập quốc tịch'}
           size='small'
           InputProps={{
@@ -329,13 +320,13 @@ export const Tutor = ({ navigation }) => {
           onKeyPress={(e) => {
             e.key === 'Enter' && handleSearch('country');
           }}
-        />
-        <Grid>
+        /> */}
+        <View>
           <ListTag
             tags={specialties}
             handFilterSpecialties={handFilterSpecialties}
           />
-        </Grid>
+        </View>
         <TouchableOpacity
           style={styles.ButtonReset}
           onPress={() => handleReset()}

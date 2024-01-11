@@ -8,41 +8,39 @@ import {
   SafeAreaView,
   Alert
 } from 'react-native';
-import { TextField, InputAdornment, IconButton } from '@mui/material';
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COLORS, ROUTES } from '../../constants';
-import { isEmpty } from 'lodash';
+import { Register } from '../../services/authentication';
 
 export const RegisterScreen = ({ navigation }) => {
   const [passwordVisible, setPasswordVisible] = useState(true);
   const [username, setUsername] = useState('');
+  const [emailError, setemailError] = useState('');
+  const [loginError, setloginError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rePassword, setRePassword] = useState('');
 
   const handleSignUp = async () => {
-    if (username && password) {
-      const existingUser = await AsyncStorage.getItem(username);
-      let usernames = await AsyncStorage.getItem('usernames');
-      if (isEmpty(usernames)) {
-        usernames = [];
-      }
-      if (existingUser) {
-        Alert.alert('Username already exists');
-      } else {
-        // Store user information locally
-        await AsyncStorage.setItem(username, JSON.stringify({ password }));
+    setemailError('');
+    setPasswordError('');
+    setloginError('');
+    if (email === '') setemailError('Email không được để trống');
+    else {
+      let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+      if (reg.test(email) === false) setemailError('Email không đúng');
+    }
+    if (password === '') setPasswordError('Mật khẩu không được để trống');
+    else if (password !== rePassword)
+      setPasswordError('Xác nhận mật khẩu không đúng');
 
-        await AsyncStorage.setItem(
-          'usernames',
-          JSON.stringify([...usernames, username])
-        );
-        console.log(123);
-        Alert.alert('Registration Successful');
+    if (emailError === '' && passwordError === '') {
+      try {
+        const response = await Register({ email, password });
         navigation.navigate(ROUTES.LOGIN);
+      } catch (error) {
+        setloginError('Đăng ký thất bại');
       }
-    } else {
-      Alert.alert('Please enter a username and password');
     }
   };
   return (
@@ -64,37 +62,26 @@ export const RegisterScreen = ({ navigation }) => {
               </Text>
               <View style={styles.formLogin}>
                 <Text style={styles.label}>ĐỊA CHỈ EMAIL</Text>
-                <TextField
+                <TextInput
                   style={styles.input}
-                  size='small'
-                  name='email'
                   placeholder='mail@example.com'
                   value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  onChangeText={(text) => setUsername(text)}
                 />
                 <Text style={styles.label}>MẬT KHẨU</Text>
-                <TextField
+                <TextInput
                   style={styles.input}
+                  value={password}
+                  onChangeText={(e) => setPassword(e.target.value)}
                   name='password'
-                  type={passwordVisible ? 'password' : null}
-                  size='small'
-                  onChange={(e) => setPassword(e.target.value)}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position='end'>
-                        <IconButton
-                          onClick={() => setPasswordVisible(!passwordVisible)}
-                          edge='end'
-                        >
-                          {passwordVisible ? (
-                            <VisibilityOffOutlinedIcon />
-                          ) : (
-                            <VisibilityOutlinedIcon />
-                          )}
-                        </IconButton>
-                      </InputAdornment>
-                    )
-                  }}
+                  label='MẬT KHẨU '
+                  secureTextEntry={passwordVisible}
+                  right={
+                    <TextInput.Icon
+                      icon={passwordVisible ? 'eye' : 'eye-off'}
+                      onPress={() => setPasswordVisible(!passwordVisible)}
+                    />
+                  }
                 />
                 {/* 
                 <TouchableOpacity

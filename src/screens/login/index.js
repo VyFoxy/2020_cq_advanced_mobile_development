@@ -9,9 +9,6 @@ import {
   Alert,
   TextInput
 } from 'react-native';
-import { TextField, InputAdornment, IconButton } from '@mui/material';
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COLORS, ROUTES } from '../../constants';
 import { useNavigation } from '@react-navigation/native';
@@ -124,7 +121,6 @@ export const LoginScreen = () => {
                   onChangeText={(text) => setUsername(text)}
                 />
                 <Text style={styles.label}>MẬT KHẨU</Text>
-
                 <TextInput
                   style={styles.input}
                   value={password}
@@ -139,7 +135,6 @@ export const LoginScreen = () => {
                     />
                   }
                 />
-
                 <TouchableOpacity
                   style={styles.forgotPass}
                   onPress={() => navigation.navigate(ROUTES.FORGOT_PASSWORD)}

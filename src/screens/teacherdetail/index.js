@@ -19,12 +19,12 @@ import CommentCard from '../../components/comment-card/CommentCard';
 import { Video } from 'expo-av';
 import { IMGS } from '../../constants';
 import { Modal, Portal, Provider, TextInput } from 'react-native-paper';
-import { Grid, Rating } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { round } from 'lodash';
 import { mappingLanguage, mappingSpecialties } from '../../utils/mapping';
 //import TimeTable from '@mikezzb/react-native-timetable';\
+import { Rating } from 'react-native-ratings';
 
 export const TeacherDetail = () => {
   const data = {
@@ -183,34 +183,31 @@ export const TeacherDetail = () => {
               {/* Profile Details */}
               <View style={styles.container}>
                 <View style={{ padding: 20 }}>
-                  <Grid container>
-                    <Grid item xs={3}>
-                      <Image
-                        style={styles.avtimg}
-                        source={data?.User?.avatar}
-                      />
-                    </Grid>
-                    <Grid item xs={9}>
-                      <View style={styles.nameContainer}>
-                        <Text style={styles.name}>Keegan</Text>
-                        <View style={{ flexDirection: 'row' }}>
-                          <Rating
-                            name='simple-controlled'
-                            value={value}
-                            onChange={(event, newValue) => {
-                              setValue(newValue);
-                            }}
-                            style={styles.rating}
-                          />
-                          <Text style={styles.textDescript}>
-                            {`(${data?.totalFeedback})`}
-                          </Text>
-                        </View>
+                  <Image style={styles.avtimg} source={data?.User?.avatar} />
 
-                        <Image style={styles.flag} source={IMGS.vi}></Image>
-                      </View>
-                    </Grid>
-                  </Grid>
+                  <View style={styles.nameContainer}>
+                    <Text style={styles.name}>Keegan</Text>
+                    <View style={{ flexDirection: 'row' }}>
+                      <Rating
+                        name='simple-controlled'
+                        value={value}
+                        onChange={(event, newValue) => {
+                          setValue(newValue);
+                        }}
+                        style={styles.rating}
+                      />
+                      <Rating
+                        showRating
+                        onFinishRating={this.ratingCompleted}
+                        style={styles.rating}
+                      />
+                      <Text style={styles.textDescript}>
+                        {`(${data?.totalFeedback})`}
+                      </Text>
+                    </View>
+
+                    <Image style={styles.flag} source={IMGS.vi}></Image>
+                  </View>
                 </View>
                 <View style={styles.descript}>
                   <Text numberOfLines={4} style={styles.textDescript}>
@@ -221,54 +218,48 @@ export const TeacherDetail = () => {
 
               {/* Interact Buttons View */}
               <View style={styles.interactButtonsView}>
-                <Grid container style={{ padding: 10 }}>
-                  <Grid item xs={6}>
-                    <View
-                      style={{
-                        flex: 1,
-                        justifyContent: 'flex-start',
-                        alignItems: 'flex-start'
-                      }}
-                    >
-                      <Pressable
-                        onPress={() => {
-                          setFollowStatus(!followStatus);
-                        }}
-                        style={{ alignItems: 'center' }}
-                      >
-                        <AntDesign
-                          name={followStatus ? 'heart' : 'hearto'}
-                          size={24}
-                          color={followStatus ? 'red' : 'blue'}
-                        />
-                        <Text style={{ color: followStatus ? 'red' : 'blue' }}>
-                          Yêu thích
-                        </Text>
-                      </Pressable>
-                    </View>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <View
-                      style={{
-                        flex: 1,
-                        justifyContent: 'flex-start',
-                        alignItems: 'flex-start'
-                      }}
-                    >
-                      <Pressable
-                        onPress={showModal}
-                        style={{ alignItems: 'center' }}
-                      >
-                        <FontAwesomeIcon
-                          icon={faCircleInfo}
-                          size={24}
-                          color='blue'
-                        />
-                        <Text style={{ color: 'blue' }}>Báo cáo</Text>
-                      </Pressable>
-                    </View>
-                  </Grid>
-                </Grid>
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: 'flex-start',
+                    alignItems: 'flex-start'
+                  }}
+                >
+                  <Pressable
+                    onPress={() => {
+                      setFollowStatus(!followStatus);
+                    }}
+                    style={{ alignItems: 'center' }}
+                  >
+                    <AntDesign
+                      name={followStatus ? 'heart' : 'hearto'}
+                      size={24}
+                      color={followStatus ? 'red' : 'blue'}
+                    />
+                    <Text style={{ color: followStatus ? 'red' : 'blue' }}>
+                      Yêu thích
+                    </Text>
+                  </Pressable>
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: 'flex-start',
+                    alignItems: 'flex-start'
+                  }}
+                >
+                  <Pressable
+                    onPress={showModal}
+                    style={{ alignItems: 'center' }}
+                  >
+                    <FontAwesomeIcon
+                      icon={faCircleInfo}
+                      size={24}
+                      color='blue'
+                    />
+                    <Text style={{ color: 'blue' }}>Báo cáo</Text>
+                  </Pressable>
+                </View>
               </View>
               <View style={{ flex: 1 }}>
                 <Video
@@ -292,9 +283,7 @@ export const TeacherDetail = () => {
                 </View>
                 <Text style={styles.headingParagraph}>Chuyên ngành</Text>
                 <View style={styles.tagItem}>
-                  <Grid>
-                    <ListTag tags={listSpecialties} />
-                  </Grid>
+                  <ListTag tags={listSpecialties} />
                 </View>
                 <Text style={styles.headingParagraph}>Khóa học tham khảo</Text>
                 <Text style={styles.paragraph}>No Data</Text>
