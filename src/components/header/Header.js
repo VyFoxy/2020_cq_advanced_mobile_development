@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
   button: {
     width: 38,
     height: 38,
-    borderRadius: '50%',
+    borderRadius: 50,
     backgroundColor: '#E4E6EB',
     marginLeft: 'auto',
     overflow: 'hidden',
@@ -182,13 +182,13 @@ const styles = StyleSheet.create({
     opacity: 1,
     width: 20,
     height: 20,
-    borderRadius: '50%',
+    borderRadius: 50,
     overflow: 'hidden'
   },
   menuIcon: {
     width: 38,
     height: 38,
-    borderRadius: '50%',
+    borderRadius: 50,
     backgroundColor: '#E4E6EB',
     marginLeft: 'auto',
     overflow: 'hidden',

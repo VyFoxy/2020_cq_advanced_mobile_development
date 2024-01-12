@@ -18,6 +18,7 @@ export const Login = async ({ email, password }) => {
 export const Register = async ({ email, password }) => {
   try {
     const response = await api.post(PATH.REGISTER, { email, password });
+    console.log({ email, password }, 'response');
     return response;
   } catch (error) {
     throw Error(error);

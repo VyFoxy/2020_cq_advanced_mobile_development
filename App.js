@@ -15,8 +15,8 @@ export default function App() {
         <Header />
         {/* <CourseDetail /> */}
         {/* <CoursesSreeen /> */}
-        {/* <Tutor /> */}
-        <ScreenStackNavigator />
+        <Tutor />
+        {/* <ScreenStackNavigator /> */}
         {/* <TeacherDetail /> */}
       </NavigationContainer>
     </AuthProvider>

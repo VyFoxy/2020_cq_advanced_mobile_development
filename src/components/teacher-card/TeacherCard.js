@@ -23,7 +23,7 @@ export default function TeacherCard(props) {
     item?.isFavoriteTutor || false
   );
 
-  const listSpecialties = item?.specialties.map((item) => ({
+  const listSpecialties = item?.specialties?.map((item) => ({
     label: item,
     status: 'active'
   }));
@@ -46,11 +46,12 @@ export default function TeacherCard(props) {
               <View style={styles.nameContainer}>
                 <Text style={styles.name}>{item?.name}</Text>
                 <Rating
-                  showRating
+                  startingValue={item?.rating || 0}
                   onFinishRating={(event, newValue) => {
                     setValue(newValue);
                   }}
                   style={styles.rating}
+                  imageSize={20}
                 />
                 <View style={{ flexDirection: 'row' }}>
                   <Image style={styles.flag} source={IMGS.vi} />{' '}
@@ -164,9 +165,9 @@ const styles = StyleSheet.create({
   },
   tagItem: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     marginLeft: 12,
-    marginVertical: 10
+    marginVertical: 10,
+    flex: 1
   },
   descript: {
     marginHorizontal: 20,

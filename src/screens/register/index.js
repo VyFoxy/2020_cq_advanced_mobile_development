@@ -6,7 +6,8 @@ import {
   View,
   TouchableOpacity,
   SafeAreaView,
-  Alert
+  Alert,
+  TextInput
 } from 'react-native';
 import { COLORS, ROUTES } from '../../constants';
 import { Register } from '../../services/authentication';
@@ -25,10 +26,10 @@ export const RegisterScreen = ({ navigation }) => {
     setemailError('');
     setPasswordError('');
     setloginError('');
-    if (email === '') setemailError('Email không được để trống');
+    if (username === '') setemailError('Email không được để trống');
     else {
       let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-      if (reg.test(email) === false) setemailError('Email không đúng');
+      if (reg.test(username) === false) setemailError('Email không đúng');
     }
     if (password === '') setPasswordError('Mật khẩu không được để trống');
     else if (password !== rePassword)
@@ -36,7 +37,10 @@ export const RegisterScreen = ({ navigation }) => {
 
     if (emailError === '' && passwordError === '') {
       try {
-        const response = await Register({ email, password });
+        const response = await Register({
+          email: username,
+          password: password
+        });
         navigation.navigate(ROUTES.LOGIN);
       } catch (error) {
         setloginError('Đăng ký thất bại');
@@ -66,13 +70,13 @@ export const RegisterScreen = ({ navigation }) => {
                   style={styles.input}
                   placeholder='mail@example.com'
                   value={username}
-                  onChangeText={(text) => setUsername(text)}
+                  onChangeText={setUsername}
                 />
                 <Text style={styles.label}>MẬT KHẨU</Text>
                 <TextInput
                   style={styles.input}
                   value={password}
-                  onChangeText={(e) => setPassword(e.target.value)}
+                  onChangeText={setPassword}
                   name='password'
                   label='MẬT KHẨU '
                   secureTextEntry={passwordVisible}
@@ -93,7 +97,7 @@ export const RegisterScreen = ({ navigation }) => {
 
                 <TouchableOpacity
                   style={styles.loginButton}
-                  onPress={() => handleSignUp()}
+                  onPress={handleSignUp}
                 >
                   <Text style={styles.loginButtonText}> ĐĂNG KÝ </Text>
                 </TouchableOpacity>
@@ -152,6 +156,15 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: '500'
   },
+  input: {
+    backgroundColor: '#fff',
+    borderColor: COLORS.grayLight,
+    borderWidth: 1,
+    borderRadius: 5,
+    marginVertical: 10,
+    marginBottom: 20,
+    height: 40
+  },
   header: {
     height: 50,
     backgroundColor: '#fff',
@@ -188,20 +201,6 @@ const styles = StyleSheet.create({
   formLogin: {
     flexDirection: 'column',
     paddingVertical: 20
-  },
-
-  input: {
-    backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 2,
-    marginVertical: 10,
-    marginBottom: 20
   },
   label: { marginBottom: 10, color: '#A4B0BE' },
   forgotPass: {

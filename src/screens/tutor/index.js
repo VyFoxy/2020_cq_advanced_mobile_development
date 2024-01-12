@@ -4,17 +4,42 @@ import {
   FlatList,
   StyleSheet,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
+  TextInput
 } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import TeacherCard from '../../components/teacher-card/TeacherCard';
 import { COLORS, ROUTES } from '../../constants';
 import { mappingSpecialties } from '../../utils/mapping';
 import { ListTag } from '../../components/list-tag/ListTag';
 import { useState } from 'react';
+import AvatarContext from '../../context/AvatarProvider';
+import { getListTutor } from '../../services/tutorAPI';
 
 export const Tutor = ({ navigation }) => {
   const [nation, setNation] = useState('');
+  const { avatar } = useContext(AvatarContext);
+  const [listTutor, setListTutor] = React.useState([]);
+  const [favoriteTutor, setFavoriteTutor] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const fetchData = async () => {
+    const response = await getListTutor(1, 60);
+    console.log(response, 'response');
+    setFavoriteTutor(() => {
+      const newListID = response.favoriteTutor.map((item) => item.secondId);
+      return newListID;
+    });
+
+    const data = response.tutors.rows.filter((item) => {
+      return item.level != null;
+    });
+    setListTutor(data);
+    setIsLoading(false);
+  };
+  useEffect(() => {
+    fetchData();
+  }, [avatar]);
+  console.log(listTutor, 'listTutor');
   const data = [
     {
       avatar:
@@ -231,7 +256,7 @@ export const Tutor = ({ navigation }) => {
     return mappingSpecialties.find((item) => item?.value === value)?.label;
   };
 
-  const mappedTutors = sortedTutors.map((tutor) => ({
+  const mappedTutors = listTutor.map((tutor) => ({
     ...tutor,
     specialties: tutor.specialties.split(',').map(mappingSpecialtiesTag)
   }));
@@ -321,7 +346,7 @@ export const Tutor = ({ navigation }) => {
             e.key === 'Enter' && handleSearch('country');
           }}
         /> */}
-        <View>
+        <View style={{ paddingRight: 20 }}>
           <ListTag
             tags={specialties}
             handFilterSpecialties={handFilterSpecialties}

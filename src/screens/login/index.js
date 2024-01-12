@@ -17,6 +17,7 @@ import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
 import { GoogleLoginAuth, login } from '../../services/authentication';
 import AuthContext from '../../context/AuthContext';
+import { Login } from '../../services/authentication';
 WebBrowser.maybeCompleteAuthSession();
 
 export const LoginScreen = () => {
@@ -26,6 +27,9 @@ export const LoginScreen = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [accessToken, setAccessToken] = useState(null);
+  const [emailError, setemailError] = useState('');
+  const [loginError, setloginError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const [request, response, promptAsync] = Google.useAuthRequest({
     clientId:
       '237722397720-hkdm7tjfm427d97fnv5d9dqbrh8pgknb.apps.googleusercontent.com',
@@ -57,26 +61,26 @@ export const LoginScreen = () => {
     }
     ggLogin();
   }, [accessToken, response]);
-  async function handleLogin() {
+
+  const handleLogin = async () => {
     setemailError('');
     setPasswordError('');
     setloginError('');
-
-    if (email === '') setemailError('Email không được để trống');
+    if (username === '') setemailError('Email không được để trống');
     else {
       let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-      if (reg.test(email) === false) setemailError('Email không đúng');
+      if (reg.test(username) === false) setemailError('Email không đúng');
     }
     if (password === '') setPasswordError('Mật khẩu không được để trống');
 
     if (
       emailError === '' &&
       passwordError === '' &&
-      email !== '' &&
+      username !== '' &&
       password !== ''
     ) {
       try {
-        const response = await login({ email, password });
+        const response = await Login({ email: username, password: password });
         if (response.data) {
           setAuth(response.data);
 
@@ -90,7 +94,7 @@ export const LoginScreen = () => {
         setloginError('Đăng nhập thất bại');
       }
     }
-  }
+  };
 
   const googleLogin = () => {
     promptAsync();
@@ -118,13 +122,13 @@ export const LoginScreen = () => {
                   style={styles.input}
                   placeholder='mail@example.com'
                   value={username}
-                  onChangeText={(text) => setUsername(text)}
+                  onChangeText={setUsername}
                 />
                 <Text style={styles.label}>MẬT KHẨU</Text>
                 <TextInput
                   style={styles.input}
                   value={password}
-                  onChangeText={(e) => setPassword(e.target.value)}
+                  onChangeText={setPassword}
                   name='password'
                   label='MẬT KHẨU '
                   secureTextEntry={passwordVisible}
@@ -144,7 +148,7 @@ export const LoginScreen = () => {
 
                 <TouchableOpacity
                   style={styles.loginButton}
-                  onPress={() => handleLogin()}
+                  onPress={handleLogin}
                 >
                   <Text style={styles.loginButtonText}> ĐĂNG NHẬP </Text>
                 </TouchableOpacity>
@@ -318,7 +322,7 @@ const styles = StyleSheet.create({
     opacity: 1,
     width: 40,
     height: 40,
-    borderRadius: '50%',
+    borderRadius: 50,
     overflow: 'hidden'
   }
 });

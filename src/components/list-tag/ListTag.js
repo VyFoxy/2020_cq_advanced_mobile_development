@@ -14,7 +14,7 @@ export const ListTag = ({ tags, handFilterSpecialties }) => {
         <TagItem item={item} handFilterSpecialties={handFilterSpecialties} />
       )}
       keyExtractor={(item) => item}
-      //style={styles.listTag}
+      style={styles.listTag}
     />
   );
 };
