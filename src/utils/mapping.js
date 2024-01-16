@@ -47,3 +47,9 @@ export const mappingSpecialties = [
 ];
 
 export const mappingLanguage = [{ value: 'en', label: 'English' }];
+
+export const mappingSelectCountry = [
+  { name: 'Gia sư Nước ngoài', id: 'isNative' },
+  { name: 'Gia sư Việt Nam', id: 'isVietNamese' },
+  { name: 'Gia sư Tiếng Trung', id: '' }
+];

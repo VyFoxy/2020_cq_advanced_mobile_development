@@ -23,22 +23,16 @@ export default function TeacherCard(props) {
   const { setAvatar } = useContext(AvatarContext);
   const navigation = useNavigation();
   const [value, setValue] = useState(round(item?.rating) || null);
-  //const [followStatus, setFollowStatus] = useState(item?.isFavoriteTutor);
   const [itemState, setItemState] = useState(item || []);
   const listSpecialties = item?.specialties?.map((item) => ({
     label: item,
     status: 'active'
   }));
-
-  useEffect(() => {
-    console.log(itemState?.isFavoriteTutor, itemState, 'followStatus');
-  }, [item]);
   const handleFavorAction = async () => {
     setItemState({
       ...itemState,
       isFavoriteTutor: !itemState?.isFavoriteTutor
     });
-    console.log(item?.id, 'item?.id');
     await favorAction(item?.id);
   };
   return (

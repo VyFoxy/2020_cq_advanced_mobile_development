@@ -5,16 +5,19 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  TextInput
+  TextInput,
+  CheckBox
 } from 'react-native';
 import React, { useEffect, useContext } from 'react';
 import TeacherCard from '../../components/teacher-card/TeacherCard';
 import { COLORS, ROUTES } from '../../constants';
-import { mappingSpecialties } from '../../utils/mapping';
+import { mappingSpecialties, mappingSelectCountry } from '../../utils/mapping';
 import { ListTag } from '../../components/list-tag/ListTag';
 import { useState } from 'react';
 import AvatarContext from '../../context/AvatarProvider';
 import { getListTutor, searchTutor } from '../../services/tutorAPI';
+import MultiSelect from 'react-native-multiple-select';
+import { compact, includes, isEmpty } from 'lodash';
 
 export const Tutor = ({ navigation }) => {
   const [nation, setNation] = useState('');
@@ -22,13 +25,15 @@ export const Tutor = ({ navigation }) => {
   const [listTutor, setListTutor] = React.useState([]);
   const [favoriteTutor, setFavoriteTutor] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [isFavoriteTutor, setIsFavoriteTutor] = useState(false);
   const fetchData = async () => {
-    // const response = await getListTutor(1, 60);
-    // setFavoriteTutor(() => {
-    //   const newListID = response.favoriteTutor.map((item) => item.secondId);
-    //   return newListID;
-    // });
-
+    const response = await getListTutor(1, 60);
+    setFavoriteTutor(() => {
+      const newListID = compact(
+        response.favoriteTutor.map((item) => item.secondId)
+      );
+      return newListID;
+    });
     // const data = response.tutors.rows.filter((item) => {
     //   return item.level != null;
     // });
@@ -41,7 +46,10 @@ export const Tutor = ({ navigation }) => {
   }, [avatar]);
   const initSearchQuery = {
     name: '',
-    country: ''
+    country: '',
+    nationality: [],
+    page: '1',
+    perPage: 12
   };
   const [searchQuery, setSearchQuery] = useState(initSearchQuery);
   const [specialties, setSpecialties] = useState(
@@ -51,10 +59,12 @@ export const Tutor = ({ navigation }) => {
       status: item?.status || null
     })) || []
   );
+  const onSelectedItemsChange = (selectedItems) => {
+    setSearchQuery({ nationality: selectedItems });
+  };
   const [mappedTutors, setMappedTutors] = useState([]);
   const handleSearch = async () => {
     const response = await searchTutor(searchQuery);
-    console.log(response, 'response');
     if (response.rows.length > 0) {
       setListTutor(response.rows);
     } else {
@@ -79,7 +89,6 @@ export const Tutor = ({ navigation }) => {
   }, [searchQuery]);
 
   const handFilterSpecialties = (value) => {
-    console.log(value, 'value');
     if (value === 'ALL') {
       setSearchQuery({ ...searchQuery, specialties: '' });
     } else {
@@ -93,6 +102,17 @@ export const Tutor = ({ navigation }) => {
     );
   };
 
+  const handleSelectFavoriteTutor = () => {
+    if (isFavoriteTutor == false) {
+      setIsFavoriteTutor(!isFavoriteTutor);
+      setListTutor(
+        listTutor.filter((tutor) => includes(favoriteTutor, tutor.id))
+      );
+    } else {
+      setIsFavoriteTutor(!isFavoriteTutor);
+      handleSearch();
+    }
+  };
   const handleReset = () => {
     setSearchQuery({ name: '', country: '' });
     setSpecialties((prevSpecialties) =>
@@ -144,29 +164,49 @@ export const Tutor = ({ navigation }) => {
             }
           }}
         />
-        {/* <TextField
-          placeholder={'Nhập quốc tịch'}
-          size='small'
-          InputProps={{
-            style: {
-              borderRadius: 50
-            }
+        <View
+          style={{
+            width: 200,
+            height: 40,
+            paddingLeft: 10,
+            marginBottom: 10,
+            flex: 1
           }}
-          style={{ width: 200, marginBottom: 10 }}
-          value={searchQuery.country}
-          onChange={(e) =>
-            setSearchQuery({ ...searchQuery, country: e.target.value })
-          }
-          onKeyPress={(e) => {
-            e.key === 'Enter' && handleSearch('country');
-          }}
-        /> */}
+        >
+          <MultiSelect
+            hideTags
+            items={mappingSelectCountry}
+            uniqueKey='id'
+            onSelectedItemsChange={(e) => onSelectedItemsChange(e)}
+            selectedItems={searchQuery.nationality}
+            selectText='Chọn quốc tịch'
+            searchInputPlaceholderText='Chọn quốc tịch...'
+            onChangeInput={(text) => console.log(text)}
+            tagRemoveIconColor='#fff'
+            tagBorderColor='#CCC'
+            tagTextColor='#CCC'
+            selectedItemTextColor='#CCC'
+            selectedItemIconColor='#CCC'
+            itemTextColor='#000'
+            displayKey='name'
+            searchInputStyle={{ color: '#CCC' }}
+          />
+        </View>
+        <View style={styles.checkboxContainer}>
+          <CheckBox
+            value={isFavoriteTutor}
+            onValueChange={handleSelectFavoriteTutor}
+            style={styles.checkbox}
+          />
+          <Text style={styles.label}>Gia sư được yêu thích</Text>
+        </View>
         <View style={{ paddingRight: 20 }}>
           <ListTag
             tags={specialties}
             handFilterSpecialties={handFilterSpecialties}
           />
         </View>
+
         <TouchableOpacity
           style={styles.ButtonReset}
           onPress={() => handleReset()}
@@ -280,5 +320,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 600,
     marginBottom: 10
+  },
+  checkboxContainer: {
+    flexDirection: 'row'
+  },
+  checkbox: {
+    alignSelf: 'center'
+  },
+  label: {
+    margin: 8
   }
 });

@@ -25,7 +25,7 @@ export async function getListTutor(page, perPage) {
   }
 }
 export async function searchTutor(search) {
-  const { name, country, specialties } = search;
+  const { name, nationality, specialties } = search;
   const data = {
     filters: {
       specialties: specialties ? [specialties] : [],
@@ -33,8 +33,8 @@ export async function searchTutor(search) {
       nationality: null,
       tutoringTimeAvailable: [null, null]
     },
-    page: '1',
-    perPage: 60,
+    page: search.page.toString(),
+    perPage: search.perPage,
     search: name
   };
 
