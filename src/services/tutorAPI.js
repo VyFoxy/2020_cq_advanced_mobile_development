@@ -25,16 +25,17 @@ export async function getListTutor(page, perPage) {
   }
 }
 export async function searchTutor(search) {
+  const { name, country, specialties } = search;
   const data = {
-    filter: {
-      specialties: [],
+    filters: {
+      specialties: specialties ? [specialties] : [],
       date: null,
       nationality: null,
       tutoringTimeAvailable: [null, null]
     },
     page: '1',
     perPage: 60,
-    search
+    search: name
   };
 
   try {

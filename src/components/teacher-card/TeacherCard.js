@@ -14,20 +14,33 @@ import { Rating } from 'react-native-ratings';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { round } from 'lodash';
+import { favorAction } from '../../services/tutorAPI';
+import { useContext } from 'react';
+import AvatarContext from '../../context/AvatarProvider';
 
 export default function TeacherCard(props) {
   const { item } = props;
+  const { setAvatar } = useContext(AvatarContext);
   const navigation = useNavigation();
   const [value, setValue] = useState(round(item?.rating) || null);
-  const [followStatus, setFollowStatus] = useState(
-    item?.isFavoriteTutor || false
-  );
-
+  //const [followStatus, setFollowStatus] = useState(item?.isFavoriteTutor);
+  const [itemState, setItemState] = useState(item || []);
   const listSpecialties = item?.specialties?.map((item) => ({
     label: item,
     status: 'active'
   }));
 
+  useEffect(() => {
+    console.log(itemState?.isFavoriteTutor, itemState, 'followStatus');
+  }, [item]);
+  const handleFavorAction = async () => {
+    setItemState({
+      ...itemState,
+      isFavoriteTutor: !itemState?.isFavoriteTutor
+    });
+    console.log(item?.id, 'item?.id');
+    await favorAction(item?.id);
+  };
   return (
     <View style={styles.outerContainer}>
       <Pressable
@@ -62,14 +75,12 @@ export default function TeacherCard(props) {
             <View style={styles.HeaderLeft}>
               <Pressable
                 style={styles.btnFollow}
-                onPress={() => {
-                  setFollowStatus(!followStatus);
-                }}
+                onPress={() => handleFavorAction()}
               >
                 <AntDesign
-                  name={followStatus ? 'heart' : 'hearto'}
+                  name={itemState?.isFavoriteTutor ? 'heart' : 'hearto'}
                   size={24}
-                  color={followStatus ? 'red' : 'blue'}
+                  color={itemState?.isFavoriteTutor ? 'red' : 'blue'}
                 />
               </Pressable>
             </View>
@@ -86,7 +97,7 @@ export default function TeacherCard(props) {
             <TouchableOpacity style={styles.Button}>
               <MaterialIcons
                 name='event-note'
-                size={30}
+                size={24}
                 style={{ color: COLORS.primary }}
               />
               <Text style={styles.ButtonText}>Đặt lịch</Text>

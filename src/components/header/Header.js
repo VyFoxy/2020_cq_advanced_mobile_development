@@ -147,6 +147,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     paddingLeft: 18,
     paddingRight: 10,
+    paddingVertical: 20,
     boxShadow: 'rgba(0, 0, 0, 0.2) 0px -1px 13px 2px'
   },
   headerRight: {
@@ -198,7 +199,7 @@ const styles = StyleSheet.create({
     marginLeft: 10
   },
   filter: {
-    position: 'fixed',
+    position: 'absolute',
     top: 0,
     left: 0,
     width: '100%',
