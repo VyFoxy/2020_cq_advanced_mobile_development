@@ -8,7 +8,7 @@ import {
   TextInput,
   CheckBox
 } from 'react-native';
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useRef } from 'react';
 import TeacherCard from '../../components/teacher-card/TeacherCard';
 import { COLORS, ROUTES } from '../../constants';
 import { mappingSpecialties, mappingSelectCountry } from '../../utils/mapping';
@@ -18,14 +18,18 @@ import AvatarContext from '../../context/AvatarProvider';
 import { getListTutor, searchTutor } from '../../services/tutorAPI';
 import MultiSelect from 'react-native-multiple-select';
 import { compact, includes, isEmpty } from 'lodash';
+import Pagination from '../../components/pagination/Pagination';
+import NotFoundFilter from '../../components/not-found/NoteFound';
 
 export const Tutor = ({ navigation }) => {
-  const [nation, setNation] = useState('');
   const { avatar } = useContext(AvatarContext);
   const [listTutor, setListTutor] = React.useState([]);
   const [favoriteTutor, setFavoriteTutor] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [isFavoriteTutor, setIsFavoriteTutor] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const scrollRef = useRef();
+  const [totalPages, setTotalPages] = useState(5);
   const fetchData = async () => {
     const response = await getListTutor(1, 60);
     setFavoriteTutor(() => {
@@ -86,6 +90,11 @@ export const Tutor = ({ navigation }) => {
 
   useEffect(() => {
     handleSearch();
+    console.log(searchQuery);
+    scrollRef.current.scrollTo({
+      y: 30,
+      animated: true
+    });
   }, [searchQuery]);
 
   const handFilterSpecialties = (value) => {
@@ -123,8 +132,11 @@ export const Tutor = ({ navigation }) => {
     );
   };
 
+  const onPageChange = (pageNumber) => {
+    setSearchQuery({ ...searchQuery, page: pageNumber });
+  };
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} ref={scrollRef}>
       <View style={styles.banner}>
         <Text style={styles.welcomeText}>Buổi học sắp diễn ra</Text>
         <View style={{ marginTop: 20 }}>
@@ -214,14 +226,27 @@ export const Tutor = ({ navigation }) => {
           <Text style={styles.ButtonText}>Đặt lại bộ tìm kiếm</Text>
         </TouchableOpacity>
       </View>
+
       <View style={styles.filterContainer}>
         <Text style={styles.teacherHeader}>Gia sư được đề xuất</Text>
-        <FlatList
-          data={mappedTutors}
-          renderItem={({ item }) => <TeacherCard item={item} />}
-          keyExtractor={(item, index) => index}
-        />
+        {mappedTutors && mappedTutors?.length > 0 ? (
+          <FlatList
+            data={mappedTutors}
+            renderItem={({ item }) => <TeacherCard item={item} />}
+            keyExtractor={(item, index) => index}
+          />
+        ) : (
+          <NotFoundFilter />
+        )}
       </View>
+      {mappedTutors && mappedTutors?.length > 0 && (
+        <Pagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          onPageChange={onPageChange}
+          setCurrentPage={setCurrentPage}
+        />
+      )}
     </ScrollView>
   );
 };

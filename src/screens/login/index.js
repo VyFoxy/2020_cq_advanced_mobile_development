@@ -124,6 +124,9 @@ export const LoginScreen = () => {
                   value={username}
                   onChangeText={setUsername}
                 />
+                {emailError !== '' && (
+                  <Text style={styles.error}>{emailError}</Text>
+                )}
                 <Text style={styles.label}>MẬT KHẨU</Text>
                 <TextInput
                   style={styles.input}
@@ -139,6 +142,9 @@ export const LoginScreen = () => {
                     />
                   }
                 />
+                {passwordError !== '' && (
+                  <Text style={styles.error}>{passwordError}</Text>
+                )}
                 <TouchableOpacity
                   style={styles.forgotPass}
                   onPress={() => navigation.navigate(ROUTES.FORGOT_PASSWORD)}
@@ -152,6 +158,9 @@ export const LoginScreen = () => {
                 >
                   <Text style={styles.loginButtonText}> ĐĂNG NHẬP </Text>
                 </TouchableOpacity>
+                {loginError !== '' && (
+                  <Text style={styles.error}>{loginError}</Text>
+                )}
               </View>
 
               <View style={styles.otherLogin}>
@@ -258,10 +267,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     marginVertical: 10,
-    marginBottom: 20,
     height: 40
   },
-  label: { marginBottom: 10, color: '#A4B0BE' },
+  label: { marginBottom: 10, color: '#A4B0BE', marginTop: 20 },
   forgotPass: {
     marginVertical: 20
   },

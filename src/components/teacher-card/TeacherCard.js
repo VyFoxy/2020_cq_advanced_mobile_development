@@ -61,7 +61,12 @@ export default function TeacherCard(props) {
                   imageSize={20}
                 />
                 <View style={{ flexDirection: 'row' }}>
-                  <Image style={styles.flag} source={IMGS.vi} />{' '}
+                  <Image
+                    style={styles.flag}
+                    source={
+                      'https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.3/flags/4x3/tw.svg'
+                    }
+                  />{' '}
                   <Text style={styles.textDescript}>{item?.country || ''}</Text>
                 </View>
               </View>
