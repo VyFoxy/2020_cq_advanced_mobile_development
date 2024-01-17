@@ -129,7 +129,10 @@ export const TeacherDetail = (props) => {
                     flexDirection: 'row'
                   }}
                 >
-                  <Image style={styles.avtimg} source={data?.User?.avatar} />
+                  <Image
+                    style={styles.avtimg}
+                    source={{ uri: data?.User?.avatar }}
+                  />
 
                   <View style={styles.nameContainer}>
                     <Text style={styles.name}>{data?.User?.name}</Text>
@@ -174,31 +177,54 @@ export const TeacherDetail = (props) => {
                       size={24}
                       color={followStatus ? 'red' : 'blue'}
                     />
-                    <Text style={{ color: followStatus ? 'red' : 'blue' }}>
+                    <Text
+                      style={{
+                        color: followStatus ? 'red' : 'blue',
+                        marginVertical: 5
+                      }}
+                    >
                       Yêu thích
                     </Text>
                   </Pressable>
                 </View>
+
                 <View
                   style={{
                     flex: 1,
-                    justifyContent: 'flex-start',
-                    alignItems: 'flex-start'
+                    justifyContent: 'center',
+                    alignItems: 'center'
                   }}
                 >
                   <Pressable
                     onPress={showModal}
                     style={{ alignItems: 'center' }}
                   >
-                    <MaterialIcons
-                      name='report-gmailerrorred'
-                      size={24}
-                      color='blue'
-                    />
-                    <Text style={{ color: 'blue' }}>Báo cáo</Text>
+                    <AntDesign name='message1' size={24} color='blue' />
+                    <Text style={{ color: 'blue', marginVertical: 5 }}>
+                      Nhắn tin
+                    </Text>
+                  </Pressable>
+                </View>
+
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: 'flex-end',
+                    alignItems: 'flex-end'
+                  }}
+                >
+                  <Pressable
+                    onPress={showModal}
+                    style={{ alignItems: 'center' }}
+                  >
+                    <AntDesign name='warning' size={24} color='blue' />
+                    <Text style={{ color: 'blue', marginVertical: 5 }}>
+                      Báo cáo
+                    </Text>
                   </Pressable>
                 </View>
               </View>
+
               <View style={{ flex: 1 }}>
                 <Video
                   source={{
@@ -313,8 +339,8 @@ const styles = StyleSheet.create({
   countText: { fontSize: 18, color: '#333', justifyContent: 'flex-start' },
   interactButtonsView: {
     flexDirection: 'row',
-    marginTop: 10,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
+    marginVertical: 20
   },
   interactButton: {
     flex: 2,

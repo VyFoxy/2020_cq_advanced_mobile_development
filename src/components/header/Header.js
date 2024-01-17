@@ -157,7 +157,8 @@ const styles = StyleSheet.create({
   },
   logo: {
     maxHeight: 44,
-    height: 50,
+    height: 5,
+    width: 10,
     width: 'auto',
     position: 'relative'
   },

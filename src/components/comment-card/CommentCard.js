@@ -7,10 +7,10 @@ export default function CommentCard(props) {
   const { item } = props;
   return (
     <View style={styles.container}>
-      <Image style={styles.avtimg} source={item?.firstInfo.avatar} />
+      <Image style={styles.avtimg} source={{ uri: item?.firstInfo.avatar }} />
       <View style={styles.innnerContainer}>
         <Text style={styles.name}>{item?.firstInfo?.name} </Text>
-        <Rating startingValue={item?.rating} imageSize={10} isDisabled={true} />
+        <Rating startingValue={item?.rating} imageSize={15} isDisabled={true} />
 
         <Text style={styles.comment}>{item?.content}</Text>
       </View>
@@ -30,8 +30,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   avtimg: {
-    width: 25,
-    height: 25,
+    width: 35,
+    height: 35,
     borderRadius: 50
   },
   innnerContainer: {
@@ -39,11 +39,11 @@ const styles = StyleSheet.create({
     marginLeft: 10
   },
   name: {
-    fontSize: 12,
+    fontSize: 15,
     color: 'gray'
   },
   comment: {
-    fontSize: 12,
+    fontSize: 15,
     color: 'gray'
   }
 });

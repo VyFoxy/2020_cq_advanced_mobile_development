@@ -45,7 +45,7 @@ export default function TeacherCard(props) {
       >
         <View style={styles.container}>
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-            <Image style={styles.avtimg} source={item?.avatar || ''} />
+            <Image style={styles.avtimg} source={{ uri: item?.avatar }} />
           </View>
 
           <View style={styles.header}>
@@ -128,6 +128,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.18,
     overflow: 'hidden',
     shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 1,
+    shadowColor: 'rgba(0, 0, 0, 0.2)',
     shadowRadius: 5,
     backgroundColor: COLORS.white,
     marginVertical: 5,
