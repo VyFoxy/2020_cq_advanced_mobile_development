@@ -23,17 +23,19 @@ const styles = StyleSheet.create({
     color: '#0071F0',
     paddingHorizontal: 20,
     paddingVertical: 5,
-    borderRadius: 50,
+    borderRadius: 15,
     marginRight: 2,
-    marginVertical: 5
+    marginVertical: 5,
+    overflow: 'hidden'
   },
   TagItem: {
     backgroundColor: '#E4E6EB',
     color: '#646464',
     paddingHorizontal: 20,
     paddingVertical: 5,
-    borderRadius: 50,
+    borderRadius: 15,
     marginRight: 2,
-    marginVertical: 5
+    marginVertical: 5,
+    overflow: 'hidden'
   }
 });

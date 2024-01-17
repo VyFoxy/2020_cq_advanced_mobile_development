@@ -62,38 +62,39 @@ export const LoginScreen = () => {
     ggLogin();
   }, [accessToken, response]);
 
-  const handleLogin = async () => {
-    setemailError('');
-    setPasswordError('');
-    setloginError('');
-    if (username === '') setemailError('Email không được để trống');
-    else {
-      let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-      if (reg.test(username) === false) setemailError('Email không đúng');
-    }
-    if (password === '') setPasswordError('Mật khẩu không được để trống');
+  const handleLogin = () => {
+    // setemailError('');
+    // setPasswordError('');
+    // setloginError('');
+    // if (username === '') setemailError('Email không được để trống');
+    // else {
+    //   let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    //   if (reg.test(username) === false) setemailError('Email không đúng');
+    // }
+    // if (password === '') setPasswordError('Mật khẩu không được để trống');
 
-    if (
-      emailError === '' &&
-      passwordError === '' &&
-      username !== '' &&
-      password !== ''
-    ) {
-      try {
-        const response = await Login({ email: username, password: password });
-        if (response.data) {
-          setAuth(response.data);
+    // if (
+    //   emailError === '' &&
+    //   passwordError === '' &&
+    //   username !== '' &&
+    //   password !== ''
+    // ) {
+    //   try {
+    //     const response = await Login({ email: username, password: password });
+    //     if (response.data) {
+    //       setAuth(response.data);
 
-          navigation.navigate(ROUTES.HOME);
-        } else {
-          setloginError('Đăng nhập thất bại');
-        }
-      } catch (error) {
-        console.log(error);
+    //       navigation.navigate(ROUTES.HOME);
+    //     } else {
+    //       setloginError('Đăng nhập thất bại');
+    //     }
+    //   } catch (error) {
+    //     console.log(error);
 
-        setloginError('Đăng nhập thất bại');
-      }
-    }
+    //     setloginError('Đăng nhập thất bại');
+    //   }
+    // }
+    navigation.navigate(ROUTES.HOME);
   };
 
   const googleLogin = () => {
@@ -121,7 +122,7 @@ export const LoginScreen = () => {
                 <TextInput
                   style={styles.input}
                   placeholder='mail@example.com'
-                  value={username}
+                  value={username || ''}
                   onChangeText={setUsername}
                 />
                 {emailError !== '' && (

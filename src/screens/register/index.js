@@ -72,6 +72,9 @@ export const RegisterScreen = ({ navigation }) => {
                   value={username}
                   onChangeText={setUsername}
                 />
+                {emailError !== '' && (
+                  <Text style={styles.error}>{emailError}</Text>
+                )}
                 <Text style={styles.label}>MẬT KHẨU</Text>
                 <TextInput
                   style={styles.input}
@@ -87,14 +90,9 @@ export const RegisterScreen = ({ navigation }) => {
                     />
                   }
                 />
-                {/* 
-                <TouchableOpacity
-                  style={styles.forgotPass}
-                  onPress={() => navigation.navigate(ROUTES.FORGOT_PASSWORD)}
-                >
-                  <Text style={styles.forgotPassText}> Quên mật khẩu? </Text>
-                </TouchableOpacity> */}
-
+                {passwordError !== '' && (
+                  <Text style={styles.error}>{passwordError}</Text>
+                )}
                 <TouchableOpacity
                   style={styles.loginButton}
                   onPress={handleSignUp}
@@ -156,15 +154,6 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: '500'
   },
-  input: {
-    backgroundColor: '#fff',
-    borderColor: COLORS.grayLight,
-    borderWidth: 1,
-    borderRadius: 5,
-    marginVertical: 10,
-    marginBottom: 20,
-    height: 40
-  },
   header: {
     height: 50,
     backgroundColor: '#fff',
@@ -202,7 +191,16 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     paddingVertical: 20
   },
-  label: { marginBottom: 10, color: '#A4B0BE' },
+
+  input: {
+    backgroundColor: '#fff',
+    borderColor: COLORS.grayLight,
+    borderWidth: 1,
+    borderRadius: 5,
+    marginVertical: 10,
+    height: 40
+  },
+  label: { marginBottom: 10, color: '#A4B0BE', marginTop: 20 },
   forgotPass: {
     marginVertical: 20
   },
@@ -227,7 +225,7 @@ const styles = StyleSheet.create({
   loginButtonText: {
     color: 'white',
     alignSelf: 'center',
-    fontSize: 15,
+    fontSize: 20,
     fontWeight: 'bold'
   },
 
@@ -258,5 +256,12 @@ const styles = StyleSheet.create({
   registerText: {
     flexDirection: 'row',
     alignSelf: 'center'
+  },
+  flagIcon: {
+    opacity: 1,
+    width: 40,
+    height: 40,
+    borderRadius: 50,
+    overflow: 'hidden'
   }
 });

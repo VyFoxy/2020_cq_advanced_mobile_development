@@ -8,7 +8,9 @@ const PATH = {
   BOOKING: '/booking',
   GET_UPCOMING: '/booking/list/student',
   GET_HISTORY: '/call/history?isTutor=false',
-  DELETE_SCHEDULE: '/booking/schedule-detail'
+  DELETE_SCHEDULE: '/booking/schedule-detail',
+  GET_TUTOR_BY_ID: '/tutor/',
+  FEEDBACK: '/feedback/v2/'
 };
 export async function getListTutor(page, perPage) {
   try {
@@ -40,6 +42,16 @@ export async function searchTutor(search) {
 
   try {
     const res = await api.post(PATH.SEARCH, data);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    throw Error(error);
+  }
+}
+
+export async function GetTuTorbyID(tutorId) {
+  try {
+    const res = await api.get(PATH.GET_TUTOR_BY_ID + `${tutorId}`);
     return res.data;
   } catch (error) {
     console.log(error);
@@ -135,6 +147,16 @@ export async function cancelBooking(id) {
     });
     return res.data;
   } catch (error) {
+    throw Error(error);
+  }
+}
+
+export async function GetFeedBack(tutorId) {
+  try {
+    const res = await api.get(PATH.FEEDBACK + `${tutorId}`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
     throw Error(error);
   }
 }

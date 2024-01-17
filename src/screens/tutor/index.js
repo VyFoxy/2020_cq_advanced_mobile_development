@@ -5,8 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  TextInput,
-  CheckBox
+  TextInput
 } from 'react-native';
 import React, { useEffect, useContext, useRef } from 'react';
 import TeacherCard from '../../components/teacher-card/TeacherCard';
@@ -17,7 +16,7 @@ import { useState } from 'react';
 import AvatarContext from '../../context/AvatarProvider';
 import { getListTutor, searchTutor } from '../../services/tutorAPI';
 import MultiSelect from 'react-native-multiple-select';
-import { compact, includes, isEmpty } from 'lodash';
+import { ceil, compact, includes, isEmpty } from 'lodash';
 import Pagination from '../../components/pagination/Pagination';
 import NotFoundFilter from '../../components/not-found/NoteFound';
 
@@ -69,6 +68,7 @@ export const Tutor = ({ navigation }) => {
   const [mappedTutors, setMappedTutors] = useState([]);
   const handleSearch = async () => {
     const response = await searchTutor(searchQuery);
+    setTotalPages(ceil(response?.count / searchQuery.perPage));
     if (response.rows.length > 0) {
       setListTutor(response.rows);
     } else {
@@ -90,7 +90,6 @@ export const Tutor = ({ navigation }) => {
 
   useEffect(() => {
     handleSearch();
-    console.log(searchQuery);
     scrollRef.current.scrollTo({
       y: 30,
       animated: true
@@ -204,14 +203,14 @@ export const Tutor = ({ navigation }) => {
             searchInputStyle={{ color: '#CCC' }}
           />
         </View>
-        <View style={styles.checkboxContainer}>
+        {/* <View style={styles.checkboxContainer}>
           <CheckBox
             value={isFavoriteTutor}
             onValueChange={handleSelectFavoriteTutor}
             style={styles.checkbox}
           />
           <Text style={styles.label}>Gia sư được yêu thích</Text>
-        </View>
+        </View> */}
         <View style={{ paddingRight: 20 }}>
           <ListTag
             tags={specialties}
@@ -230,11 +229,7 @@ export const Tutor = ({ navigation }) => {
       <View style={styles.filterContainer}>
         <Text style={styles.teacherHeader}>Gia sư được đề xuất</Text>
         {mappedTutors && mappedTutors?.length > 0 ? (
-          <FlatList
-            data={mappedTutors}
-            renderItem={({ item }) => <TeacherCard item={item} />}
-            keyExtractor={(item, index) => index}
-          />
+          mappedTutors.map((item) => <TeacherCard item={item} />)
         ) : (
           <NotFoundFilter />
         )}

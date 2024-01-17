@@ -1,32 +1,18 @@
 import { StyleSheet, Text, View, Image } from 'react-native';
 import React, { useState } from 'react';
 import { COLORS, IMGS, ROUTES } from '../../constants';
+import { Rating } from 'react-native-ratings';
 
-
-export default function CommentCard() {
+export default function CommentCard(props) {
+  const { item } = props;
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.avtimg}
-        source={
-          'https://sandbox.api.lettutor.com/avatar/f569c202-7bbf-4620-af77-ecc1419a6b28avatar1686033849227.jpeg'
-        }
-      />
+      <Image style={styles.avtimg} source={item?.firstInfo.avatar} />
       <View style={styles.innnerContainer}>
-        <View style={{ flexDirection: 'row' }}>
-          <Text style={styles.name}>Phhai </Text>
-          <Text style={styles.comment}>4 ngày trước</Text>
-        </View>
-        <Rating
-          name='simple-controlled'
-          value={5}
-          // onChange={(event, newValue) => {
-          //   setRating(newValue);
-          // }}
-          size='small'
-        />
+        <Text style={styles.name}>{item?.firstInfo?.name} </Text>
+        <Rating startingValue={item?.rating} imageSize={10} isDisabled={true} />
 
-        <Text style={styles.comment}>.......</Text>
+        <Text style={styles.comment}>{item?.content}</Text>
       </View>
     </View>
   );

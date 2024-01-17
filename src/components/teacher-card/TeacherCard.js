@@ -13,7 +13,7 @@ import { COLORS, IMGS, ROUTES } from '../../constants';
 import { Rating } from 'react-native-ratings';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { round } from 'lodash';
+import { isEmpty, round } from 'lodash';
 import { favorAction } from '../../services/tutorAPI';
 import { useContext } from 'react';
 import AvatarContext from '../../context/AvatarProvider';
@@ -39,7 +39,7 @@ export default function TeacherCard(props) {
     <View style={styles.outerContainer}>
       <Pressable
         onPress={() => {
-          navigation.navigate(ROUTES.TEACHER_DETAIL);
+          navigation.navigate(ROUTES.TEACHER_DETAIL, { id: item?.id });
         }}
         style={{ flex: 1 }}
       >
@@ -51,7 +51,10 @@ export default function TeacherCard(props) {
           <View style={styles.header}>
             <View style={styles.HeaderRight}>
               <View style={styles.nameContainer}>
-                <Text style={styles.name}>{item?.name}</Text>
+                {!isEmpty(item?.name) && (
+                  <Text style={styles.name}>{item?.name}</Text>
+                )}
+
                 <Rating
                   startingValue={item?.rating || 0}
                   onFinishRating={(event, newValue) => {
@@ -66,8 +69,12 @@ export default function TeacherCard(props) {
                     source={
                       'https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.3/flags/4x3/tw.svg'
                     }
-                  />{' '}
-                  <Text style={styles.textDescript}>{item?.country || ''}</Text>
+                  />
+                  {!isEmpty(item?.country) && (
+                    <Text style={styles.textDescript}>
+                      {item?.country || ''}
+                    </Text>
+                  )}
                 </View>
               </View>
             </View>
@@ -198,7 +205,7 @@ const styles = StyleSheet.create({
   Button: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: '30%',
+    width: 100,
     height: 40,
     backgroundColor: COLORS.white,
     elevation: 2,

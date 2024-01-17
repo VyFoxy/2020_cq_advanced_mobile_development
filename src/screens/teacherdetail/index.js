@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 import {
   StyleSheet,
   Text,
@@ -11,7 +11,7 @@ import {
   FlatList,
   Pressable
 } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+import { MaterialIcons, AntDesign } from '@expo/vector-icons';
 import { COLORS } from '../../constants';
 import { ScrollView } from 'react-native-virtualized-view';
 import { ListTag } from '../../components/list-tag/ListTag';
@@ -20,99 +20,52 @@ import { Video } from 'expo-av';
 import { IMGS } from '../../constants';
 import { Modal, Portal, Provider, TextInput } from 'react-native-paper';
 import { round } from 'lodash';
-import { FontAwesome } from '@expo/vector-icons';
 import { mappingLanguage, mappingSpecialties } from '../../utils/mapping';
-//import TimeTable from '@mikezzb/react-native-timetable';\
+//import TimeTable from '@mikezzb/react-native-timetable';
 import { Rating } from 'react-native-ratings';
+import { GetFeedBack, GetTuTorbyID } from '../../services/tutorAPI';
+import AvatarContext from '../../context/AvatarProvider';
 
-export const TeacherDetail = () => {
-  const data = {
-    // video:
-    //   'https://api.app.lettutor.com/video/4d54d3d7-d2a9-42e5-97a2-5ed38af5789avideo1627913015871.mp4',
-    // bio: 'I am passionate about running and fitness, I often compete in trail/mountain running events and I love pushing myself. I am training to one day take part in ultra-endurance events. I also enjoy watching rugby on the weekends, reading and watching podcasts on Youtube. My most memorable life experience would be living in and traveling around Southeast Asia.',
-    // education: 'BA',
-    // experience: 'I have more than 10 years of teaching english experience',
-    // profession: 'English teacher',
-    // accent: null,
-    // targetStudent: 'Advanced',
-    // interests:
-    //   ' I loved the weather, the scenery and the laid-back lifestyle of the locals.',
-    // languages: 'en',
-    // specialties:
-    //   'business-english,conversational-english,english-for-kids,ielts,starters,movers,flyers,ket,pet,toefl,toeic',
-    // rating: 4.101449275362318,
-    // isNative: null,
-    // youtubeVideoId: null,
-    // User: {
-    //   id: '4d54d3d7-d2a9-42e5-97a2-5ed38af5789a',
-    //   level: 'HIGHER_BEGINNER',
-    //   avatar:
-    //     'https://sandbox.api.lettutor.com/avatar/4d54d3d7-d2a9-42e5-97a2-5ed38af5789aavatar1684484879187.jpg',
-    //   name: 'Keegan',
-    //   country: 'TN',
-    //   language: 'Ukrainian',
-    //   isPublicRecord: false,
-    //   caredByStaffId: null,
-    //   zaloUserId: null,
-    //   studentGroupId: null,
-    //   courses: [
-    //     {
-    //       id: '46972669-1755-4f27-8a87-dc4dd2630492',
-    //       name: 'Basic Conversation Topics',
-    //       TutorCourse: {
-    //         UserId: '4d54d3d7-d2a9-42e5-97a2-5ed38af5789a',
-    //         CourseId: '46972669-1755-4f27-8a87-dc4dd2630492',
-    //         createdAt: '2022-01-10T02:34:41.861Z',
-    //         updatedAt: '2022-01-10T02:34:41.861Z'
-    //       }
-    //     },
-    //     {
-    //       id: '964bed84-6450-49ee-92d5-e8c565864bd9',
-    //       name: 'Life in the Internet Age',
-    //       TutorCourse: {
-    //         UserId: '4d54d3d7-d2a9-42e5-97a2-5ed38af5789a',
-    //         CourseId: '964bed84-6450-49ee-92d5-e8c565864bd9',
-    //         createdAt: '2022-01-10T02:34:56.399Z',
-    //         updatedAt: '2022-01-10T02:34:56.399Z'
-    //       }
-    //     },
-    //     {
-    //       id: 'ad318948-4e5c-48b3-8cd5-613327b65bd5',
-    //       name: 'IELTS Speaking Part 3',
-    //       TutorCourse: {
-    //         UserId: '4d54d3d7-d2a9-42e5-97a2-5ed38af5789a',
-    //         CourseId: 'ad318948-4e5c-48b3-8cd5-613327b65bd5',
-    //         createdAt: '2023-11-13T03:13:08.677Z',
-    //         updatedAt: '2023-11-13T03:13:08.677Z'
-    //       }
-    //     },
-    //     {
-    //       id: '33f2ac3a-9c72-4df6-82b9-0d5a1f726746',
-    //       name: 'Movies and Television',
-    //       TutorCourse: {
-    //         UserId: '4d54d3d7-d2a9-42e5-97a2-5ed38af5789a',
-    //         CourseId: '33f2ac3a-9c72-4df6-82b9-0d5a1f726746',
-    //         createdAt: '2023-11-13T03:13:24.395Z',
-    //         updatedAt: '2023-11-13T03:13:24.395Z'
-    //       }
-    //     }
-    //   ]
-    // },
-    // isFavorite: true,
-    // avgRating: 4.101449275362318,
-    // totalFeedback: 138
-  };
+export const TeacherDetail = (props) => {
+  const id = props.route?.params?.id;
+  const { avatar } = useContext(AvatarContext);
+  const [data, setData] = useState({});
+  const [review, setReview] = useState([]);
+  const fetchData = async () => {
+    const response = await GetTuTorbyID(id);
+    const mappingSpecialtiesTag = (value) => {
+      return mappingSpecialties.find((item) => item?.value === value)?.label;
+    };
+    const mappedSpecialties = response?.specialties
+      .split(',')
+      .map(mappingSpecialtiesTag);
 
-  const mappingSpecialtiesTag = (value) => {
-    return mappingSpecialties.find((item) => item?.value === value)?.label;
+    const mappingLanguageTag = (value) => {
+      return mappingLanguage.find((item) => item?.value === value)?.label;
+    };
+    const mappedLanguage = response?.languages
+      .split(',')
+      .map(mappingLanguageTag);
+    const listLanguages = mappedLanguage.map((item) => ({
+      label: item,
+      status: 'active'
+    }));
+    const listSpecialties = mappedSpecialties.map((item) => ({
+      label: item,
+      status: 'active'
+    }));
+    setData({
+      ...response,
+      listLanguages: listLanguages,
+      listSpecialties: listSpecialties
+    });
+    const response_feedback = await GetFeedBack(id);
+    setReview(response_feedback?.data?.rows);
   };
-  const mappedSpecialties = data?.specialties
-    .split(',')
-    .map(mappingSpecialtiesTag);
-  const mappingLanguageTag = (value) => {
-    return mappingLanguage.find((item) => item?.value === value)?.label;
-  };
-  const mappedLanguage = data?.languages.split(',').map(mappingLanguageTag);
+  useEffect(() => {
+    fetchData();
+  }, [avatar]);
+
   const video = React.useRef(null);
   const [value, setValue] = useState(round(data?.rating || 0));
   const [visible, setVisible] = useState(false);
@@ -121,18 +74,8 @@ export const TeacherDetail = () => {
   const [followStatus, setFollowStatus] = useState(data?.isFavorite);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
-  const listLanguages = mappedLanguage.map((item) => ({
-    label: item,
-    status: 'active'
-  }));
-  const listSpecialties = mappedSpecialties.map((item) => ({
-    label: item,
-    status: 'active'
-  }));
-  console.log(listSpecialties, 'listSpecialties');
   const listRating = [1, 2, 3, 4, 5];
   const sentReport = () => {
-    console.log(report);
     hideModal();
   };
 
@@ -175,30 +118,26 @@ export const TeacherDetail = () => {
             </TouchableOpacity>
           </Modal>
         </Portal>
-
         <ScrollView showsVerticalScrollIndicator={false}>
           <>
             <View style={styles.profileContainer}>
               {/* Profile Details */}
               <View style={styles.container}>
-                <View style={{ padding: 20 }}>
+                <View
+                  style={{
+                    padding: 20,
+                    flexDirection: 'row'
+                  }}
+                >
                   <Image style={styles.avtimg} source={data?.User?.avatar} />
 
                   <View style={styles.nameContainer}>
-                    <Text style={styles.name}>Keegan</Text>
+                    <Text style={styles.name}>{data?.User?.name}</Text>
                     <View style={{ flexDirection: 'row' }}>
                       <Rating
-                        name='simple-controlled'
-                        value={value}
-                        onChange={(event, newValue) => {
-                          setValue(newValue);
-                        }}
+                        startingValue={data?.rating}
                         style={styles.rating}
-                      />
-                      <Rating
-                        showRating
-                        onFinishRating={this.ratingCompleted}
-                        style={styles.rating}
+                        imageSize={20}
                       />
                       <Text style={styles.textDescript}>
                         {`(${data?.totalFeedback})`}
@@ -251,7 +190,11 @@ export const TeacherDetail = () => {
                     onPress={showModal}
                     style={{ alignItems: 'center' }}
                   >
-                    <FontAwesome name='info-circle' size={24} color='blue' />
+                    <MaterialIcons
+                      name='report-gmailerrorred'
+                      size={24}
+                      color='blue'
+                    />
                     <Text style={{ color: 'blue' }}>Báo cáo</Text>
                   </Pressable>
                 </View>
@@ -271,14 +214,14 @@ export const TeacherDetail = () => {
               {/* Profile Content */}
               <View style={styles.profileContent}>
                 <Text style={styles.headingParagraph}>Học vấn</Text>
-                <Text style={styles.paragraph}>BA</Text>
+                <Text style={styles.paragraph}>{data?.education}</Text>
                 <Text style={styles.headingParagraph}>Ngôn ngữ</Text>
                 <View style={styles.tagItem}>
-                  <ListTag tags={listLanguages} />
+                  <ListTag tags={data?.listLanguages} />
                 </View>
                 <Text style={styles.headingParagraph}>Chuyên ngành</Text>
                 <View style={styles.tagItem}>
-                  <ListTag tags={listSpecialties} />
+                  <ListTag tags={data?.listSpecialties} />
                 </View>
                 <Text style={styles.headingParagraph}>Khóa học tham khảo</Text>
                 <Text style={styles.paragraph}>No Data</Text>
@@ -290,22 +233,31 @@ export const TeacherDetail = () => {
                 <Text style={styles.paragraph}>{data?.experience}</Text>
                 <Text style={styles.headingParagraph}>Người khác đánh giá</Text>
                 <FlatList
-                  data={listRating}
-                  renderItem={CommentCard}
+                  data={review}
+                  renderItem={({ item }) => <CommentCard item={item} />}
                   style={styles.commentList}
+                  keyExtractor={(item, index) => index}
                 />
               </View>
               {/* <TimeTable
-                events={[
+                eventGroups={[
                   {
                     courseId: 'CSCI2100',
                     title: 'Data Structures',
-                    section: 'A - LEC',
-                    day: 3,
-                    startTime: '14:30',
-                    endTime: '16:15',
-                    location: 'Online Teaching',
-                    color: 'rgba(241,153,40,1)'
+                    sections: {
+                      'A - LEC': {
+                        days: [1, 3],
+                        startTimes: ['16:30', '14:30'],
+                        endTimes: ['17:15', '16:15'],
+                        locations: ['Online Teaching', 'Online Teaching']
+                      },
+                      'AT02 - TUT': {
+                        days: [4],
+                        startTimes: ['17:30'],
+                        endTimes: ['18:15'],
+                        locations: ['Online Teaching']
+                      }
+                    }
                   }
                 ]}
                 eventOnPress={(event) =>
@@ -440,6 +392,7 @@ const styles = StyleSheet.create({
     height: 70,
     borderRadius: 50,
     borderWidth: 0.5,
+    marginRight: 30,
     borderColor: 'gray'
   },
   name: {

@@ -136,19 +136,18 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 2000,
+    marginTop: 30,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    shadowColor: 'rgba(0, 0, 0, 0.2)',
-    shadowOffset: { width: 0, height: -1 },
-    shadowOpacity: 1,
     shadowRadius: 3,
     paddingLeft: 18,
     paddingRight: 10,
     paddingVertical: 20,
-    boxShadow: 'rgba(0, 0, 0, 0.2) 0px -1px 13px 2px'
+    borderBottomWidth: 0.5,
+    borderColor: '#CCC'
   },
   headerRight: {
     flexDirection: 'row',
@@ -158,9 +157,8 @@ const styles = StyleSheet.create({
   },
   logo: {
     maxHeight: 44,
-    height: '100%',
+    height: 50,
     width: 'auto',
-    overflow: 'none',
     position: 'relative'
   },
   label: {
