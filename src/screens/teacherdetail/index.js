@@ -25,12 +25,16 @@ import { mappingLanguage, mappingSpecialties } from '../../utils/mapping';
 import { Rating } from 'react-native-ratings';
 import { GetFeedBack, GetTuTorbyID } from '../../services/tutorAPI';
 import AvatarContext from '../../context/AvatarProvider';
+import { getSchedule } from '../../services/schedule';
+import { formatTimestampToTimeZone, getDayOfWeek } from '../../utils/func';
 
 export const TeacherDetail = (props) => {
   const id = props.route?.params?.id;
   const { avatar } = useContext(AvatarContext);
   const [data, setData] = useState({});
   const [review, setReview] = useState([]);
+  const [schedule, setSchedule] = React.useState([]);
+  const [isBookedSchedule, setIsBookedSchedule] = useState([]);
   const fetchData = async () => {
     const response = await GetTuTorbyID(id);
     const mappingSpecialtiesTag = (value) => {
@@ -61,6 +65,14 @@ export const TeacherDetail = (props) => {
     });
     const response_feedback = await GetFeedBack(id);
     setReview(response_feedback?.data?.rows);
+    //schedule
+    const { scheduleOfTutor } = await getSchedule({
+      tutorId: id,
+      page: 0
+    });
+    console.log(scheduleOfTutor, 'scheduleOfTutor');
+    let getSchedules = scheduleOfTutor.filter((item) => !item.isBooked);
+    setSchedule([...schedule, ...getSchedules]);
   };
   useEffect(() => {
     fetchData();
@@ -78,6 +90,22 @@ export const TeacherDetail = (props) => {
   const sentReport = () => {
     hideModal();
   };
+
+  const handleSchedule = () => {
+    const data = schedule.map((item) => ({
+      courseId: 'Đã đặt',
+      day: getDayOfWeek(),
+      startTime: formatTimestampToTimeZone(item?.startTimestamp),
+      endTime: formatTimestampToTimeZone(item?.endTimestamp),
+      color: 'rgb(46, 204, 113)'
+    }));
+    console.log(data);
+    setIsBookedSchedule(data);
+  };
+
+  useEffect(() => {
+    handleSchedule();
+  }, [schedule]);
 
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
@@ -141,6 +169,7 @@ export const TeacherDetail = (props) => {
                         startingValue={data?.rating}
                         style={styles.rating}
                         imageSize={20}
+                        readonly
                       />
                       <Text style={styles.textDescript}>
                         {`(${data?.totalFeedback})`}
@@ -265,25 +294,22 @@ export const TeacherDetail = (props) => {
                   keyExtractor={(item, index) => index}
                 />
               </View>
+              <Text style={styles.headingParagraph}>Thời khóa biểu</Text>
               {/* <TimeTable
-                eventGroups={[
+                events={[
                   {
-                    courseId: 'CSCI2100',
-                    title: 'Data Structures',
-                    sections: {
-                      'A - LEC': {
-                        days: [1, 3],
-                        startTimes: ['16:30', '14:30'],
-                        endTimes: ['17:15', '16:15'],
-                        locations: ['Online Teaching', 'Online Teaching']
-                      },
-                      'AT02 - TUT': {
-                        days: [4],
-                        startTimes: ['17:30'],
-                        endTimes: ['18:15'],
-                        locations: ['Online Teaching']
-                      }
-                    }
+                    courseId: 'Đã đặt',
+                    day: 3,
+                    startTime: '14:30',
+                    endTime: '16:15',
+                    color: 'rgb(46, 204, 113)'
+                  },
+                  {
+                    courseId: 'Đã đặt',
+                    day: 3,
+                    startTime: '10:30',
+                    endTime: '12:15',
+                    color: 'rgb(46, 204, 113)'
                   }
                 ]}
                 eventOnPress={(event) =>
@@ -303,7 +329,7 @@ const styles = StyleSheet.create({
   profileContainer: {
     // height: 1000,
     backgroundColor: '#fff',
-    marginTop: -100,
+    marginTop: -150,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20
   },

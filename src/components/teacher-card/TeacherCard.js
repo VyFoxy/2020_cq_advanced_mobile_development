@@ -62,6 +62,7 @@ export default function TeacherCard(props) {
                   }}
                   style={styles.rating}
                   imageSize={20}
+                  readonly
                 />
                 <View style={{ flexDirection: 'row' }}>
                   <Image
@@ -99,18 +100,18 @@ export default function TeacherCard(props) {
               {item?.bio || ''}
             </Text>
           </View>
-          <View style={{ alignItems: 'flex-end' }}>
-            <TouchableOpacity style={styles.Button}>
-              <MaterialIcons
-                name='event-note'
-                size={24}
-                style={{ color: COLORS.primary }}
-              />
-              <Text style={styles.ButtonText}>Đặt lịch</Text>
-            </TouchableOpacity>
-          </View>
         </View>
       </Pressable>
+      <View style={{ alignItems: 'flex-end' }}>
+        <TouchableOpacity style={styles.Button}>
+          <MaterialIcons
+            name='event-note'
+            size={24}
+            style={{ color: COLORS.primary }}
+          />
+          <Text style={styles.ButtonText}>Đặt lịch</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -127,14 +128,17 @@ const styles = StyleSheet.create({
     shadowColor: 'black',
     shadowOpacity: 0.18,
     overflow: 'hidden',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 1,
-    shadowColor: 'rgba(0, 0, 0, 0.2)',
+    // shadowOffset: { width: 0, height: -2 },
+    // shadowOpacity: 1,
+    // shadowColor: '#CCC',
+    borderWidth: 0.8,
+    borderColor: '#CCC',
     shadowRadius: 5,
     backgroundColor: COLORS.white,
-    marginVertical: 5,
+    marginVertical: 15,
     borderRadius: 16,
-    marginHorizontal: 16
+    marginHorizontal: 16,
+    minHeight: 500
   },
   header: {
     flexDirection: 'row'

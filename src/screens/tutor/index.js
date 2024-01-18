@@ -181,7 +181,8 @@ export const Tutor = ({ navigation }) => {
             height: 40,
             paddingLeft: 10,
             marginBottom: 10,
-            flex: 1
+            flex: 1,
+            zIndex: 1000
           }}
         >
           <MultiSelect
@@ -192,7 +193,7 @@ export const Tutor = ({ navigation }) => {
             selectedItems={searchQuery.nationality}
             selectText='Chọn quốc tịch'
             searchInputPlaceholderText='Chọn quốc tịch...'
-            onChangeInput={(text) => console.log(text)}
+            //onChangeInput={(text) => console.log(text)}
             tagRemoveIconColor='#fff'
             tagBorderColor='#CCC'
             tagTextColor='#CCC'

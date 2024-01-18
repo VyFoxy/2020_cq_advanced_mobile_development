@@ -84,19 +84,6 @@ export async function reportAction(content, id) {
   }
 }
 
-export async function getSchedule({ tutorId, startTimestamp, endTimestamp }) {
-  try {
-    const res = await api.get(
-      PATH.GET_SCHEDULE +
-        `?tutorId=${tutorId}&startTimestamp=${startTimestamp}&endTimestamp=${endTimestamp}`
-    );
-    return res.data;
-  } catch (error) {
-    console.log(error);
-    throw Error(error);
-  }
-}
-
 export async function bookTutor({ scheduleDetailIds, note }) {
   try {
     const res = await api.post(PATH.BOOKING, {

@@ -10,7 +10,7 @@ export default function CommentCard(props) {
       <Image style={styles.avtimg} source={{ uri: item?.firstInfo.avatar }} />
       <View style={styles.innnerContainer}>
         <Text style={styles.name}>{item?.firstInfo?.name} </Text>
-        <Rating startingValue={item?.rating} imageSize={15} isDisabled={true} />
+        <Rating startingValue={item?.rating} imageSize={15} readonly />
 
         <Text style={styles.comment}>{item?.content}</Text>
       </View>
