@@ -45,14 +45,14 @@ export default function TeacherCard(props) {
       >
         <View style={styles.container}>
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-            <Image style={styles.avtimg} source={{ uri: item?.avatar }} />
+            <Image style={styles.avtimg} source={{ uri: item?.avatar || '' }} />
           </View>
 
           <View style={styles.header}>
             <View style={styles.HeaderRight}>
               <View style={styles.nameContainer}>
                 {!isEmpty(item?.name) && (
-                  <Text style={styles.name}>{item?.name}</Text>
+                  <Text style={styles.name}>{item?.name || ''}</Text>
                 )}
 
                 <Rating
@@ -67,9 +67,9 @@ export default function TeacherCard(props) {
                 <View style={{ flexDirection: 'row' }}>
                   <Image
                     style={styles.flag}
-                    source={
-                      'https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.3/flags/4x3/tw.svg'
-                    }
+                    source={{
+                      uri: 'https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.3/flags/4x3/tw.svg'
+                    }}
                   />
                   {!isEmpty(item?.country) && (
                     <Text style={styles.textDescript}>
@@ -96,14 +96,21 @@ export default function TeacherCard(props) {
             <ListTag tags={listSpecialties || []} />
           </View>
           <View style={styles.descript}>
-            <Text numberOfLines={4} style={styles.textDescript}>
-              {item?.bio || ''}
-            </Text>
+            {!isEmpty(item?.bio) && (
+              <Text numberOfLines={4} style={styles.textDescript}>
+                {item?.bio || ''}
+              </Text>
+            )}
           </View>
         </View>
       </Pressable>
       <View style={{ alignItems: 'flex-end' }}>
-        <TouchableOpacity style={styles.Button}>
+        <TouchableOpacity
+          style={styles.Button}
+          onPress={() => {
+            navigation.navigate(ROUTES.TEACHER_DETAIL, { id: item?.id });
+          }}
+        >
           <MaterialIcons
             name='event-note'
             size={24}

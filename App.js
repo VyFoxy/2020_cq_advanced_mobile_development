@@ -14,7 +14,7 @@ export default function App() {
     async function getAccessToken() {
       await AsyncStorage.setItem(
         'accessToken',
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmNTY5YzIwMi03YmJmLTQ2MjAtYWY3Ny1lY2MxNDE5YTZiMjgiLCJpYXQiOjE3MDU0Njg5MDUsImV4cCI6MTcwNTU1NTMwNSwidHlwZSI6ImFjY2VzcyJ9.nDkha0hVG972XYSAPCxKyoXVzMagwpFhb3CwEpRuXhQ'
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmNTY5YzIwMi03YmJmLTQ2MjAtYWY3Ny1lY2MxNDE5YTZiMjgiLCJpYXQiOjE3MDU3MDg4MDEsImV4cCI6MTcwNTc5NTIwMSwidHlwZSI6ImFjY2VzcyJ9.U5X9Ci633jKfQGEkdpOHzU9cm72sMIEN1iaMrcl3E-Q'
       );
     }
     getAccessToken();

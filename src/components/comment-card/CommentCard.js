@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 import React, { useState } from 'react';
 import { COLORS, IMGS, ROUTES } from '../../constants';
 import { Rating } from 'react-native-ratings';
+import { isEmpty } from 'lodash';
 
 export default function CommentCard(props) {
   const { item } = props;
@@ -9,10 +10,14 @@ export default function CommentCard(props) {
     <View style={styles.container}>
       <Image style={styles.avtimg} source={{ uri: item?.firstInfo.avatar }} />
       <View style={styles.innnerContainer}>
-        <Text style={styles.name}>{item?.firstInfo?.name} </Text>
-        <Rating startingValue={item?.rating} imageSize={15} readonly />
+        {!isEmpty(item?.firstInfo?.name) && (
+          <Text style={styles.name}>{item?.firstInfo?.name} </Text>
+        )}
 
-        <Text style={styles.comment}>{item?.content}</Text>
+        <Rating startingValue={item?.rating} imageSize={15} readonly />
+        {!isEmpty(item?.content) && (
+          <Text style={styles.name}>{item?.content} </Text>
+        )}
       </View>
     </View>
   );

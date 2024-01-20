@@ -41,6 +41,6 @@ export const formatTimestampToTimeZone = (timestamp) => {
 
 export const getDayOfWeek = () => {
   const currentDate = new Date();
-  const dayIndex = currentDate.getDay() - 1;
+  const dayIndex = currentDate.getDay();
   return dayIndex;
 };

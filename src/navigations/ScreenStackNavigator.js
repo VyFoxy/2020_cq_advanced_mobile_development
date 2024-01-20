@@ -29,11 +29,6 @@ function ScreenStackNavigator() {
         options={{ headerShown: false }}
       /> */}
       <Stack.Screen
-        name={ROUTES.HOME}
-        component={Tutor}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
         name={ROUTES.HOME_DRAWER}
         component={DrawerNavigator}
         options={{ headerShown: false }}

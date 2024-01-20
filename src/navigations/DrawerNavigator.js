@@ -12,14 +12,31 @@ const Drawer = createDrawerNavigator();
 function DrawerNavigator() {
   return (
     <Drawer.Navigator>
-      <Drawer.Screen name={ROUTES.HOME} component={Tutor} />
-      <Drawer.Screen name={ROUTES.HISTORY} component={HistoryScreen} />
+      <Drawer.Screen
+        name={ROUTES.HOME}
+        component={Tutor}
+        options={{ headerShown: false }}
+      />
+      <Drawer.Screen
+        name={ROUTES.HISTORY}
+        component={HistoryScreen}
+        options={{ headerShown: false }}
+      />
       <Drawer.Screen
         name={ROUTES.BOOKINGSTUDENT}
         component={BookingStudentScreen}
+        options={{ headerShown: false }}
       />
-      <Drawer.Screen name={ROUTES.COURSE} component={CoursesSreeen} />
-      <Drawer.Screen name={ROUTES.COURSE_DETAIL} component={CourseDetail} />
+      <Drawer.Screen
+        name={ROUTES.COURSE}
+        component={CoursesSreeen}
+        options={{ headerShown: false }}
+      />
+      <Drawer.Screen
+        name={ROUTES.COURSE_DETAIL}
+        component={CourseDetail}
+        options={{ headerShown: false }}
+      />
     </Drawer.Navigator>
   );
 }

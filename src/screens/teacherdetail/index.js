@@ -19,11 +19,15 @@ import CommentCard from '../../components/comment-card/CommentCard';
 import { Video } from 'expo-av';
 import { IMGS } from '../../constants';
 import { Modal, Portal, Provider, TextInput } from 'react-native-paper';
-import { round } from 'lodash';
+import { isEmpty, round } from 'lodash';
 import { mappingLanguage, mappingSpecialties } from '../../utils/mapping';
-//import TimeTable from '@mikezzb/react-native-timetable';
+import TimeTable from '@mikezzb/react-native-timetable';
 import { Rating } from 'react-native-ratings';
-import { GetFeedBack, GetTuTorbyID } from '../../services/tutorAPI';
+import {
+  GetFeedBack,
+  GetTuTorbyID,
+  reportAction
+} from '../../services/tutorAPI';
 import AvatarContext from '../../context/AvatarProvider';
 import { getSchedule } from '../../services/schedule';
 import { formatTimestampToTimeZone, getDayOfWeek } from '../../utils/func';
@@ -35,6 +39,9 @@ export const TeacherDetail = (props) => {
   const [review, setReview] = useState([]);
   const [schedule, setSchedule] = React.useState([]);
   const [isBookedSchedule, setIsBookedSchedule] = useState([]);
+  const [listScheduleCanBook, setListScheduleCanBook] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isOpenBooking, setIsOpenBooking] = useState(false);
   const fetchData = async () => {
     const response = await GetTuTorbyID(id);
     const mappingSpecialtiesTag = (value) => {
@@ -70,9 +77,9 @@ export const TeacherDetail = (props) => {
       tutorId: id,
       page: 0
     });
-    console.log(scheduleOfTutor, 'scheduleOfTutor');
-    let getSchedules = scheduleOfTutor.filter((item) => !item.isBooked);
-    setSchedule([...schedule, ...getSchedules]);
+    setSchedule([...schedule, ...scheduleOfTutor]);
+
+    setIsLoading(false);
   };
   useEffect(() => {
     fetchData();
@@ -86,241 +93,343 @@ export const TeacherDetail = (props) => {
   const [followStatus, setFollowStatus] = useState(data?.isFavorite);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
-  const listRating = [1, 2, 3, 4, 5];
-  const sentReport = () => {
+  const sentReport = async () => {
+    const response = await reportAction(report, id);
+    if (response.message == 'Report successfully') {
+      alert('Report successfully');
+    }
+    setReport('');
     hideModal();
   };
 
   const handleSchedule = () => {
-    const data = schedule.map((item) => ({
-      courseId: 'Đã đặt',
-      day: getDayOfWeek(),
-      startTime: formatTimestampToTimeZone(item?.startTimestamp),
-      endTime: formatTimestampToTimeZone(item?.endTimestamp),
-      color: 'rgb(46, 204, 113)'
-    }));
-    console.log(data);
+    const data = schedule.map((item) =>
+      item?.isBooked
+        ? {
+            courseId: 'Đã đặt',
+            day: getDayOfWeek(),
+            startTime: formatTimestampToTimeZone(item?.startTimestamp),
+            endTime: formatTimestampToTimeZone(item?.endTimestamp),
+            color: 'rgb(46, 204, 113)'
+          }
+        : {
+            courseId: 'Đặt lịch',
+            day: getDayOfWeek(),
+            startTime: formatTimestampToTimeZone(item?.startTimestamp),
+            endTime: formatTimestampToTimeZone(item?.endTimestamp),
+            color: COLORS.primary
+          }
+    );
     setIsBookedSchedule(data);
   };
 
+  const handleBookingSchedule = (event) => {};
   useEffect(() => {
     handleSchedule();
   }, [schedule]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#fff' }}>
-      <Provider>
-        {/* Report Modal */}
+    <>
+      {isLoading ? (
+        <ActivityIndicator
+          size='large'
+          color={COLORS.primary}
+          style={styles.centerLoading}
+        />
+      ) : (
+        <View style={{ flex: 1, backgroundColor: '#fff' }}>
+          <Provider>
+            {/* Report Modal */}
 
-        <Portal>
-          <Modal
-            visible={visible}
-            onDismiss={hideModal}
-            contentContainerStyle={styles.modalStyle}
-          >
-            <TextInput
-              mode='outlined'
-              style={styles.input}
-              value={report}
-              onChangeText={setReport}
-              name='Report'
-              label='Report'
-              defaultValue=''
-              multiline={true}
-              numberOfLines={4}
-            />
-            <TouchableOpacity
-              style={{
-                ...styles.interactButton,
-                backgroundColor: 'white',
-                borderWidth: 2,
-                borderColor: COLORS.danger
-              }}
-              onPress={sentReport}
-            >
-              <Text
-                style={{ ...styles.interactButtonText, color: COLORS.danger }}
+            <Portal>
+              <Modal
+                visible={visible}
+                onDismiss={hideModal}
+                contentContainerStyle={styles.modalStyle}
               >
-                Sent
-              </Text>
-            </TouchableOpacity>
-          </Modal>
-        </Portal>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <>
-            <View style={styles.profileContainer}>
-              {/* Profile Details */}
-              <View style={styles.container}>
-                <View
-                  style={{
-                    padding: 20,
-                    flexDirection: 'row'
-                  }}
-                >
-                  <Image
-                    style={styles.avtimg}
-                    source={{ uri: data?.User?.avatar }}
+                <View style={{ flex: 1 }}>
+                  {!isEmpty(data?.User?.name) && (
+                    <Text style={styles.headingParagraph}>{`Báo cáo ${
+                      data?.User?.name || ''
+                    }`}</Text>
+                  )}
+
+                  <TextInput
+                    mode='outlined'
+                    style={styles.input}
+                    value={report}
+                    onChangeText={setReport}
+                    name='Report'
+                    placeholder='Vui lòng điền chi tiết vấn đề bạn gặp phải'
+                    defaultValue=''
+                    multiline={true}
+                    numberOfLines={4}
                   />
-
-                  <View style={styles.nameContainer}>
-                    <Text style={styles.name}>{data?.User?.name}</Text>
-                    <View style={{ flexDirection: 'row' }}>
-                      <Rating
-                        startingValue={data?.rating}
-                        style={styles.rating}
-                        imageSize={20}
-                        readonly
-                      />
-                      <Text style={styles.textDescript}>
-                        {`(${data?.totalFeedback})`}
+                  <View
+                    style={{ justifyContent: 'flex-end', flexDirection: 'row' }}
+                  >
+                    <Pressable
+                      style={styles.Button}
+                      onPress={() => hideModal()}
+                    >
+                      <Text style={styles.ButtonText}>Hủy</Text>
+                    </Pressable>
+                    <Pressable
+                      disabled={isEmpty(report)}
+                      style={
+                        isEmpty(report) ? styles.ButtonDisable : styles.Button
+                      }
+                      onPress={() => sentReport()}
+                    >
+                      <Text
+                        style={
+                          isEmpty(report)
+                            ? styles.ButtonTextDisable
+                            : styles.ButtonText
+                        }
+                      >
+                        Gửi
                       </Text>
-                    </View>
-
-                    <Image style={styles.flag} source={IMGS.vi}></Image>
+                    </Pressable>
                   </View>
                 </View>
-                <View style={styles.descript}>
-                  <Text numberOfLines={4} style={styles.textDescript}>
-                    {data?.bio || ''}
-                  </Text>
-                </View>
-              </View>
-
-              {/* Interact Buttons View */}
-              <View style={styles.interactButtonsView}>
-                <View
-                  style={{
-                    flex: 1,
-                    justifyContent: 'flex-start',
-                    alignItems: 'flex-start'
-                  }}
-                >
-                  <Pressable
-                    onPress={() => {
-                      setFollowStatus(!followStatus);
-                    }}
-                    style={{ alignItems: 'center' }}
+              </Modal>
+              {/* <Modal
+                visible={isOpenBooking}
+                onDismiss={() => setIsOpenBooking(false)}
+                contentContainerStyle={styles.modalStyle}
+              >
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.headingParagraph}>Chi tiết đặt lịch</Text>
+                  <TextInput
+                    mode='outlined'
+                    style={styles.input}
+                    value={report}
+                    onChangeText={setReport}
+                    name='Report'
+                    placeholder='Vui lòng điền chi tiết vấn đề bạn gặp phải'
+                    defaultValue=''
+                    multiline={true}
+                    numberOfLines={4}
+                  />
+                  <View
+                    style={{ justifyContent: 'flex-end', flexDirection: 'row' }}
                   >
-                    <AntDesign
-                      name={followStatus ? 'heart' : 'hearto'}
-                      size={24}
-                      color={followStatus ? 'red' : 'blue'}
-                    />
-                    <Text
+                    <Pressable
+                      style={styles.Button}
+                      onPress={() => hideModal()}
+                    >
+                      <Text style={styles.ButtonText}>Hủy</Text>
+                    </Pressable>
+                    <Pressable
+                      disabled={isEmpty(report)}
+                      style={
+                        isEmpty(report) ? styles.ButtonDisable : styles.Button
+                      }
+                      onPress={() => sentReport()}
+                    >
+                      <Text
+                        style={
+                          isEmpty(report)
+                            ? styles.ButtonTextDisable
+                            : styles.ButtonText
+                        }
+                      >
+                        Gửi
+                      </Text>
+                    </Pressable>
+                  </View>
+                </View>
+              </Modal> */}
+            </Portal>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <>
+                <View style={styles.profileContainer}>
+                  {/* Profile Details */}
+                  <View style={styles.container}>
+                    <View
                       style={{
-                        color: followStatus ? 'red' : 'blue',
-                        marginVertical: 5
+                        padding: 20,
+                        flexDirection: 'row'
                       }}
                     >
-                      Yêu thích
+                      <Image
+                        style={styles.avtimg}
+                        source={{ uri: data?.User?.avatar }}
+                      />
+
+                      <View style={styles.nameContainer}>
+                        {!isEmpty(data?.User?.name) && (
+                          <Text style={styles.name}>
+                            {data?.User?.name || ''}
+                          </Text>
+                        )}
+
+                        <View style={{ flexDirection: 'row' }}>
+                          <Rating
+                            startingValue={data?.rating}
+                            style={styles.rating}
+                            imageSize={20}
+                            readonly
+                          />
+                          {!isEmpty(data?.totalFeedback) && (
+                            <Text style={styles.textDescript}>
+                              {`(${data?.totalFeedback || ''})`}
+                            </Text>
+                          )}
+                        </View>
+
+                        <Image style={styles.flag} source={IMGS.vi}></Image>
+                      </View>
+                    </View>
+                    <View style={styles.descript}>
+                      {!isEmpty(data?.bio) && (
+                        <Text numberOfLines={4} style={styles.textDescript}>
+                          {data?.bio || ''}
+                        </Text>
+                      )}
+                    </View>
+                  </View>
+
+                  {/* Interact Buttons View */}
+                  <View style={styles.interactButtonsView}>
+                    <View
+                      style={{
+                        flex: 1,
+                        justifyContent: 'flex-start',
+                        alignItems: 'flex-start'
+                      }}
+                    >
+                      <Pressable
+                        onPress={() => {
+                          setFollowStatus(!followStatus);
+                        }}
+                        style={{ alignItems: 'center' }}
+                      >
+                        <AntDesign
+                          name={followStatus ? 'heart' : 'hearto'}
+                          size={24}
+                          color={followStatus ? 'red' : 'blue'}
+                        />
+                        <Text
+                          style={{
+                            color: followStatus ? 'red' : 'blue',
+                            marginVertical: 5
+                          }}
+                        >
+                          Yêu thích
+                        </Text>
+                      </Pressable>
+                    </View>
+
+                    <View
+                      style={{
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                      }}
+                    >
+                      <Pressable
+                        onPress={showModal}
+                        style={{ alignItems: 'center' }}
+                      >
+                        <AntDesign name='message1' size={24} color='blue' />
+                        <Text style={{ color: 'blue', marginVertical: 5 }}>
+                          Nhắn tin
+                        </Text>
+                      </Pressable>
+                    </View>
+
+                    <View
+                      style={{
+                        flex: 1,
+                        justifyContent: 'flex-end',
+                        alignItems: 'flex-end'
+                      }}
+                    >
+                      <Pressable
+                        onPress={showModal}
+                        style={{ alignItems: 'center' }}
+                      >
+                        <AntDesign name='warning' size={24} color='blue' />
+                        <Text style={{ color: 'blue', marginVertical: 5 }}>
+                          Báo cáo
+                        </Text>
+                      </Pressable>
+                    </View>
+                  </View>
+
+                  <View style={{ flex: 1 }}>
+                    <Video
+                      source={{
+                        uri: data?.video
+                      }}
+                      style={styles.video}
+                      useNativeControls
+                      isLooping
+                    />
+                  </View>
+                  {/* Video */}
+
+                  {/* Profile Content */}
+                  <View style={styles.profileContent}>
+                    <Text style={styles.headingParagraph}>Học vấn</Text>
+                    {!isEmpty(data?.education) && (
+                      <Text style={styles.paragraph}>
+                        {data?.education || ''}
+                      </Text>
+                    )}
+
+                    <Text style={styles.headingParagraph}>Ngôn ngữ</Text>
+                    <View style={styles.tagItem}>
+                      <ListTag tags={data?.listLanguages} />
+                    </View>
+                    <Text style={styles.headingParagraph}>Chuyên ngành</Text>
+                    <View style={styles.tagItem}>
+                      <ListTag tags={data?.listSpecialties} />
+                    </View>
+                    <Text style={styles.headingParagraph}>
+                      Khóa học tham khảo
                     </Text>
-                  </Pressable>
-                </View>
-
-                <View
-                  style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                  }}
-                >
-                  <Pressable
-                    onPress={showModal}
-                    style={{ alignItems: 'center' }}
-                  >
-                    <AntDesign name='message1' size={24} color='blue' />
-                    <Text style={{ color: 'blue', marginVertical: 5 }}>
-                      Nhắn tin
+                    <Text style={styles.paragraph}>No Data</Text>
+                    <Text style={styles.headingParagraph}>Sở thích</Text>
+                    {!isEmpty(data?.interests) && (
+                      <Text style={styles.paragraph}>
+                        {data?.interests || ''}
+                      </Text>
+                    )}
+                    <Text style={styles.headingParagraph}>
+                      Kinh nghiệm giảng dạy
                     </Text>
-                  </Pressable>
-                </View>
-
-                <View
-                  style={{
-                    flex: 1,
-                    justifyContent: 'flex-end',
-                    alignItems: 'flex-end'
-                  }}
-                >
-                  <Pressable
-                    onPress={showModal}
-                    style={{ alignItems: 'center' }}
-                  >
-                    <AntDesign name='warning' size={24} color='blue' />
-                    <Text style={{ color: 'blue', marginVertical: 5 }}>
-                      Báo cáo
+                    {!isEmpty(data?.experience) && (
+                      <Text style={styles.paragraph}>
+                        {data?.experience || ''}
+                      </Text>
+                    )}
+                    <Text style={styles.headingParagraph}>
+                      Người khác đánh giá
                     </Text>
-                  </Pressable>
+                    <FlatList
+                      data={review}
+                      renderItem={({ item }) => <CommentCard item={item} />}
+                      style={styles.commentList}
+                      keyExtractor={(item, index) => index}
+                    />
+                  </View>
+                  <Text style={styles.headingParagraph}>Thời khóa biểu</Text>
+                  <View style={{ overflow: 'hidden' }}>
+                    <TimeTable
+                      events={isBookedSchedule}
+                      eventOnPress={(event) => console.log(event)}
+                    />
+                  </View>
                 </View>
-              </View>
-
-              <View style={{ flex: 1 }}>
-                <Video
-                  source={{
-                    uri: data?.video
-                  }}
-                  style={styles.video}
-                  useNativeControls
-                  isLooping
-                />
-              </View>
-              {/* Video */}
-
-              {/* Profile Content */}
-              <View style={styles.profileContent}>
-                <Text style={styles.headingParagraph}>Học vấn</Text>
-                <Text style={styles.paragraph}>{data?.education}</Text>
-                <Text style={styles.headingParagraph}>Ngôn ngữ</Text>
-                <View style={styles.tagItem}>
-                  <ListTag tags={data?.listLanguages} />
-                </View>
-                <Text style={styles.headingParagraph}>Chuyên ngành</Text>
-                <View style={styles.tagItem}>
-                  <ListTag tags={data?.listSpecialties} />
-                </View>
-                <Text style={styles.headingParagraph}>Khóa học tham khảo</Text>
-                <Text style={styles.paragraph}>No Data</Text>
-                <Text style={styles.headingParagraph}>Sở thích</Text>
-                <Text style={styles.paragraph}>{data?.interests}</Text>
-                <Text style={styles.headingParagraph}>
-                  Kinh nghiệm giảng dạy
-                </Text>
-                <Text style={styles.paragraph}>{data?.experience}</Text>
-                <Text style={styles.headingParagraph}>Người khác đánh giá</Text>
-                <FlatList
-                  data={review}
-                  renderItem={({ item }) => <CommentCard item={item} />}
-                  style={styles.commentList}
-                  keyExtractor={(item, index) => index}
-                />
-              </View>
-              <Text style={styles.headingParagraph}>Thời khóa biểu</Text>
-              {/* <TimeTable
-                events={[
-                  {
-                    courseId: 'Đã đặt',
-                    day: 3,
-                    startTime: '14:30',
-                    endTime: '16:15',
-                    color: 'rgb(46, 204, 113)'
-                  },
-                  {
-                    courseId: 'Đã đặt',
-                    day: 3,
-                    startTime: '10:30',
-                    endTime: '12:15',
-                    color: 'rgb(46, 204, 113)'
-                  }
-                ]}
-                eventOnPress={(event) =>
-                  Alert.alert(`${JSON.stringify(event)}`)
-                }
-              /> */}
-            </View>
-          </>
-        </ScrollView>
-      </Provider>
-    </View>
+              </>
+            </ScrollView>
+          </Provider>
+        </View>
+      )}
+    </>
   );
 };
 
@@ -421,13 +530,53 @@ const styles = StyleSheet.create({
   modalStyle: {
     backgroundColor: 'white',
     padding: 20,
-    height: 200
+    height: 400,
+    borderRadius: 20
   },
   container: {
     backgroundColor: COLORS.white,
     marginTop: 180
   },
-
+  Button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 100,
+    height: 40,
+    backgroundColor: COLORS.white,
+    elevation: 2,
+    borderRadius: 100,
+    marginVertical: 30,
+    marginHorizontal: 5,
+    borderColor: COLORS.primary,
+    borderWidth: 1,
+    flexDirection: 'row'
+  },
+  ButtonDisable: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 100,
+    height: 40,
+    backgroundColor: '#f5f5f5',
+    elevation: 2,
+    borderRadius: 100,
+    marginVertical: 30,
+    marginHorizontal: 5,
+    borderColor: '#d9d9d9',
+    borderWidth: 1,
+    flexDirection: 'row'
+  },
+  ButtonText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: COLORS.primary,
+    marginLeft: 5
+  },
+  ButtonTextDisable: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#d9d9d9',
+    marginLeft: 5
+  },
   HeaderRight: {
     flex: 4,
     marginTop: 20,
@@ -447,6 +596,8 @@ const styles = StyleSheet.create({
     marginRight: 30,
     borderColor: 'gray'
   },
+  input: { height: 150 },
+
   name: {
     fontSize: 18,
     fontWeight: '400',
