@@ -7,7 +7,7 @@ const PATH = {
   GET_SCHEDULE: '/schedule',
   BOOKING: '/booking',
   GET_UPCOMING: '/booking/list/student',
-  GET_HISTORY: '/call/history?isTutor=false',
+  GET_HISTORY: 'booking/list/student?inFuture=0&orderBy=meeting&sortBy=desc',
   DELETE_SCHEDULE: '/booking/schedule-detail',
   GET_TUTOR_BY_ID: '/tutor/',
   FEEDBACK: '/feedback/v2/'
@@ -115,8 +115,10 @@ export async function getUpcomingBooking({ page, perPage, dateTimeGte }) {
   }
 }
 
-export async function getHistoryBooking({ page, perPage }) {
-  const stringapi = PATH.GET_HISTORY + `&page=${page}&perPage=${perPage}`;
+export async function getHistoryBooking({ page, perPage, dateTimeLte }) {
+  const stringapi =
+    PATH.GET_HISTORY +
+    `&page=${page}&perPage=${perPage}&dateTimeLte=${dateTimeLte}`;
   try {
     const res = await api.get(stringapi);
     return res.data;

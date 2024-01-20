@@ -28,6 +28,69 @@ const Pagination = ({
     onPageChange(pageNumber);
   };
 
+  const renderPageButtons = () => {
+    const pageButtons = [];
+    const maxVisibleButtons = 3;
+
+    if (totalPages <= maxVisibleButtons) {
+      // If total pages are less than or equal to maxVisibleButtons, show all pages
+      for (let i = 1; i <= totalPages; i++) {
+        pageButtons.push(renderPageButton(i));
+      }
+    } else {
+      // If total pages are more than maxVisibleButtons, show a subset
+      const firstVisible = Math.max(
+        currentPage > 1 ? currentPage - 2 : 1,
+        currentPage - 1
+      );
+      const lastVisible = Math.min(
+        totalPages,
+        firstVisible + maxVisibleButtons - 1
+      );
+
+      // Always show the first page
+      pageButtons.push(renderPageButton(firstVisible));
+
+      // Show the visible pages
+      for (let i = firstVisible + 1; i <= lastVisible; i++) {
+        pageButtons.push(renderPageButton(i));
+      }
+
+      // Show '...' if the last page is not visible
+      if (lastVisible < totalPages - 1) {
+        pageButtons.push(renderEllipsis());
+      }
+
+      // Always show the last page
+      pageButtons.push(renderPageButton(totalPages));
+    }
+
+    return pageButtons;
+  };
+
+  const renderPageButton = (pageNumber) => (
+    <TouchableOpacity
+      key={pageNumber}
+      onPress={() => handlePageClick(pageNumber)}
+    >
+      <Text
+        style={[
+          styles.paginationButton,
+          styles.paginationButtonText,
+          currentPage === pageNumber && styles.activePage
+        ]}
+      >
+        {pageNumber}
+      </Text>
+    </TouchableOpacity>
+  );
+
+  const renderEllipsis = () => (
+    <Text key='ellipsis' style={styles.paginationButtonText}>
+      ...
+    </Text>
+  );
+
   return (
     <View style={styles.paginationContainer}>
       <TouchableOpacity onPress={handlePrevious} disabled={currentPage === 1}>
@@ -36,22 +99,7 @@ const Pagination = ({
         </Text>
       </TouchableOpacity>
 
-      {[...Array(totalPages).keys()].map((pageNumber) => (
-        <TouchableOpacity
-          key={pageNumber + 1}
-          onPress={() => handlePageClick(pageNumber + 1)}
-        >
-          <Text
-            style={[
-              styles.paginationButton,
-              styles.paginationButtonText,
-              currentPage === pageNumber + 1 && styles.activePage
-            ]}
-          >
-            {pageNumber + 1}
-          </Text>
-        </TouchableOpacity>
-      ))}
+      {renderPageButtons()}
 
       <TouchableOpacity
         onPress={handleNext}
@@ -70,7 +118,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 20
+    marginVertical: 40
   },
   paginationButton: {
     padding: 10,
@@ -78,6 +126,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     borderColor: COLORS.primary
+  },
+  paginationButtonText: {
+    color: 'black'
   },
   activePage: {
     backgroundColor: COLORS.primary,

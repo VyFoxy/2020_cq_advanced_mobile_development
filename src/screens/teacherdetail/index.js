@@ -21,7 +21,7 @@ import { IMGS } from '../../constants';
 import { Modal, Portal, Provider, TextInput } from 'react-native-paper';
 import { isEmpty, round } from 'lodash';
 import { mappingLanguage, mappingSpecialties } from '../../utils/mapping';
-import TimeTable from '@mikezzb/react-native-timetable';
+//import TimeTable from '@mikezzb/react-native-timetable';
 import { Rating } from 'react-native-ratings';
 import {
   GetFeedBack,
@@ -418,10 +418,10 @@ export const TeacherDetail = (props) => {
                   </View>
                   <Text style={styles.headingParagraph}>Thời khóa biểu</Text>
                   <View style={{ overflow: 'hidden' }}>
-                    <TimeTable
+                    {/* <TimeTable
                       events={isBookedSchedule}
                       eventOnPress={(event) => console.log(event)}
-                    />
+                    /> */}
                   </View>
                 </View>
               </>

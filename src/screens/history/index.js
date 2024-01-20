@@ -6,28 +6,62 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
-  FlatList
+  FlatList,
+  ActivityIndicator
 } from 'react-native';
 import { COLORS } from '../../constants';
 import { CourseCard } from '../../components/course-card/CourseCard';
+import { getHistoryBooking } from '../../services/tutorAPI';
+import { useEffect, useRef, useState } from 'react';
+import Pagination from '../../components/pagination/Pagination';
+import { ceil } from 'lodash';
+import { getMinutesAgoTimestamp } from '../../utils/func';
 
 export const HistoryScreen = () => {
-  const arr = [1, 2, 3, 4];
+  const [historyBooking, setHistoryBooking] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
+  const scrollRef = useRef();
+  async function fetchData(page) {
+    setIsLoading(true);
+    let { data } = await getHistoryBooking({
+      page: page,
+      perPage: 20,
+      dateTimeLte: getMinutesAgoTimestamp(35)
+    });
+    if (data?.rows?.length > 0) {
+      setHistoryBooking(data?.rows);
+    }
+    setTotalPages(ceil(data?.count / 20));
+    setIsLoading(false);
+  }
+  useEffect(() => {
+    fetchData(currentPage);
+  }, []);
+
+  useEffect(() => {
+    fetchData(currentPage);
+    scrollRef.current.scrollTo({
+      y: 30,
+      animated: true
+    });
+  }, [currentPage]);
   return (
     <ScrollView
       style={{
         flex: 1,
         backgroundColor: '#fff',
-        paddingVertical: 40,
+        paddingVertical: 30,
         paddingHorizontal: 40
       }}
+      ref={scrollRef}
     >
       <View>
         <Image
-          source={
-            'https://sandbox.app.lettutor.com/static/media/history.1e097d10.svg'
-          }
+          source={require('../../../assets/img/history.png')}
           style={styles.image}
+          resizeMode='contain'
         ></Image>
         <Text style={styles.headingParagraph}>Lịch sử các buổi học</Text>
         <View style={styles.blockquote}>
@@ -40,27 +74,42 @@ export const HistoryScreen = () => {
           </Text>
         </View>
       </View>
-      <View>
-        {/* <CourseCard /> */}
-        <FlatList
-          data={arr}
-          renderItem={({ item }) => <CourseCard />}
-          keyExtractor={(item) => item.toString()}
+
+      {isLoading ? (
+        <ActivityIndicator
+          size='large'
+          color={COLORS.primary}
+          style={styles.centerLoading}
         />
-      </View>
+      ) : (
+        <>
+          <View>
+            {/* <CourseCard /> */}
+            <FlatList
+              data={historyBooking}
+              renderItem={({ item }) => <CourseCard item={item} />}
+              keyExtractor={(item, index) => index.toString()}
+              scrollEnabled={false}
+            />
+          </View>
+          {historyBooking && historyBooking?.length > 0 && (
+            <Pagination
+              totalPages={totalPages}
+              currentPage={currentPage}
+              onPageChange={() => {}}
+              setCurrentPage={setCurrentPage}
+            />
+          )}
+        </>
+      )}
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    marginTop: 30
-  },
   image: {
-    width: '40%',
-    aspectRatio: 1
+    width: 150,
+    height: 150
   },
   headingParagraph: {
     fontSize: 30,
@@ -186,8 +235,9 @@ const styles = StyleSheet.create({
     //borderColor: COLORS.primary,
     alignItems: 'center'
   },
-  registerText: {
-    flexDirection: 'row',
-    alignSelf: 'center'
+  centerLoading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 });

@@ -2,6 +2,7 @@ import {
   View,
   Text,
   FlatList,
+  ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
@@ -67,6 +68,7 @@ export const Tutor = ({ navigation }) => {
   };
   const [mappedTutors, setMappedTutors] = useState([]);
   const handleSearch = async () => {
+    setIsLoading(true);
     const response = await searchTutor(searchQuery);
     setTotalPages(ceil(response?.count / searchQuery.perPage));
     if (response.rows.length > 0) {
@@ -74,6 +76,7 @@ export const Tutor = ({ navigation }) => {
     } else {
       setListTutor([]);
     }
+    setIsLoading(false);
   };
   const mappingSpecialtiesTag = (value) => {
     return mappingSpecialties.find((item) => item?.value === value)?.label;
@@ -226,22 +229,33 @@ export const Tutor = ({ navigation }) => {
           <Text style={styles.ButtonText}>Đặt lại bộ tìm kiếm</Text>
         </TouchableOpacity>
       </View>
-
-      <View style={styles.filterContainer}>
-        <Text style={styles.teacherHeader}>Gia sư được đề xuất</Text>
-        {mappedTutors && mappedTutors?.length > 0 ? (
-          mappedTutors.map((item) => <TeacherCard item={item} />)
-        ) : (
-          <NotFoundFilter />
-        )}
-      </View>
-      {mappedTutors && mappedTutors?.length > 0 && (
-        <Pagination
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={onPageChange}
-          setCurrentPage={setCurrentPage}
+      {isLoading ? (
+        <ActivityIndicator
+          size='large'
+          color={COLORS.primary}
+          style={styles.centerLoading}
         />
+      ) : (
+        <>
+          <View style={styles.filterContainer}>
+            <Text style={styles.teacherHeader}>Gia sư được đề xuất</Text>
+            {mappedTutors && mappedTutors?.length > 0 ? (
+              mappedTutors.map((item, index) => (
+                <TeacherCard key={index.toString()} item={item} />
+              ))
+            ) : (
+              <NotFoundFilter />
+            )}
+          </View>
+          {mappedTutors && mappedTutors?.length > 0 && (
+            <Pagination
+              totalPages={totalPages}
+              currentPage={currentPage}
+              onPageChange={onPageChange}
+              setCurrentPage={setCurrentPage}
+            />
+          )}
+        </>
       )}
     </ScrollView>
   );

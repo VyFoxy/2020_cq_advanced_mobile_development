@@ -7,47 +7,132 @@ import {
   Button
 } from 'react-native';
 import { ROUTES, COLORS } from '../../constants';
+import {
+  formatTimestampToTimeZone,
+  formatTimestampToVietnamese,
+  showRelativeTime
+} from '../../utils/func';
+import { isEmpty } from 'lodash';
+import { ClassReview } from '../class-review/ClassReview';
+import { Rating } from 'react-native-ratings';
 
-export const CourseCard = () => {
+export const CourseCard = ({ item }) => {
+  const {
+    createdAtTimeStamp,
+    feedbacks,
+    classReview,
+    studentRequest,
+    scheduleDetailInfo
+  } = item;
+  const { scheduleInfo } = scheduleDetailInfo;
   return (
     <View style={styles.container}>
       <View style={styles.margin}>
-        <Text style={styles.headingParagraph}>CN, 05 Thg 11 23 </Text>
-        <Text style={styles.paragraph}>1 week ago</Text>
+        {/* {!isEmpty(createdAtTimeStamp) && (
+          <View> */}
+        <Text style={styles.headingParagraph}>
+          {formatTimestampToVietnamese(createdAtTimeStamp)}
+        </Text>
+        <Text style={styles.paragraph}>
+          {showRelativeTime(createdAtTimeStamp)}
+        </Text>
+        {/* </View>
+        )} */}
       </View>
       <View style={styles.contentProfile}>
         <Image
           style={styles.avtimg}
-          source={
-            'https://sandbox.api.lettutor.com/avatar/4d54d3d7-d2a9-42e5-97a2-5ed38af5789aavatar1684484879187.jpg'
-          }
+          source={{
+            uri: 'https://sandbox.api.lettutor.com/avatar/4d54d3d7-d2a9-42e5-97a2-5ed38af5789aavatar1684484879187.jpg'
+          }}
         />
         <View>
-          <Text style={styles.teacherName}>Keegan</Text>
+          <Text style={styles.teacherName}>
+            {scheduleInfo?.tutorInfo?.name}
+          </Text>
           <View style={styles.row}>
             <Image
-              source={
-                'https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.3/flags/4x3/tn.svg'
-              }
+              source={{
+                uri: 'https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.3/flags/4x3/tn.svg'
+              }}
               style={styles.flagIcon}
             />
-            <Text>Tunisia</Text>
+            <Text>{scheduleInfo?.tutorInfo?.country}</Text>
             <TouchableOpacity></TouchableOpacity>
           </View>
         </View>
       </View>
       <View style={styles.containerContent}>
         <Text style={{ fontSize: 20 }}>Thời gian học: </Text>
-        <Text style={{ fontSize: 20 }}>19:30 - 19:55</Text>
+        <Text style={{ fontSize: 20 }}>{`${formatTimestampToTimeZone(
+          scheduleInfo?.startTimestamp
+        )} - ${formatTimestampToTimeZone(scheduleInfo?.endTimestamp)}`}</Text>
       </View>
       <View style={styles.containerContentCol}>
-        <View xs={12} style={styles.rowDescription}>
-          <Text style={styles.paragraph}>Không có yêu cầu cho buổi học</Text>
+        <View style={styles.rowDescription}>
+          {isEmpty(studentRequest) ? (
+            <Text style={styles.paragraph}>Không có yêu cầu cho buổi học</Text>
+          ) : (
+            <View>
+              <Text style={styles.paragraph}>Yêu cầu cho buổi học</Text>
+              <Text
+                style={{
+                  fontSize: 15,
+                  paddingVertical: 10
+                }}
+              >
+                {studentRequest}
+              </Text>
+            </View>
+          )}
         </View>
-        <View xs={12} style={styles.rowDescription}>
-          <Text style={styles.paragraph}>Gia sư chưa có đánh giá</Text>
+        <View style={styles.rowDescription}>
+          {isEmpty(classReview) ? (
+            <Text style={styles.paragraph}>Gia sư chưa có đánh giá</Text>
+          ) : (
+            <View>
+              <Text style={styles.paragraph}>Đánh giá từ gia sư</Text>
+              <ClassReview
+                label={'Bahavior'}
+                comment={classReview?.behaviorComment}
+                ratingValue={classReview?.behaviorRating}
+              />
+              <ClassReview
+                label={'Listening'}
+                comment={classReview?.listeningComment}
+                ratingValue={classReview?.listeningRating}
+              />
+              <ClassReview
+                label={'Speaking'}
+                comment={classReview?.speakingComment}
+                ratingValue={classReview?.speakingRating}
+              />
+              <ClassReview
+                label={'Vacabulary'}
+                comment={classReview?.vocabularyComment}
+                ratingValue={classReview?.vocabularyRating}
+              />
+              <ClassReview
+                label={'Overal Comment'}
+                comment={classReview?.overallComment}
+              />
+            </View>
+          )}
         </View>
-        <View xs={12} style={styles.buttonContainer}>
+        {feedbacks &&
+          feedbacks?.length > 0 &&
+          feedbacks.map((item, index) => (
+            <View style={[{ flexDirection: 'row' }, styles.rowDescription]}>
+              <Text style={styles.paragraph}>{`Rating ${index + 1}:`}</Text>
+              <Rating
+                startingValue={item?.rating}
+                style={{ marginTop: 5, marginLeft: 5 }}
+                imageSize={15}
+                readonly
+              />
+            </View>
+          ))}
+        {/* <View xs={12} style={styles.buttonContainer}>
           <TouchableOpacity>
             <Text style={styles.buttonText}>Đánh giá</Text>
           </TouchableOpacity>
@@ -55,7 +140,7 @@ export const CourseCard = () => {
           <TouchableOpacity>
             <Text style={styles.buttonText}>Báo cáo</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
       <View xs={12} style={styles.buttonContainer}>
         <View />
@@ -126,7 +211,6 @@ const styles = StyleSheet.create({
   },
   rowDescription: {
     flex: 1,
-    justifyContent: 'center',
     //alignItems: 'center',
     paddingVertical: 10,
     paddingHorizontal: 20,
@@ -151,7 +235,7 @@ const styles = StyleSheet.create({
   buttonIn: {
     backgroundColor: '#1890ff',
     height: 40,
-    width: '70%',
+    width: 70,
     borderRadius: 10
   }
 });
