@@ -7,15 +7,14 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Alert,
-  TextInput
+  TextInput,
+  ScrollView
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COLORS, ROUTES } from '../../constants';
 import { useNavigation } from '@react-navigation/native';
-import { useAuth } from '../../context/AuthContext';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
-import { GoogleLoginAuth, login } from '../../services/authentication';
 import AuthContext from '../../context/AuthContext';
 import { Login } from '../../services/authentication';
 WebBrowser.maybeCompleteAuthSession();
@@ -40,7 +39,7 @@ export const LoginScreen = () => {
     async function getAccessToken() {
       const accessToken = await AsyncStorage.getItem('accessToken');
       if (accessToken) {
-        navigation.navigate(ROUTES.HOME);
+        navigation.navigate(ROUTES.HOME_DRAWER);
       }
     }
     getAccessToken();
@@ -51,60 +50,64 @@ export const LoginScreen = () => {
       if (response?.type === 'success') {
         const { authentication } = response;
         if (authentication?.accessToken) {
-          const response = await googleLoginAuth({
-            accessToken: authentication.accessToken
-          });
-          setAuth(response.data);
-          navigation.navigate(ROUTES.HOME);
+          try {
+            const loginResponse = await googleLoginAuth({
+              accessToken: authentication.accessToken
+            });
+            setAuth(loginResponse.data);
+            navigation.navigate(ROUTES.HOME);
+          } catch (error) {
+            console.log(error);
+            setloginError('Đăng nhập thất bại');
+          }
         }
       }
     }
+
     ggLogin();
-  }, [accessToken, response]);
+  }, [response?.type]);
 
-  const handleLogin = () => {
-    // setemailError('');
-    // setPasswordError('');
-    // setloginError('');
-    // if (username === '') setemailError('Email không được để trống');
-    // else {
-    //   let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-    //   if (reg.test(username) === false) setemailError('Email không đúng');
-    // }
-    // if (password === '') setPasswordError('Mật khẩu không được để trống');
+  const handleLogin = async () => {
+    setemailError('');
+    setPasswordError('');
+    setloginError('');
+    if (username === '') setemailError('Email không được để trống');
+    else {
+      let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+      if (reg.test(username) === false) setemailError('Email không đúng');
+    }
+    if (password === '') setPasswordError('Mật khẩu không được để trống');
 
-    // if (
-    //   emailError === '' &&
-    //   passwordError === '' &&
-    //   username !== '' &&
-    //   password !== ''
-    // ) {
-    //   try {
-    //     const response = await Login({ email: username, password: password });
-    //     if (response.data) {
-    //       setAuth(response.data);
+    if (
+      emailError === '' &&
+      passwordError === '' &&
+      username !== '' &&
+      password !== ''
+    ) {
+      try {
+        const response = await Login({ email: username, password: password });
+        if (response.data) {
+          setAuth(response.data);
 
-    //       navigation.navigate(ROUTES.HOME);
-    //     } else {
-    //       setloginError('Đăng nhập thất bại');
-    //     }
-    //   } catch (error) {
-    //     console.log(error);
+          navigation.navigate(ROUTES.HOME_DRAWER);
+        } else {
+          setloginError('Đăng nhập thất bại');
+        }
+      } catch (error) {
+        console.log(error);
 
-    //     setloginError('Đăng nhập thất bại');
-    //   }
-    // }
-    navigation.navigate(ROUTES.HOME);
+        setloginError('Đăng nhập thất bại');
+      }
+    }
+    navigation.navigate(ROUTES.HOME_DRAWER);
   };
 
   const googleLogin = () => {
     promptAsync();
   };
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+    <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={styles.container}>
-        <View style={styles.header}></View>
-
         <View style={styles.authentication}>
           <View style={styles.content}>
             <Image
@@ -136,12 +139,6 @@ export const LoginScreen = () => {
                   name='password'
                   label='MẬT KHẨU '
                   secureTextEntry={passwordVisible}
-                  right={
-                    <TextInput.Icon
-                      icon={passwordVisible ? 'eye' : 'eye-off'}
-                      onPress={() => setPasswordVisible(!passwordVisible)}
-                    />
-                  }
                 />
                 {passwordError !== '' && (
                   <Text style={styles.error}>{passwordError}</Text>
@@ -170,10 +167,7 @@ export const LoginScreen = () => {
                   <TouchableOpacity style={styles.otherLoginIcon}>
                     <Image
                       style={styles.flagIcon}
-                      source={
-                        'https://sandbox.app.lettutor.com/static/media/facebook-logo.3bac8064.svg'
-                      }
-                      resizeMode='contain'
+                      source={require('../../../assets/img/facebookLogo.png')}
                     />
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -182,9 +176,7 @@ export const LoginScreen = () => {
                   >
                     <Image
                       style={styles.flagIcon}
-                      source={
-                        'https://sandbox.app.lettutor.com/static/media/google-logo.5f53496e.svg'
-                      }
+                      source={require('../../../assets/img/googleLogo.png')}
                       resizeMode='contain'
                     />
                   </TouchableOpacity>
@@ -202,7 +194,7 @@ export const LoginScreen = () => {
           </View>
         </View>
       </View>
-    </SafeAreaView>
+    </ScrollView>
   );
 };
 
@@ -213,7 +205,8 @@ const styles = StyleSheet.create({
     marginTop: 30
   },
   image: {
-    width: '100%',
+    width: 350,
+    height: 350,
     aspectRatio: 1,
     marginBottom: 30
   },
@@ -314,7 +307,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   otherLoginIcon: {
-    height: 50
+    height: 50,
+    width: 50
   },
   phoneIcon: {
     width: 50,

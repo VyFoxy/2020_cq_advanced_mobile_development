@@ -7,9 +7,11 @@ export function AuthProvider({ children }) {
   const [auth, setAuth] = useState();
   useEffect(() => {
     async function storeTokens() {
-      console.log(auth.tokens.access.token);
+      console.log(auth);
       await AsyncStorage.setItem('accessToken', auth.tokens.access.token);
       await AsyncStorage.setItem('refreshToken', auth.tokens.refresh.token);
+      await AsyncStorage.setItem('avatar', auth.user.avatar);
+      await AsyncStorage.setItem('name', auth.user.name);
     }
     if (auth) storeTokens();
   }, [auth]);

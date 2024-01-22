@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { COLORS, ROUTES } from '../../constants';
 import { Register } from '../../services/authentication';
+import { ScrollView } from 'react-native';
 
 export const RegisterScreen = ({ navigation }) => {
   const [passwordVisible, setPasswordVisible] = useState(true);
@@ -20,7 +21,6 @@ export const RegisterScreen = ({ navigation }) => {
   const [passwordError, setPasswordError] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [rePassword, setRePassword] = useState('');
 
   const handleSignUp = async () => {
     setemailError('');
@@ -32,8 +32,6 @@ export const RegisterScreen = ({ navigation }) => {
       if (reg.test(username) === false) setemailError('Email không đúng');
     }
     if (password === '') setPasswordError('Mật khẩu không được để trống');
-    else if (password !== rePassword)
-      setPasswordError('Xác nhận mật khẩu không đúng');
 
     if (emailError === '' && passwordError === '') {
       try {
@@ -48,7 +46,7 @@ export const RegisterScreen = ({ navigation }) => {
     }
   };
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+    <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={styles.container}>
         <View style={styles.header}></View>
 
@@ -83,12 +81,6 @@ export const RegisterScreen = ({ navigation }) => {
                   name='password'
                   label='MẬT KHẨU '
                   secureTextEntry={passwordVisible}
-                  right={
-                    <TextInput.Icon
-                      icon={passwordVisible ? 'eye' : 'eye-off'}
-                      onPress={() => setPasswordVisible(!passwordVisible)}
-                    />
-                  }
                 />
                 {passwordError !== '' && (
                   <Text style={styles.error}>{passwordError}</Text>
@@ -132,7 +124,7 @@ export const RegisterScreen = ({ navigation }) => {
           </View>
         </View>
       </View>
-    </SafeAreaView>
+    </ScrollView>
   );
 };
 
@@ -143,7 +135,8 @@ const styles = StyleSheet.create({
     marginTop: 30
   },
   image: {
-    width: '100%',
+    width: 350,
+    height: 350,
     aspectRatio: 1,
     marginBottom: 30
   },
@@ -217,6 +210,7 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2
     },
+    marginTop: 20,
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 2,
@@ -244,7 +238,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   otherLoginIcon: {
-    height: 50
+    height: 50,
+    width: 50
   },
   phoneIcon: {
     width: 50,

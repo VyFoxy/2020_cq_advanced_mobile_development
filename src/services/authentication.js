@@ -17,7 +17,11 @@ export const Login = async ({ email, password }) => {
 };
 export const Register = async ({ email, password }) => {
   try {
-    const response = await api.post(PATH.REGISTER, { email, password });
+    const response = await api.post(PATH.REGISTER, {
+      email,
+      password,
+      source: null
+    });
     console.log({ email, password }, 'response');
     return response;
   } catch (error) {

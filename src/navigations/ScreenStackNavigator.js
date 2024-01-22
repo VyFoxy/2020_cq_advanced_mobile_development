@@ -13,7 +13,7 @@ const Stack = createStackNavigator();
 function ScreenStackNavigator() {
   return (
     <Stack.Navigator>
-      {/* <Stack.Screen
+      <Stack.Screen
         name={ROUTES.LOGIN}
         component={LoginScreen}
         options={{ headerShown: false }}
@@ -27,7 +27,12 @@ function ScreenStackNavigator() {
         name={ROUTES.FORGOT_PASSWORD}
         component={ForgotPassWordScreen}
         options={{ headerShown: false }}
-      /> */}
+      />
+      <Stack.Screen
+        name={ROUTES.HOME}
+        component={Tutor}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen
         name={ROUTES.HOME_DRAWER}
         component={DrawerNavigator}

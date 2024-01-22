@@ -8,38 +8,21 @@ import ScreenStackNavigator from './src/navigations/ScreenStackNavigator';
 import { Tutor } from './src/screens/tutor';
 import { TeacherDetail } from './src/screens/teacherdetail';
 import { AuthProvider } from './src/context/AuthContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-export default function App() {
-  useEffect(() => {
-    async function getAccessToken() {
-      await AsyncStorage.setItem(
-        'accessToken',
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmNTY5YzIwMi03YmJmLTQ2MjAtYWY3Ny1lY2MxNDE5YTZiMjgiLCJpYXQiOjE3MDU3MDg4MDEsImV4cCI6MTcwNTc5NTIwMSwidHlwZSI6ImFjY2VzcyJ9.U5X9Ci633jKfQGEkdpOHzU9cm72sMIEN1iaMrcl3E-Q'
-      );
-    }
-    getAccessToken();
-  }, []);
+import { LocalizationProvider } from './src/context/LocalizationProvider';
 
-  useEffect(() => {
-    async function getAccessToken() {
-      const accessToken = await AsyncStorage.getItem('accessToken');
-      if (accessToken) {
-        console.log(accessToken);
-        //navigation.navigate(ROUTES.HOME);
-      }
-    }
-    getAccessToken();
-  }, []);
+export default function App() {
   return (
-    <AuthProvider>
-      <NavigationContainer>
-        <Header />
-        {/* <CourseDetail /> */}
-        {/* <CoursesSreeen /> */}
-        {/* <Tutor /> */}
-        <ScreenStackNavigator />
-        {/* <TeacherDetail /> */}
-      </NavigationContainer>
-    </AuthProvider>
+    <LocalizationProvider>
+      <AuthProvider>
+        <NavigationContainer>
+          <Header />
+          {/* <CourseDetail /> */}
+          {/* <CoursesSreeen /> */}
+          {/* <Tutor /> */}
+          <ScreenStackNavigator />
+          {/* <TeacherDetail /> */}
+        </NavigationContainer>
+      </AuthProvider>
+    </LocalizationProvider>
   );
 }

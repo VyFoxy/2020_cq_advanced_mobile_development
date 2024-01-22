@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -10,9 +10,26 @@ import {
 import { Ionicons, MaterialIcons, AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS, IMGS, ROUTES } from '../../constants';
+import AuthContext from '../../context/AuthContext';
+import { isEmpty } from 'lodash';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import LocalizationContext from '../../context/LocalizationProvider';
+
 export const Header = () => {
+  const { locale, setLocale } = LocalizationContext;
   const navigation = useNavigation();
   const [showMenu, setShowMenu] = useState(false);
+  const [userInfo, setUserInfo] = useState({});
+  useEffect(() => {
+    async function getUserInfo() {
+      const avatar = await AsyncStorage.getItem('avatar');
+      const name = await AsyncStorage.getItem('name');
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      setUserInfo({ avatar: avatar, name: name, accessToken: accessToken });
+      console.log(userInfo);
+    }
+    getUserInfo();
+  }, []);
   return (
     <>
       <View style={styles.header}>
@@ -26,18 +43,35 @@ export const Header = () => {
           <TouchableOpacity style={styles.button}>
             <Image source={IMGS.vi} style={styles.flagIcon} />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.menuIcon}
-            onPress={() => setShowMenu(!showMenu)}
-          >
-            <Ionicons name='menu-outline' size={26} color='black' />
-          </TouchableOpacity>
+          {!isEmpty(userInfo?.accessToken) && (
+            <TouchableOpacity
+              style={styles.menuIcon}
+              onPress={() => setShowMenu(!showMenu)}
+            >
+              <Ionicons name='menu-outline' size={26} color='black' />
+            </TouchableOpacity>
+          )}
         </View>
       </View>
       <View style={showMenu ? styles.filter : styles.jselshow}>
         <View style={styles.wrap}>
           <View style={styles.inner}>
             <View style={styles.body}>
+              {!isEmpty(userInfo) && (
+                <TouchableOpacity
+                  style={styles.menuNav}
+                  onPress={() => {
+                    navigation.navigate(ROUTES.PROFILE);
+                    setShowMenu(!showMenu);
+                  }}
+                >
+                  <Image
+                    style={styles.avtimg}
+                    source={{ uri: userInfo?.avatar }}
+                  />
+                  <Text style={styles.navText}>{userInfo?.name}</Text>
+                </TouchableOpacity>
+              )}
               <TouchableOpacity style={styles.menuNav}>
                 <MaterialIcons
                   name='calendar-today'
@@ -112,7 +146,8 @@ export const Header = () => {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.menuNav}
-                onPress={() => {
+                onPress={async () => {
+                  await AsyncStorage.removeItem('accessToken');
                   navigation.navigate(ROUTES.LOGIN);
                   setShowMenu(!showMenu);
                 }}
@@ -154,6 +189,11 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end'
+  },
+  avtimg: {
+    width: 35,
+    height: 35,
+    borderRadius: 50
   },
   logo: {
     maxHeight: 44,
