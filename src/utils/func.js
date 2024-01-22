@@ -166,3 +166,11 @@ const formatTime = (hour, minute) => {
   const formattedMinute = minute < 10 ? `0${minute}` : minute;
   return `${formattedHour}:${formattedMinute}`;
 };
+
+export const convertMinutesToHoursAndMinutes = (totalMinutes) => {
+  console.log(totalMinutes);
+  const hours = Math.floor(totalMinutes / 60);
+  const remainingMinutes = totalMinutes % 60;
+
+  return { hours: hours, minutes: remainingMinutes };
+};

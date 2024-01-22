@@ -17,9 +17,12 @@ import { useState } from 'react';
 import AvatarContext from '../../context/AvatarProvider';
 import { getListTutor, searchTutor } from '../../services/tutorAPI';
 import MultiSelect from 'react-native-multiple-select';
-import { ceil, compact, includes, isEmpty } from 'lodash';
+import { ceil, compact, includes } from 'lodash';
 import Pagination from '../../components/pagination/Pagination';
 import NotFoundFilter from '../../components/not-found/NoteFound';
+import { getTotalCourse } from '../../services/courseAPI';
+import { MaterialIcons } from '@expo/vector-icons';
+import { convertMinutesToHoursAndMinutes } from '../../utils/func';
 
 export const Tutor = ({ navigation }) => {
   const { avatar } = useContext(AvatarContext);
@@ -30,19 +33,19 @@ export const Tutor = ({ navigation }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const scrollRef = useRef();
   const [totalPages, setTotalPages] = useState(5);
+  const [total, setTotal] = useState({});
   const fetchData = async () => {
     const response = await getListTutor(1, 60);
+    const res_total = await getTotalCourse();
+    setTotal(convertMinutesToHoursAndMinutes(res_total));
     setFavoriteTutor(() => {
       const newListID = compact(
         response.favoriteTutor.map((item) => item.secondId)
       );
+
       return newListID;
     });
-    // const data = response.tutors.rows.filter((item) => {
-    //   return item.level != null;
-    // });
-    // setListTutor(data);
-    // setIsLoading(false);
+
     handleSearch();
   };
   useEffect(() => {
@@ -142,16 +145,31 @@ export const Tutor = ({ navigation }) => {
       <View style={styles.banner}>
         <Text style={styles.welcomeText}>Buổi học sắp diễn ra</Text>
         <View style={{ marginTop: 20 }}>
-          <View item xs={6} md={6} style={{ textAlign: 'center' }}>
+          <View
+            item
+            xs={6}
+            md={6}
+            style={{ textAlign: 'center', alignItems: 'center' }}
+          >
             <Text style={styles.welcomeText}>
               T7, 04 Thg 11 23 18:00 - 18:25
             </Text>
             <Text style={styles.remainingText}>{' (còn 43:26:09)'}</Text>
           </View>
-          <View item xs={6} md={6}>
+          <View item xs={6} md={6} style={{ alignItems: 'center' }}>
             <TouchableOpacity style={styles.Button}>
+              <MaterialIcons
+                name='queue-play-next'
+                size={24}
+                color={COLORS.primary}
+              />
               <Text style={styles.ButtonText}>Vào lớp học</Text>
             </TouchableOpacity>
+            <View item xs={6} md={6} style={{ alignItems: 'center' }}>
+              <Text
+                style={{ fontSize: 18, color: 'white' }}
+              >{`Tổng số giờ bạn đã học là ${total.hours} giờ ${total.minutes} phút`}</Text>
+            </View>
           </View>
         </View>
       </View>
@@ -270,11 +288,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    width: '100%',
     color: 'white',
     borderBottomLeftRadius: 5,
-    shadowColor: 'rgba(0, 0, 0, 0.16)',
-    shadowOffset: { width: 0, height: 0 },
     shadowRadius: 5,
     backgroundColor:
       'linear-gradient(144deg, rgb(12, 61, 223) 0%, rgb(5, 23, 157) 100%)',
@@ -290,8 +305,9 @@ const styles = StyleSheet.create({
   },
   Button: {
     alignItems: 'center',
-    justifyContent: 'center',
-    width: '70%',
+    justifyContent: 'space-around',
+    width: 150,
+    flexDirection: 'row',
     height: 40,
     backgroundColor: COLORS.white,
     shadowOffset: {
@@ -302,12 +318,11 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 2,
     borderRadius: 100,
-    marginTop: 10,
-    marginLeft: 50
+    marginVertical: 20
   },
   ButtonText: {
-    fontSize: 12,
-    fontWeight: 'bold',
+    fontSize: 13,
+    fontWeight: '500',
     color: COLORS.primary
   },
   ButtonReset: {

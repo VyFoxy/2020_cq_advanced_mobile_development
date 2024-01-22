@@ -37,7 +37,6 @@ export const Header = () => {
       const name = await AsyncStorage.getItem('name');
       const accessToken = await AsyncStorage.getItem('accessToken');
       setUserInfo({ avatar: avatar, name: name, accessToken: accessToken });
-      console.log(123);
     }
     getUserInfo();
   }, [auth]);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -8,18 +8,22 @@ import LocalizationContext from '../../context/LocalizationProvider';
 import ThemeContext from '../../context/ThemeProvider';
 import { ROUTES, IMGS, COLORS } from '../../constants';
 export const Settings = () => {
-  const { i18n, setLocale } = useContext(LocalizationContext);
+  const { i18n, setLocale, locale } = useContext(LocalizationContext);
   const { themeData, setMode } = useContext(ThemeContext);
+  const [currentNation, setCurrentNation] = useState({});
   const countriesWithFlags = [
-    { title: 'en', image: IMGS.vi },
-    { title: 'vi', image: IMGS.usa }
+    { title: 'vi', label: i18n.t('Vietnamese'), image: IMGS.vi },
+    { title: 'en', label: i18n.t('English'), image: IMGS.usa }
   ];
 
   const theme = [
-    { title: 'Light', image: IMGS.lightTheme },
-    { title: 'Dark', image: IMGS.darkTheme }
+    { title: 'light', label: 'Light', image: IMGS.lightTheme },
+    { title: 'dark', label: 'Dark', image: IMGS.darkTheme }
   ];
 
+  useEffect(() => {
+    setCurrentNation(countriesWithFlags.find((item) => locale == item.title));
+  }, [locale]);
   return (
     <View
       style={[styles.container, { backgroundColor: themeData.backgroundColor }]}
@@ -37,16 +41,14 @@ export const Settings = () => {
           renderCustomizedButtonChild={(selectedItem, index) => {
             return (
               <View style={styles.dropdown3BtnChildStyle}>
-                {selectedItem ? (
-                  <Image
-                    source={selectedItem.image}
-                    style={styles.dropdown3BtnImage}
-                  />
-                ) : (
-                  <Icon name='md-earth-sharp' color={'#444'} size={20} />
-                )}
+                <Image
+                  source={
+                    selectedItem ? selectedItem.image : currentNation.image
+                  }
+                  style={styles.dropdown3BtnImage}
+                />
                 <Text style={styles.dropdown3BtnTxt}>
-                  {selectedItem ? selectedItem.title : i18n.t('SelectLanguage')}
+                  {selectedItem ? selectedItem.label : currentNation.label}
                 </Text>
                 <FontAwesome name='chevron-down' color={'#444'} size={18} />
               </View>
@@ -58,7 +60,7 @@ export const Settings = () => {
             return (
               <View style={styles.dropdown3RowChildStyle}>
                 <Image source={item.image} style={styles.dropdownRowImage} />
-                <Text style={styles.dropdown3RowTxt}>{item.title}</Text>
+                <Text style={styles.dropdown3RowTxt}>{item.label}</Text>
               </View>
             );
           }}
@@ -87,7 +89,7 @@ export const Settings = () => {
                   <Icon name='contrast-outline' color={'#444'} size={20} />
                 )}
                 <Text style={styles.dropdown3BtnTxt}>
-                  {selectedItem ? selectedItem.title : i18n.t('SelectTheme')}
+                  {selectedItem ? selectedItem.label : i18n.t('SelectTheme')}
                 </Text>
                 <FontAwesome name='chevron-down' color={'#444'} size={18} />
               </View>
@@ -99,7 +101,7 @@ export const Settings = () => {
             return (
               <View style={styles.dropdown3RowChildStyle}>
                 <Image source={item.image} style={styles.dropdownRowImage} />
-                <Text style={styles.dropdown3RowTxt}>{item.title}</Text>
+                <Text style={styles.dropdown3RowTxt}>{item.label}</Text>
               </View>
             );
           }}
@@ -140,7 +142,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 10
   },
-  dropdown3BtnImage: { width: 30, height: 30, resizeMode: 'cover' },
+  dropdown3BtnImage: {
+    width: 40,
+    height: 30,
+    resizeMode: 'cover'
+  },
   dropdown3BtnTxt: {
     color: '#444',
     textAlign: 'center',
