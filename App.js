@@ -9,19 +9,22 @@ import { Tutor } from './src/screens/tutor';
 import { TeacherDetail } from './src/screens/teacherdetail';
 import { AuthProvider } from './src/context/AuthContext';
 import { LocalizationProvider } from './src/context/LocalizationProvider';
+import { ThemeProvider } from './src/context/ThemeProvider';
 
 export default function App() {
   return (
     <LocalizationProvider>
       <AuthProvider>
-        <NavigationContainer>
-          <Header />
-          {/* <CourseDetail /> */}
-          {/* <CoursesSreeen /> */}
-          {/* <Tutor /> */}
-          <ScreenStackNavigator />
-          {/* <TeacherDetail /> */}
-        </NavigationContainer>
+        <ThemeProvider>
+          <NavigationContainer>
+            <Header />
+            {/* <CourseDetail /> */}
+            {/* <CoursesSreeen /> */}
+            {/* <Tutor /> */}
+            <ScreenStackNavigator />
+            {/* <TeacherDetail /> */}
+          </NavigationContainer>
+        </ThemeProvider>
       </AuthProvider>
     </LocalizationProvider>
   );

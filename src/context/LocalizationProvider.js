@@ -15,6 +15,7 @@ export function LocalizationProvider({ children }) {
     () => ({ i18n, locale, setLocale }),
     [i18n, locale, setLocale]
   );
+  console.log(locale);
   return (
     <LocalizationContext.Provider value={value}>
       {children}

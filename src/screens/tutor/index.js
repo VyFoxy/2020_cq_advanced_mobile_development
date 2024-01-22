@@ -364,5 +364,10 @@ const styles = StyleSheet.create({
   },
   label: {
     margin: 8
+  },
+  centerLoading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 });

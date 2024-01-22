@@ -39,8 +39,8 @@ export const formatTimestampToTimeZone = (timestamp) => {
   return formattedDate;
 };
 
-export const getDayOfWeek = () => {
-  const currentDate = new Date();
+export const getDayOfWeek = (timestamp) => {
+  const currentDate = new Date(timestamp);
   const dayIndex = currentDate.getDay();
   return dayIndex;
 };
@@ -112,4 +112,57 @@ export const formatTimestampToVietnamese = (timestamp) => {
     ' ' +
     parts[5]
   );
+};
+
+export const formatTimestampRange = (startTimestamp, endTimestamp) => {
+  const startDate = new Date(startTimestamp);
+  const endDate = new Date(endTimestamp);
+
+  const startHour = startDate.getHours();
+  const startMinute = startDate.getMinutes();
+  const endHour = endDate.getHours();
+  const endMinute = endDate.getMinutes();
+
+  const daysOfWeek = [
+    'Chủ Nhật',
+    'Thứ Hai',
+    'Thứ Ba',
+    'Thứ Tư',
+    'Thứ Năm',
+    'Thứ Sáu',
+    'Thứ Bảy'
+  ];
+  const dayOfWeek = daysOfWeek[startDate.getDay()];
+
+  const monthNames = [
+    'Tháng 1',
+    'Tháng 2',
+    'Tháng 3',
+    'Tháng 4',
+    'Tháng 5',
+    'Tháng 6',
+    'Tháng 7',
+    'Tháng 8',
+    'Tháng 9',
+    'Tháng 10',
+    'Tháng 11',
+    'Tháng 12'
+  ];
+  const monthName = monthNames[startDate.getMonth()];
+
+  const dayOfMonth = startDate.getDate();
+  const year = startDate.getFullYear();
+
+  const formattedText = `${formatTime(startHour, startMinute)} - ${formatTime(
+    endHour,
+    endMinute
+  )} ${dayOfWeek}, ${dayOfMonth} ${monthName} ${year}`;
+
+  return formattedText;
+};
+
+const formatTime = (hour, minute) => {
+  const formattedHour = hour < 10 ? `0${hour}` : hour;
+  const formattedMinute = minute < 10 ? `0${minute}` : minute;
+  return `${formattedHour}:${formattedMinute}`;
 };

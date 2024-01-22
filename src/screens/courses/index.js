@@ -60,7 +60,8 @@ export const CoursesSreeen = () => {
               </View>
             </CourseCard>
           )}
-          keyExtractor={(item) => item.toString()}
+          keyExtractor={(item, index) => index.toString()}
+          scrollEnabled={false}
         />
       </View>
     </ScrollView>

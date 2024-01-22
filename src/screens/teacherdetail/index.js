@@ -9,9 +9,10 @@ import {
   Dimensions,
   Button,
   FlatList,
-  Pressable
+  Pressable,
+  Alert
 } from 'react-native';
-import { MaterialIcons, AntDesign } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import { COLORS } from '../../constants';
 import { ScrollView } from 'react-native-virtualized-view';
 import { ListTag } from '../../components/list-tag/ListTag';
@@ -21,16 +22,21 @@ import { IMGS } from '../../constants';
 import { Modal, Portal, Provider, TextInput } from 'react-native-paper';
 import { isEmpty, round } from 'lodash';
 import { mappingLanguage, mappingSpecialties } from '../../utils/mapping';
-//import TimeTable from '@mikezzb/react-native-timetable';
+import TimeTable from '@mikezzb/react-native-timetable';
 import { Rating } from 'react-native-ratings';
 import {
   GetFeedBack,
   GetTuTorbyID,
+  bookTutor,
   reportAction
 } from '../../services/tutorAPI';
 import AvatarContext from '../../context/AvatarProvider';
 import { getSchedule } from '../../services/schedule';
-import { formatTimestampToTimeZone, getDayOfWeek } from '../../utils/func';
+import {
+  formatTimestampRange,
+  formatTimestampToTimeZone,
+  getDayOfWeek
+} from '../../utils/func';
 
 export const TeacherDetail = (props) => {
   const id = props.route?.params?.id;
@@ -39,8 +45,8 @@ export const TeacherDetail = (props) => {
   const [review, setReview] = useState([]);
   const [schedule, setSchedule] = React.useState([]);
   const [isBookedSchedule, setIsBookedSchedule] = useState([]);
-  const [listScheduleCanBook, setListScheduleCanBook] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [scheduleBooking, setScheduleBooking] = useState({});
   const [isOpenBooking, setIsOpenBooking] = useState(false);
   const fetchData = async () => {
     const response = await GetTuTorbyID(id);
@@ -50,7 +56,6 @@ export const TeacherDetail = (props) => {
     const mappedSpecialties = response?.specialties
       .split(',')
       .map(mappingSpecialtiesTag);
-
     const mappingLanguageTag = (value) => {
       return mappingLanguage.find((item) => item?.value === value)?.label;
     };
@@ -78,52 +83,79 @@ export const TeacherDetail = (props) => {
       page: 0
     });
     setSchedule([...schedule, ...scheduleOfTutor]);
-
     setIsLoading(false);
   };
   useEffect(() => {
     fetchData();
-  }, [avatar]);
+  }, []);
 
-  const video = React.useRef(null);
-  const [value, setValue] = useState(round(data?.rating || 0));
   const [visible, setVisible] = useState(false);
   const [report, setReport] = useState('');
-  const [liked, setLiked] = useState(false);
   const [followStatus, setFollowStatus] = useState(data?.isFavorite);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
   const sentReport = async () => {
     const response = await reportAction(report, id);
     if (response.message == 'Report successfully') {
-      alert('Report successfully');
+      alert('Báo cáo thành công');
     }
     setReport('');
     hideModal();
   };
 
   const handleSchedule = () => {
+    const currentTimestamp = new Date().getTime();
     const data = schedule.map((item) =>
       item?.isBooked
         ? {
             courseId: 'Đã đặt',
-            day: getDayOfWeek(),
+            day: getDayOfWeek(item?.startTimestamp),
             startTime: formatTimestampToTimeZone(item?.startTimestamp),
             endTime: formatTimestampToTimeZone(item?.endTimestamp),
-            color: 'rgb(46, 204, 113)'
+            color: 'rgb(46, 204, 113)',
+            canBook: false
           }
         : {
             courseId: 'Đặt lịch',
-            day: getDayOfWeek(),
+            eventId: item?.id,
+            day: getDayOfWeek(item?.startTimestamp),
             startTime: formatTimestampToTimeZone(item?.startTimestamp),
             endTime: formatTimestampToTimeZone(item?.endTimestamp),
-            color: COLORS.primary
+            endTimestamp: item?.endTimestamp,
+            startTimestamp: item?.startTimestamp,
+            color:
+              currentTimestamp >= item?.startTimestamp
+                ? COLORS.gray
+                : COLORS.primary,
+            canBook: currentTimestamp >= item?.startTimestamp ? false : true,
+            note: ''
           }
     );
     setIsBookedSchedule(data);
   };
 
-  const handleBookingSchedule = (event) => {};
+  const handleBookingSchedule = (event) => {
+    if (event.canBook == false) {
+      Alert.alert('Không thể đặt lịch học này');
+    } else {
+      setScheduleBooking(event);
+      setIsOpenBooking(true);
+    }
+  };
+
+  const sentBooking = async () => {
+    try {
+      const response = await bookTutor({
+        scheduleDetailIds: scheduleBooking.eventId,
+        note: scheduleBooking.note
+      });
+      if (response.message == 'Book successful') {
+        alert('Đặt lịch thành công');
+      }
+    } catch (error) {
+      alert('Đặt lịch thất bại');
+    }
+  };
   useEffect(() => {
     handleSchedule();
   }, [schedule]);
@@ -147,12 +179,25 @@ export const TeacherDetail = (props) => {
                 onDismiss={hideModal}
                 contentContainerStyle={styles.modalStyle}
               >
-                <View style={{ flex: 1 }}>
-                  {!isEmpty(data?.User?.name) && (
-                    <Text style={styles.headingParagraph}>{`Báo cáo ${
-                      data?.User?.name || ''
-                    }`}</Text>
-                  )}
+                <View
+                  style={{
+                    flex: 1,
+                    alignContent: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  <View
+                    style={{
+                      borderBottomColor: COLORS.grayLight,
+                      borderBottomWidth: 0.3
+                    }}
+                  >
+                    {!isEmpty(data?.User?.name) && (
+                      <Text style={styles.titleParagraph}>{`Báo cáo ${
+                        data?.User?.name || ''
+                      }`}</Text>
+                    )}
+                  </View>
 
                   <TextInput
                     mode='outlined'
@@ -161,9 +206,8 @@ export const TeacherDetail = (props) => {
                     onChangeText={setReport}
                     name='Report'
                     placeholder='Vui lòng điền chi tiết vấn đề bạn gặp phải'
-                    defaultValue=''
-                    multiline={true}
-                    numberOfLines={4}
+                    //multiline={true}
+                    //numberOfLines={4}
                   />
                   <View
                     style={{ justifyContent: 'flex-end', flexDirection: 'row' }}
@@ -194,53 +238,63 @@ export const TeacherDetail = (props) => {
                   </View>
                 </View>
               </Modal>
-              {/* <Modal
+              <Modal
                 visible={isOpenBooking}
                 onDismiss={() => setIsOpenBooking(false)}
                 contentContainerStyle={styles.modalStyle}
               >
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.headingParagraph}>Chi tiết đặt lịch</Text>
+                  <View
+                    style={{
+                      borderBottomColor: COLORS.grayLight,
+                      borderBottomWidth: 0.3
+                    }}
+                  >
+                    <Text style={styles.titleParagraph}>Chi tiết đặt lịch</Text>
+                  </View>
+
+                  <Text style={styles.headingParagraph}>
+                    Thời gian đặt lịch
+                  </Text>
+                  <View style={styles.labelTime}>
+                    <Text style={styles.labelTimeText}>
+                      {formatTimestampRange(
+                        scheduleBooking.startTimestamp,
+                        scheduleBooking.endTimestamp
+                      )}
+                    </Text>
+                  </View>
+                  <Text style={styles.headingParagraph}>Notes</Text>
                   <TextInput
                     mode='outlined'
-                    style={styles.input}
-                    value={report}
-                    onChangeText={setReport}
-                    name='Report'
-                    placeholder='Vui lòng điền chi tiết vấn đề bạn gặp phải'
-                    defaultValue=''
-                    multiline={true}
-                    numberOfLines={4}
+                    style={[styles.input, { marginHorizontal: 30 }]}
+                    value={scheduleBooking.note}
+                    onChangeText={(text) =>
+                      setScheduleBooking((prevScheduleBooking) => ({
+                        ...prevScheduleBooking,
+                        note: text
+                      }))
+                    }
                   />
                   <View
                     style={{ justifyContent: 'flex-end', flexDirection: 'row' }}
                   >
                     <Pressable
                       style={styles.Button}
-                      onPress={() => hideModal()}
+                      onPress={() => setIsOpenBooking(false)}
                     >
                       <Text style={styles.ButtonText}>Hủy</Text>
                     </Pressable>
                     <Pressable
-                      disabled={isEmpty(report)}
-                      style={
-                        isEmpty(report) ? styles.ButtonDisable : styles.Button
-                      }
-                      onPress={() => sentReport()}
+                      style={styles.bookingBtn}
+                      onPress={() => sentBooking()}
                     >
-                      <Text
-                        style={
-                          isEmpty(report)
-                            ? styles.ButtonTextDisable
-                            : styles.ButtonText
-                        }
-                      >
-                        Gửi
-                      </Text>
+                      <AntDesign name='doubleright' size={18} color='white' />
+                      <Text style={styles.bookingBtnText}>Đặt lịch</Text>
                     </Pressable>
                   </View>
                 </View>
-              </Modal> */}
+              </Modal>
             </Portal>
             <ScrollView showsVerticalScrollIndicator={false}>
               <>
@@ -418,10 +472,10 @@ export const TeacherDetail = (props) => {
                   </View>
                   <Text style={styles.headingParagraph}>Thời khóa biểu</Text>
                   <View style={{ overflow: 'hidden' }}>
-                    {/* <TimeTable
+                    <TimeTable
                       events={isBookedSchedule}
-                      eventOnPress={(event) => console.log(event)}
-                    /> */}
+                      eventOnPress={(event) => handleBookingSchedule(event)}
+                    />
                   </View>
                 </View>
               </>
@@ -505,9 +559,16 @@ const styles = StyleSheet.create({
   showContentButtonText: {
     fontSize: 18
   },
+  titleParagraph: {
+    fontSize: 18,
+    fontWeight: 700,
+    color: COLORS.black,
+    marginLeft: 15,
+    marginVertical: 5
+  },
   headingParagraph: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: 500,
     color: COLORS.black,
     marginLeft: 30,
     marginVertical: 15
@@ -530,7 +591,7 @@ const styles = StyleSheet.create({
   modalStyle: {
     backgroundColor: 'white',
     padding: 20,
-    height: 400,
+    height: 430,
     borderRadius: 20
   },
   container: {
@@ -544,7 +605,7 @@ const styles = StyleSheet.create({
     height: 40,
     backgroundColor: COLORS.white,
     elevation: 2,
-    borderRadius: 100,
+    borderRadius: 10,
     marginVertical: 30,
     marginHorizontal: 5,
     borderColor: COLORS.primary,
@@ -558,7 +619,7 @@ const styles = StyleSheet.create({
     height: 40,
     backgroundColor: '#f5f5f5',
     elevation: 2,
-    borderRadius: 100,
+    borderRadius: 10,
     marginVertical: 30,
     marginHorizontal: 5,
     borderColor: '#d9d9d9',
@@ -646,5 +707,41 @@ const styles = StyleSheet.create({
   flag: {
     width: 30,
     height: 20
+  },
+  centerLoading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  labelTime: {
+    backgroundColor: '#eeeaff',
+    paddingHorizontal: 10,
+    fontSize: 15,
+    marginHorizontal: 30,
+    paddingVertical: 5,
+    borderRadius: 5
+  },
+  labelTimeText: {
+    color: '#7766c7',
+    fontWeight: 'bold',
+    fontSize: 13
+  },
+  bookingBtn: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 130,
+    height: 40,
+    backgroundColor: COLORS.primary,
+    elevation: 2,
+    borderRadius: 10,
+    marginVertical: 30,
+    marginHorizontal: 5,
+    flexDirection: 'row'
+  },
+  bookingBtnText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: 'white',
+    marginLeft: 5
   }
 });

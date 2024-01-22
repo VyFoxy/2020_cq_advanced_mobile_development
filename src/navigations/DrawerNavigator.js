@@ -6,7 +6,8 @@ import { Tutor } from '../screens/tutor';
 import { CoursesSreeen } from '../screens/courses';
 import { CourseDetail } from '../screens/courses/detail';
 import { ROUTES, COLORS } from '../constants';
-import { Profile } from '../screens/profile/Profile';
+import { Profile } from '../screens/profile';
+import { Settings } from '../screens/setting';
 
 const Drawer = createDrawerNavigator();
 
@@ -41,6 +42,11 @@ function DrawerNavigator() {
       <Drawer.Screen
         name={ROUTES.PROFILE}
         component={Profile}
+        options={{ headerShown: false }}
+      />
+      <Drawer.Screen
+        name={ROUTES.SETTINGS}
+        component={Settings}
         options={{ headerShown: false }}
       />
     </Drawer.Navigator>

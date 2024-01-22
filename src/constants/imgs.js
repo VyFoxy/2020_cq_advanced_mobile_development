@@ -5,5 +5,7 @@ export default {
   imgHolder: require('../../assets/img/imgHolder.png'),
   completeImg: require('../../assets/img/complete.png'),
   vi: require('../../assets/img/vietnam.png'),
-  usa: require('../../assets/img/usa.png')
+  usa: require('../../assets/img/usa.png'),
+  lightTheme: require('../../assets/img/light-mode.png'),
+  darkTheme: require('../../assets/img/dark-mode.png')
 };
