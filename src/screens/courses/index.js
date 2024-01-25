@@ -4,7 +4,8 @@ import {
   StyleSheet,
   FlatList,
   ScrollView,
-  Image
+  Image,
+  TextInput
 } from 'react-native';
 import React from 'react';
 import CourseCard from '../../components/course/course';
@@ -29,8 +30,29 @@ export const CoursesSreeen = () => {
             style={styles.image}
             resizeMode='contain'
           ></Image>
-          <View style={styles.headingContainer}>
+          <View style={{ flexShrink: 1 }}>
             <Text style={styles.headingParagraph}>Khám phá các khóa học</Text>
+            <TextInput
+              placeholder={'Khóa học'}
+              style={{
+                width: 200,
+                height: 40,
+                borderColor: 'gray',
+                borderWidth: 1,
+                borderRadius: 20, // Adjust this value as needed
+                paddingLeft: 10,
+                marginBottom: 10
+              }}
+              value={searchQuery.name}
+              // onChangeText={(text) =>
+              //   setSearchQuery({ ...searchQuery, name: text })
+              // }
+              // onKeyPress={(e) => {
+              //   if (e.nativeEvent.key === 'Enter') {
+              //     handleSearch('name');
+              //   }
+              // }}
+            />
           </View>
         </View>
 
@@ -52,7 +74,7 @@ export const CoursesSreeen = () => {
                 This is a subtitle pla pla pla pla pla pla pla pla pla pla
               </Text>
               <View style={styles.levelContainer}>
-                <Text style={styles.levelText}>Beginner</Text>
+                <Text style={styles.levelText}>Beginner </Text>
                 <Text style={styles.levelText}>9 bài học</Text>
               </View>
             </CourseCard>
@@ -68,18 +90,21 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 30
+    marginBottom: 30,
+    flexShrink: 1
   },
   image: {
     width: 100,
     height: 100
   },
   headingParagraph: {
-    fontSize: 25,
-    fontWeight: 600,
+    fontSize: 27,
+    fontWeight: '600',
     color: COLORS.black,
     marginVertical: 10,
-    marginLeft: 20
+    marginLeft: 20,
+    //flex: 1,
+    flexShrink: 1
   },
   paragraph: {
     fontSize: 14,
@@ -96,133 +121,28 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: '500'
   },
-  header: {
-    height: 50,
-    backgroundColor: '#fff',
-    alignItems: 'center'
-  },
-  logo: {
-    width: '50%',
-    justifyContent: 'center',
-    alignContent: 'center'
-  },
   authentication: {
     padding: 20
-  },
-  content: {
-    height: '100%'
-  },
-  loginText: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    //color: COLORS.primary,
-    alignSelf: 'center'
-  },
-  loginArea: {
-    padding: 20,
-    flexDirection: 'column'
-  },
-  textIntro: {
-    textAlign: 'center',
-    fontSize: 16,
-    fontWeight: 500,
-    color: '#2A3453'
-  },
-
-  formLogin: {
-    flexDirection: 'column',
-    paddingVertical: 20
-  },
-
-  input: {
-    backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 2,
-    marginVertical: 10,
-    marginBottom: 20
-  },
-  label: { marginBottom: 10, color: '#A4B0BE' },
-  forgotPass: {
-    marginVertical: 20
-  },
-  forgotPassText: {
-    //color: COLORS.primary
-  },
-  loginButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    height: 50,
-    //backgroundColor: COLORS.primary,
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 2,
-    borderRadius: 5
-  },
-  loginButtonText: {
-    color: 'white',
-    alignSelf: 'center',
-    fontSize: 20,
-    fontWeight: 'bold'
-  },
-
-  otherLogin: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    margin: 20
-  },
-
-  otherLoginIcons: {
-    flexDirection: 'row',
-    margin: 10,
-    padding: 20,
-    width: '70%',
-    justifyContent: 'space-around',
-    alignItems: 'center'
-  },
-  otherLoginIcon: {
-    height: 50
-  },
-  phoneIcon: {
-    width: 50,
-    borderWidth: 1,
-    borderRadius: 25,
-    //borderColor: COLORS.primary,
-    alignItems: 'center'
-  },
-  registerText: {
-    flexDirection: 'row',
-    alignSelf: 'center'
   },
   nameCourse: {
     fontSize: 16,
     fontWeight: 'bold',
     marginTop: 30,
-    marginBottom: 10
+    marginBottom: 15
   },
   subtitle: {
-    fontSize: 12,
-    fontWeight: '300'
+    fontSize: 13,
+    fontWeight: '300',
+    color: COLORS.gray
   },
   levelText: {
     fontSize: 14,
-    fontWeight: '600',
-    marginHorizontal: 5
+    fontWeight: '400'
   },
   levelContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%'
+    alignItems: 'flex-end',
+    flex: 1,
+    paddingVertical: 15
   }
 });

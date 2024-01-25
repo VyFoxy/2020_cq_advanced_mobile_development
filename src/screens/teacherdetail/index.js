@@ -22,7 +22,7 @@ import { IMGS } from '../../constants';
 import { Modal, Portal, Provider, TextInput } from 'react-native-paper';
 import { isEmpty, round } from 'lodash';
 import { mappingLanguage, mappingSpecialties } from '../../utils/mapping';
-//import TimeTable from '@mikezzb/react-native-timetable';
+import TimeTable from '@mikezzb/react-native-timetable';
 import { Rating } from 'react-native-ratings';
 import {
   GetFeedBack,
@@ -40,7 +40,7 @@ import {
 
 export const TeacherDetail = (props) => {
   const id = props.route?.params?.id;
-  const { avatar } = useContext(AvatarContext);
+  const { setAvatar } = useContext(AvatarContext);
   const [data, setData] = useState({});
   const [review, setReview] = useState([]);
   const [schedule, setSchedule] = React.useState([]);
@@ -105,6 +105,7 @@ export const TeacherDetail = (props) => {
 
   const handleSchedule = () => {
     const currentTimestamp = new Date().getTime();
+
     const data = schedule.map((item) =>
       item?.isBooked
         ? {
@@ -117,7 +118,7 @@ export const TeacherDetail = (props) => {
           }
         : {
             courseId: 'Đặt lịch',
-            eventId: item?.id,
+            eventId: item?.scheduleDetails?.[0]?.id,
             day: getDayOfWeek(item?.startTimestamp),
             startTime: formatTimestampToTimeZone(item?.startTimestamp),
             endTime: formatTimestampToTimeZone(item?.endTimestamp),
@@ -151,6 +152,8 @@ export const TeacherDetail = (props) => {
       });
       if (response.message == 'Book successful') {
         alert('Đặt lịch thành công');
+        setAvatar((prev) => !prev);
+        setIsOpenBooking(false);
       }
     } catch (error) {
       alert('Đặt lịch thất bại');
@@ -472,10 +475,10 @@ export const TeacherDetail = (props) => {
                   </View>
                   <Text style={styles.headingParagraph}>Thời khóa biểu</Text>
                   <View style={{ overflow: 'hidden' }}>
-                    {/* <TimeTable
+                    <TimeTable
                       events={isBookedSchedule}
                       eventOnPress={(event) => handleBookingSchedule(event)}
-                    /> */}
+                    />
                   </View>
                 </View>
               </>

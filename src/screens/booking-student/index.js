@@ -6,22 +6,36 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
-  FlatList
+  FlatList,
+  Pressable
 } from 'react-native';
 import { COLORS } from '../../constants';
 import { BookingCard } from '../../components/booking-card/BookingCard';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import AvatarContext from '../../context/AvatarProvider';
-import { getUpcomingBooking } from '../../services/tutorAPI';
-import { ceil } from 'lodash';
+import {
+  DeleteCancelBooking,
+  getUpcomingBooking
+} from '../../services/tutorAPI';
+import { ceil, isEmpty } from 'lodash';
 import Pagination from '../../components/pagination/Pagination';
+import { Provider, Portal, Modal, TextInput } from 'react-native-paper';
+import { formatTimestampToVietnamese } from '../../utils/func';
+import DropDownPicker from 'react-native-dropdown-picker';
+import { ReasonCancleBooking } from '../../utils/constant';
 
 export const BookingStudentScreen = () => {
   const { avatar } = useContext(AvatarContext);
   const [upComingClass, setUpcomingBookingClass] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
+  const [visible, setVisible] = useState(false);
   const scrollRef = useRef();
   const [totalPages, setTotalPages] = useState(0);
+  const [cancelBooking, setCancleBooking] = useState({});
+  const [openReason, setOpenReason] = useState(false);
+  const [valueReason, setValueReason] = useState([]);
+  const [itemsReason, setItemsReason] = useState(ReasonCancleBooking);
+  const [itemCancle, setItemCancle] = useState('');
   const fetchData = async () => {
     const reponse_upcoming = await getUpcomingBooking({
       page: currentPage,
@@ -33,49 +47,170 @@ export const BookingStudentScreen = () => {
   useEffect(() => {
     fetchData();
   }, [avatar]);
+
+  const handleCancleBooking = async () => {
+    try {
+      const response = await DeleteCancelBooking({
+        id: cancelBooking?.id,
+        cancelReasonId: valueReason,
+        note: itemCancle
+      });
+      if (response.message == 'Book successful') {
+        alert('Đặt lịch thành công');
+        setVisible(false);
+      }
+    } catch (error) {
+      alert('Đặt lịch thất bại');
+    }
+  };
+
   return (
-    <ScrollView
-      style={{
-        flex: 1,
-        backgroundColor: '#fff',
-        paddingVertical: 40,
-        paddingHorizontal: 40
-      }}
-    >
-      <View>
-        <Image
-          source={require('../../../assets/img/calendar.png')}
-          style={styles.image}
-          resizeMode='contain'
-        ></Image>
-        <Text style={styles.headingParagraph}>Lịch đã đặt</Text>
-        <View style={styles.blockquote}>
-          <Text style={styles.paragraph}>
-            Đây là danh sách những khung giờ bạn đã đặt
-          </Text>
-          <Text style={styles.paragraph}>
-            Bạn có thể theo dõi khi nào buổi học bắt đầu, tham gia buổi học bằng
-            một cú nhấp chuột hoặc có thể hủy buổi học trước 2 tiếng.
-          </Text>
-        </View>
-      </View>
-      <View>
-        <FlatList
-          data={upComingClass}
-          renderItem={({ item }) => <BookingCard item={item} />}
-          keyExtractor={(item, index) => index.toString()}
-          scrollEnabled={false}
-        />
-      </View>
-      {upComingClass && upComingClass?.length > 0 && (
-        <Pagination
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={() => {}}
-          setCurrentPage={setCurrentPage}
-        />
-      )}
-    </ScrollView>
+    <View style={{ flex: 1, backgroundColor: '#fff' }}>
+      <Provider>
+        <Portal>
+          <Modal
+            visible={visible}
+            onDismiss={() => setVisible(false)}
+            contentContainerStyle={styles.modalStyle}
+          >
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'center'
+              }}
+            >
+              <Image
+                style={styles.avtimg}
+                source={{
+                  uri: cancelBooking?.scheduleDetailInfo?.scheduleInfo
+                    ?.tutorInfo?.avatar
+                }}
+              />
+              {!isEmpty(
+                cancelBooking?.scheduleDetailInfo?.scheduleInfo?.tutorInfo?.name
+              ) && (
+                <Text style={styles.teacherName}>
+                  {
+                    cancelBooking?.scheduleDetailInfo?.scheduleInfo?.tutorInfo
+                      ?.name
+                  }
+                </Text>
+              )}
+              <Text style={styles.paragraph}>Thời gian bài học</Text>
+              <Text style={styles.teacherName}>
+                {formatTimestampToVietnamese(
+                  cancelBooking?.scheduleDetailInfo?.startPeriodTimestamp
+                )}
+              </Text>
+              <View
+                style={{
+                  borderTopColor: COLORS.grayLight,
+                  borderTopWidth: 0.3
+                }}
+              >
+                <View style={{ flexDirection: 'row', marginVertical: 15 }}>
+                  <Text style={{ color: 'red' }}>*</Text>
+                  <Text style={styles.teacherName}>
+                    Lý do bạn hủy buổi học này là gì
+                  </Text>
+                </View>
+
+                <TextInput
+                  mode='outlined'
+                  style={styles.input}
+                  value={itemCancle}
+                  onChangeText={setItemCancle}
+                  name='Report'
+                  placeholder='Ghi chú thêm'
+                  //multiline={true}
+                  //numberOfLines={4}
+                />
+                <DropDownPicker
+                  style={styles.dropdownmulti}
+                  open={openReason}
+                  value={valueReason}
+                  items={itemsReason}
+                  setOpen={setOpenReason}
+                  setValue={setValueReason}
+                  setItems={setItemsReason}
+                  theme='LIGHT'
+                />
+              </View>
+
+              <View
+                style={{
+                  justifyContent: 'flex-end',
+                  flexDirection: 'row',
+                  marginLeft: 200,
+                  marginTop: 20
+                }}
+              >
+                <Pressable
+                  style={{ justifyContent: 'center' }}
+                  onPress={() => setVisible(false)}
+                >
+                  <Text style={{ color: COLORS.gray }}>Bỏ qua</Text>
+                </Pressable>
+                <Pressable
+                  style={styles.Button}
+                  onPress={() => handleCancleBooking()}
+                >
+                  <Text style={styles.ButtonText}>Xác nhận hủy</Text>
+                </Pressable>
+              </View>
+            </View>
+          </Modal>
+        </Portal>
+        <ScrollView
+          style={{
+            flex: 1,
+            backgroundColor: '#fff',
+            paddingVertical: 40,
+            paddingHorizontal: 40
+          }}
+        >
+          <View>
+            <Image
+              source={require('../../../assets/img/calendar.png')}
+              style={styles.image}
+              resizeMode='contain'
+            ></Image>
+            <Text style={styles.headingParagraph}>Lịch đã đặt</Text>
+            <View style={styles.blockquote}>
+              <Text style={styles.paragraph}>
+                Đây là danh sách những khung giờ bạn đã đặt
+              </Text>
+              <Text style={styles.paragraph}>
+                Bạn có thể theo dõi khi nào buổi học bắt đầu, tham gia buổi học
+                bằng một cú nhấp chuột hoặc có thể hủy buổi học trước 2 tiếng.
+              </Text>
+            </View>
+          </View>
+          <View>
+            <FlatList
+              data={upComingClass}
+              renderItem={({ item }) => (
+                <BookingCard
+                  item={item}
+                  setVisible={setVisible}
+                  setCancleBooking={setCancleBooking}
+                />
+              )}
+              keyExtractor={(item, index) => index.toString()}
+              scrollEnabled={false}
+            />
+          </View>
+          {upComingClass && upComingClass?.length > 0 && (
+            <Pagination
+              totalPages={totalPages}
+              currentPage={currentPage}
+              onPageChange={() => {}}
+              setCurrentPage={setCurrentPage}
+            />
+          )}
+        </ScrollView>
+      </Provider>
+    </View>
   );
 };
 
@@ -109,112 +244,58 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: '500'
   },
+  input: {
+    height: 80,
+    width: 280,
+    backgroundColor: '#fff',
+    zIndex: 2,
+    borderBlockColor: 'blue',
+    marginBottom: 12
+  },
   header: {
     height: 50,
     backgroundColor: '#fff',
     alignItems: 'center'
   },
-  logo: {
-    width: '50%',
-    justifyContent: 'center',
-    alignContent: 'center'
-  },
-  authentication: {
-    padding: 20
-  },
-  content: {
-    height: '100%'
-  },
-  loginText: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    //color: COLORS.primary,
-    alignSelf: 'center'
-  },
-  loginArea: {
+  modalStyle: {
+    backgroundColor: 'white',
     padding: 20,
-    flexDirection: 'column'
-  },
-  textIntro: {
-    textAlign: 'center',
-    fontSize: 16,
-    fontWeight: 500,
-    color: '#2A3453'
-  },
-
-  formLogin: {
-    flexDirection: 'column',
-    paddingVertical: 20
-  },
-
-  input: {
-    backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 2,
-    marginVertical: 10,
-    marginBottom: 20
-  },
-  label: { marginBottom: 10, color: '#A4B0BE' },
-  forgotPass: {
-    marginVertical: 20
-  },
-  forgotPassText: {
-    //color: COLORS.primary
-  },
-  loginButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    height: 50,
-    //backgroundColor: COLORS.primary,
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 2,
-    borderRadius: 5
-  },
-  loginButtonText: {
-    color: 'white',
-    alignSelf: 'center',
-    fontSize: 20,
-    fontWeight: 'bold'
-  },
-
-  otherLogin: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    margin: 20
-  },
-
-  otherLoginIcons: {
-    flexDirection: 'row',
     margin: 10,
-    padding: 20,
-    width: '70%',
-    justifyContent: 'space-around',
-    alignItems: 'center'
+    height: 450,
+    borderRadius: 2
   },
-  otherLoginIcon: {
-    height: 50
+  avtimg: {
+    width: 70,
+    height: 70,
+    borderRadius: 50
   },
-  phoneIcon: {
-    width: 50,
-    borderWidth: 1,
-    borderRadius: 25,
-    //borderColor: COLORS.primary,
-    alignItems: 'center'
+  teacherName: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: COLORS.black,
+    marginVertical: 5
   },
-  registerText: {
-    flexDirection: 'row',
-    alignSelf: 'center'
+  dropdownmulti: {
+    marginBottom: 10,
+    width: 280,
+    height: 40,
+    paddingHorizontal: 18,
+    minHeight: 40,
+    borderBlockColor: 'blue',
+    borderRadius: 0
+  },
+  Button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 90,
+    height: 30,
+    backgroundColor: COLORS.primary,
+    elevation: 2,
+    marginHorizontal: 5
+  },
+  ButtonText: {
+    fontSize: 12,
+    fontWeight: '400',
+    color: 'white'
   }
 });

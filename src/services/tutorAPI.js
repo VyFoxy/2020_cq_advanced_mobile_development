@@ -87,10 +87,12 @@ export async function reportAction(content, id) {
 
 export async function bookTutor({ scheduleDetailIds, note }) {
   try {
+    console.log(scheduleDetailIds, note);
     const res = await api.post(PATH.BOOKING, {
-      scheduleDetailIds,
-      note
+      scheduleDetailIds: [scheduleDetailIds],
+      note: note
     });
+
     return res.data;
   } catch (error) {
     console.log(error);
@@ -116,7 +118,7 @@ export async function getUpcomingBooking({ page, perPage }) {
         perPage,
         inFuture: 1,
         orderBy: 'meeting',
-        order: 'asc'
+        order: 'desc'
       }
     });
     return res.data.data;
@@ -140,13 +142,16 @@ export async function getHistoryBooking({ page, perPage, dateTimeLte }) {
   }
 }
 
-export async function cancelBooking(id) {
-  console.log(id);
+export async function DeleteCancelBooking(item) {
   try {
     const res = await api.delete(PATH.DELETE_SCHEDULE, {
-      scheduleDetailId: id,
-      cancelInfo: { cancelReasonId: 1 }
+      scheduleDetailId: item?.id,
+      cancelInfo: {
+        cancelReasonId: item?.cancelReasonId,
+        note: item?.note || ''
+      }
     });
+    console.log(res);
     return res.data;
   } catch (error) {
     throw Error(error);

@@ -4,18 +4,20 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Button
+  Button,
+  Pressable
 } from 'react-native';
 import { ROUTES, COLORS } from '../../constants';
 import {
   formatTimestampToTimeZone,
-  formatTimestampToVietnamese
+  formatTimestampToVietnamese,
+  isWithinTwoHours
 } from '../../utils/func';
 import { Feather } from '@expo/vector-icons';
 import { isEmpty, isNil, times } from 'lodash';
 import CollapseComponent from '../collapse/Collapse';
 
-export const BookingCard = ({ item }) => {
+export const BookingCard = ({ item, setCancleBooking, setVisible }) => {
   const { createdAtTimeStamp, scheduleDetailInfo, studentRequest } = item;
   const { scheduleInfo } = scheduleDetailInfo;
   const text = `
@@ -24,12 +26,15 @@ export const BookingCard = ({ item }) => {
   const items = {
     key: '1',
     label: 'Yêu cầu cho buổi học',
-    children: <Text>{!isEmpty(studentRequest) ? studentRequest : text}</Text>
+    children: (
+      <Text style={{ lineHeight: 22 }}>
+        {!isEmpty(studentRequest) ? studentRequest : text}
+      </Text>
+    )
   };
 
   return (
     <>
-      <CollapseComponent title={items.label} children={items.children} />
       {!isNil(scheduleDetailInfo) && (
         <View style={styles.container}>
           <View style={styles.margin}>
@@ -45,7 +50,7 @@ export const BookingCard = ({ item }) => {
             <Image
               style={styles.avtimg}
               source={{
-                uri: 'https://sandbox.api.lettutor.com/avatar/4d54d3d7-d2a9-42e5-97a2-5ed38af5789aavatar1684484879187.jpg'
+                uri: scheduleInfo?.tutorInfo?.avatar
               }}
             />
             <View>
@@ -83,13 +88,22 @@ export const BookingCard = ({ item }) => {
                   scheduleInfo?.endTimestamp
                 )}`}</Text>
               )}
-              <TouchableOpacity style={styles.ButtonCancle}>
-                <Feather name='x-square' size={20} color='red' />
-                <Text style={{ color: 'red', marginRight: 5 }}>Hủy</Text>
-              </TouchableOpacity>
+              {!isWithinTwoHours(scheduleDetailInfo?.startPeriodTimestamp) && (
+                <Pressable
+                  style={styles.ButtonCancle}
+                  onPress={() => {
+                    setVisible(true);
+                    setCancleBooking(item);
+                  }}
+                >
+                  <Feather name='x-square' size={20} color='red' />
+                  <Text style={{ color: 'red', marginLeft: 5 }}>Hủy</Text>
+                </Pressable>
+              )}
             </View>
+            <CollapseComponent title={items.label} children={items.children} />
           </View>
-          <CollapseComponent title={items.label} children={items.children} />
+
           <View xs={12} style={styles.buttonContainer}>
             <View />
             <Button

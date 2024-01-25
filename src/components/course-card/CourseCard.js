@@ -43,7 +43,7 @@ export const CourseCard = ({ item }) => {
         <Image
           style={styles.avtimg}
           source={{
-            uri: 'https://sandbox.api.lettutor.com/avatar/4d54d3d7-d2a9-42e5-97a2-5ed38af5789aavatar1684484879187.jpg'
+            uri: scheduleInfo?.tutorInfo?.avatar
           }}
         />
         <View>

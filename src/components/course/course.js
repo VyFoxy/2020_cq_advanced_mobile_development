@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   innerContainer: {
     flex: 1,
     padding: 5,
-    justifyContent: 'flex-start',
+    //justifyContent: 'flex-start',
     paddingHorizontal: 20
     //alignItems: 'center'
   }

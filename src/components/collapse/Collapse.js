@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Animated } from 'react-native';
+import { COLORS } from '../../constants';
+import { AntDesign } from '@expo/vector-icons';
 
 const CollapseComponent = ({ title, children }) => {
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const animation = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -19,30 +21,33 @@ const CollapseComponent = ({ title, children }) => {
 
   const heightInterpolate = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, 200] // Adjust the height as needed
+    outputRange: [0, 180] // Adjust the height as needed
   });
 
   const styles = {
     container: {
       overflow: 'hidden',
-      marginTop: 10
+      marginTop: 10,
+      borderColor: '#f1f1f1',
+      borderWidth: 1,
+      borderRadius: 5
     },
     content: {
       height: heightInterpolate,
-      backgroundColor: 'lightgray',
-      padding: 10
+      backgroundColor: COLORS.white,
+      padding: 10,
+      justifyContent: 'center'
     },
     titleContainer: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
       alignItems: 'center',
-      backgroundColor: 'gray',
-      padding: 10
+      backgroundColor: '#f1f1f1',
+      padding: 15
     },
     title: {
-      fontWeight: 'bold',
-      fontSize: 16,
-      color: 'white'
+      fontSize: 14,
+      paddingHorizontal: 10,
+      color: COLORS.black
     }
   };
 
@@ -50,6 +55,11 @@ const CollapseComponent = ({ title, children }) => {
     <View style={styles.container}>
       <TouchableOpacity onPress={toggleCollapse}>
         <View style={styles.titleContainer}>
+          <AntDesign
+            name={isCollapsed ? 'right' : 'down'}
+            size={18}
+            color='grey'
+          />
           <Text style={styles.title}>{title}</Text>
         </View>
       </TouchableOpacity>

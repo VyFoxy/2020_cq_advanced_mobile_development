@@ -98,10 +98,18 @@ export const formatTimestampToVietnamese = (timestamp) => {
 
   // Adjust the format to match the provided example ('T5, 18 Thg 01 24')
   var parts = formattedDate.split(' ');
-  //console.log(parts);
-  if (parts[0] == 'CN, ') {
+
+  if (parts[0] == 'CN,') {
     return (
-      parts[0] + parts[1] + ' ' + parts[2] + ' ' + parts[3] + ' ' + parts[4]
+      parts[0] +
+      ' ' +
+      parts[1] +
+      ' ' +
+      parts[2] +
+      ' ' +
+      parts[3] +
+      ' ' +
+      parts[4]
     );
   }
   // Add the 'T' prefix and adjust the month format
@@ -204,4 +212,20 @@ export const remainingTimeFromTimestamp = (timestamp) => {
   ).padStart(2, '0')}`;
 
   return result;
+};
+
+export const isWithinTwoHours = (timestamp) => {
+  // Convert the timestamp to milliseconds (if it's not already in milliseconds)
+  const timestampMilliseconds = timestamp;
+
+  // Get the current time in milliseconds
+  const currentTimeMilliseconds = new Date().getTime();
+
+  // Calculate the time difference in milliseconds
+  const timeDifference = Math.abs(
+    timestampMilliseconds - currentTimeMilliseconds
+  );
+
+  // Check if the time difference is less than 2 hours (in milliseconds)
+  return timeDifference < 2 * 60 * 60 * 1000; // 2 hours in milliseconds
 };

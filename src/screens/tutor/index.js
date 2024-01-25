@@ -68,21 +68,21 @@ export const Tutor = ({ navigation }) => {
     temp = upComingClass?.scheduleDetailInfo?.startPeriodTimestamp;
   }, [avatar]);
 
-  const calculateRemainingTime = () => {
-    const time = remainingTimeFromTimestamp(temp);
-    //console.log(temp);
-    setRemainingTime(time);
-    if (time <= 0) {
-      clearInterval(intervalId);
-      setRemainingTime("Time's up!");
-    }
-  };
+  // const calculateRemainingTime = () => {
+  //   const time = remainingTimeFromTimestamp(temp);
+  //   //console.log(temp);
+  //   setRemainingTime(time);
+  //   if (time <= 0) {
+  //     clearInterval(intervalId);
+  //     setRemainingTime("Time's up!");
+  //   }
+  // };
 
-  useEffect(() => {
-    const intervalId = setInterval(calculateRemainingTime, 1000);
-    // Clean up the interval when the component is unmounted
-    return () => clearInterval(intervalId);
-  }, []);
+  // useEffect(() => {
+  //   const intervalId = setInterval(calculateRemainingTime, 1000);
+  //   // Clean up the interval when the component is unmounted
+  //   return () => clearInterval(intervalId);
+  // }, []);
   const initSearchQuery = {
     name: '',
     country: '',
@@ -174,6 +174,122 @@ export const Tutor = ({ navigation }) => {
   };
   return (
     <ScrollView style={styles.container} ref={scrollRef}>
+      <View style={styles.banner}>
+        <Text style={styles.welcomeText}>Buổi học sắp diễn ra</Text>
+        <View style={{ marginTop: 20 }}>
+          <View
+            item
+            xs={6}
+            md={6}
+            style={{ textAlign: 'center', alignItems: 'center' }}
+          >
+            {/* {console.log(upComingClass, 'up')} */}
+            {!isEmpty(upComingClass) ? (
+              <Text style={styles.welcomeText}>
+                {formatTimestampRange(
+                  upComingClass?.scheduleDetailInfo?.startPeriodTimestamp,
+                  upComingClass?.scheduleDetailInfo?.endPeriodTimestamp
+                )}
+              </Text>
+            ) : (
+              <Text style={styles.welcomeText}>
+                Không có buổi học nào sắp diễn ra
+              </Text>
+            )}
+
+            {/* <Text style={styles.remainingText}>{remainingTime}</Text> */}
+          </View>
+          <View item xs={6} md={6} style={{ alignItems: 'center' }}>
+            <TouchableOpacity style={styles.Button}>
+              <MaterialIcons
+                name='queue-play-next'
+                size={24}
+                color={COLORS.primary}
+              />
+              <Text style={styles.ButtonText}>Vào lớp học</Text>
+            </TouchableOpacity>
+            <View item xs={6} md={6} style={{ alignItems: 'center' }}>
+              <Text
+                style={{ fontSize: 18, color: 'white' }}
+              >{`Tổng số giờ bạn đã học là ${total.hours} giờ ${total.minutes} phút`}</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+      <View style={styles.filterContainer}>
+        <Text style={styles.filterHeader}>Tìm kiếm gia sư</Text>
+        <TextInput
+          placeholder={'Nhập tên gia sư'}
+          style={{
+            width: 200,
+            height: 40,
+            borderColor: 'gray',
+            borderWidth: 1,
+            borderRadius: 20, // Adjust this value as needed
+            paddingLeft: 10,
+            marginBottom: 10
+          }}
+          value={searchQuery.name}
+          onChangeText={(text) =>
+            setSearchQuery({ ...searchQuery, name: text })
+          }
+          onKeyPress={(e) => {
+            if (e.nativeEvent.key === 'Enter') {
+              handleSearch('name');
+            }
+          }}
+        />
+        <View
+          style={{
+            width: 200,
+            height: 40,
+            paddingLeft: 10,
+            marginBottom: 10,
+            flex: 1,
+            zIndex: 1000
+          }}
+        >
+          <MultiSelect
+            hideTags
+            items={mappingSelectCountry}
+            uniqueKey='id'
+            onSelectedItemsChange={(e) => onSelectedItemsChange(e)}
+            selectedItems={searchQuery.nationality}
+            selectText='Chọn quốc tịch'
+            searchInputPlaceholderText='Chọn quốc tịch...'
+            //onChangeInput={(text) => console.log(text)}
+            tagRemoveIconColor='#fff'
+            tagBorderColor='#CCC'
+            tagTextColor='#CCC'
+            selectedItemTextColor='#CCC'
+            selectedItemIconColor='#CCC'
+            itemTextColor='#000'
+            displayKey='name'
+            searchInputStyle={{ color: '#CCC' }}
+          />
+        </View>
+        {/* <View style={styles.checkboxContainer}>
+          <CheckBox
+            value={isFavoriteTutor}
+            onValueChange={handleSelectFavoriteTutor}
+            style={styles.checkbox}
+          />
+          <Text style={styles.label}>Gia sư được yêu thích</Text>
+        </View> */}
+        <View style={{ paddingRight: 20 }}>
+          <ListTag
+            tags={specialties}
+            handFilterSpecialties={handFilterSpecialties}
+          />
+        </View>
+
+        <TouchableOpacity
+          style={styles.ButtonReset}
+          onPress={() => handleReset()}
+        >
+          <Text style={styles.ButtonText}>Đặt lại bộ tìm kiếm</Text>
+        </TouchableOpacity>
+      </View>
       {isLoading ? (
         <ActivityIndicator
           size='large'
@@ -182,123 +298,6 @@ export const Tutor = ({ navigation }) => {
         />
       ) : (
         <>
-          <View style={styles.banner}>
-            <Text style={styles.welcomeText}>Buổi học sắp diễn ra</Text>
-            <View style={{ marginTop: 20 }}>
-              <View
-                item
-                xs={6}
-                md={6}
-                style={{ textAlign: 'center', alignItems: 'center' }}
-              >
-                {/* {console.log(upComingClass, 'up')} */}
-                {!isEmpty(upComingClass) ? (
-                  <Text style={styles.welcomeText}>
-                    {formatTimestampRange(
-                      upComingClass?.scheduleDetailInfo?.startPeriodTimestamp,
-                      upComingClass?.scheduleDetailInfo?.endPeriodTimestamp
-                    )}
-                  </Text>
-                ) : (
-                  <Text style={styles.welcomeText}>
-                    Không có buổi học nào sắp diễn ra
-                  </Text>
-                )}
-
-                {/* <Text style={styles.remainingText}>{remainingTime}</Text> */}
-              </View>
-              <View item xs={6} md={6} style={{ alignItems: 'center' }}>
-                <TouchableOpacity style={styles.Button}>
-                  <MaterialIcons
-                    name='queue-play-next'
-                    size={24}
-                    color={COLORS.primary}
-                  />
-                  <Text style={styles.ButtonText}>Vào lớp học</Text>
-                </TouchableOpacity>
-                <View item xs={6} md={6} style={{ alignItems: 'center' }}>
-                  <Text
-                    style={{ fontSize: 18, color: 'white' }}
-                  >{`Tổng số giờ bạn đã học là ${total.hours} giờ ${total.minutes} phút`}</Text>
-                </View>
-              </View>
-            </View>
-          </View>
-          <View style={styles.filterContainer}>
-            <Text style={styles.filterHeader}>Tìm kiếm gia sư</Text>
-            <TextInput
-              placeholder={'Nhập tên gia sư'}
-              style={{
-                width: 200,
-                height: 40,
-                borderColor: 'gray',
-                borderWidth: 1,
-                borderRadius: 20, // Adjust this value as needed
-                paddingLeft: 10,
-                marginBottom: 10
-              }}
-              value={searchQuery.name}
-              onChangeText={(text) =>
-                setSearchQuery({ ...searchQuery, name: text })
-              }
-              onKeyPress={(e) => {
-                if (e.nativeEvent.key === 'Enter') {
-                  handleSearch('name');
-                }
-              }}
-            />
-            <View
-              style={{
-                width: 200,
-                height: 40,
-                paddingLeft: 10,
-                marginBottom: 10,
-                flex: 1,
-                zIndex: 1000
-              }}
-            >
-              <MultiSelect
-                hideTags
-                items={mappingSelectCountry}
-                uniqueKey='id'
-                onSelectedItemsChange={(e) => onSelectedItemsChange(e)}
-                selectedItems={searchQuery.nationality}
-                selectText='Chọn quốc tịch'
-                searchInputPlaceholderText='Chọn quốc tịch...'
-                //onChangeInput={(text) => console.log(text)}
-                tagRemoveIconColor='#fff'
-                tagBorderColor='#CCC'
-                tagTextColor='#CCC'
-                selectedItemTextColor='#CCC'
-                selectedItemIconColor='#CCC'
-                itemTextColor='#000'
-                displayKey='name'
-                searchInputStyle={{ color: '#CCC' }}
-              />
-            </View>
-            {/* <View style={styles.checkboxContainer}>
-          <CheckBox
-            value={isFavoriteTutor}
-            onValueChange={handleSelectFavoriteTutor}
-            style={styles.checkbox}
-          />
-          <Text style={styles.label}>Gia sư được yêu thích</Text>
-        </View> */}
-            <View style={{ paddingRight: 20 }}>
-              <ListTag
-                tags={specialties}
-                handFilterSpecialties={handFilterSpecialties}
-              />
-            </View>
-
-            <TouchableOpacity
-              style={styles.ButtonReset}
-              onPress={() => handleReset()}
-            >
-              <Text style={styles.ButtonText}>Đặt lại bộ tìm kiếm</Text>
-            </TouchableOpacity>
-          </View>
-
           <View style={styles.filterContainer}>
             <Text style={styles.teacherHeader}>Gia sư được đề xuất</Text>
             {mappedTutors && mappedTutors?.length > 0 ? (
