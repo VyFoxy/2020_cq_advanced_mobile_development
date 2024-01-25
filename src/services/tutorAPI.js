@@ -7,6 +7,7 @@ const PATH = {
   GET_SCHEDULE: '/schedule',
   BOOKING: '/booking',
   GET_UPCOMING: '/booking/list/student',
+  GET_NEXT: '/booking/next',
   GET_HISTORY: 'booking/list/student?inFuture=0&orderBy=meeting&sortBy=desc',
   DELETE_SCHEDULE: '/booking/schedule-detail',
   GET_TUTOR_BY_ID: '/tutor/',
@@ -97,18 +98,30 @@ export async function bookTutor({ scheduleDetailIds, note }) {
   }
 }
 
-export async function getUpcomingBooking({ page, perPage, dateTimeGte }) {
+export async function getNextBooking() {
+  try {
+    const res = await api.get(PATH.GET_NEXT);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    throw Error(error);
+  }
+}
+
+export async function getUpcomingBooking({ page, perPage }) {
   try {
     const res = await api.get(PATH.GET_UPCOMING, {
       params: {
         page,
         perPage,
-        dateTimeGte,
+        inFuture: 1,
         orderBy: 'meeting',
         order: 'asc'
       }
     });
     return res.data.data;
+
+    return res.data;
   } catch (error) {
     console.log(error);
     throw Error(error);

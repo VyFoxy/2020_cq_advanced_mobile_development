@@ -98,7 +98,12 @@ export const formatTimestampToVietnamese = (timestamp) => {
 
   // Adjust the format to match the provided example ('T5, 18 Thg 01 24')
   var parts = formattedDate.split(' ');
-
+  //console.log(parts);
+  if (parts[0] == 'CN, ') {
+    return (
+      parts[0] + parts[1] + ' ' + parts[2] + ' ' + parts[3] + ' ' + parts[4]
+    );
+  }
   // Add the 'T' prefix and adjust the month format
   return (
     'T' +
@@ -173,4 +178,30 @@ export const convertMinutesToHoursAndMinutes = (totalMinutes) => {
   const remainingMinutes = totalMinutes % 60;
 
   return { hours: hours, minutes: remainingMinutes };
+};
+
+export const remainingTimeFromTimestamp = (timestamp) => {
+  // Convert the timestamp to a Date object
+  const targetDate = new Date(timestamp);
+
+  // Get the current time
+  const currentDate = new Date();
+
+  // Calculate the time difference in milliseconds
+  const timeDifference = targetDate - currentDate;
+  if (timeDifference <= 0) return null;
+  // Convert milliseconds to seconds
+  const seconds = Math.floor(timeDifference / 1000);
+
+  // Calculate hours, minutes, and remaining seconds
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = seconds % 60;
+
+  // Format the result
+  const result = `${hours}:${String(minutes).padStart(2, '0')}:${String(
+    remainingSeconds
+  ).padStart(2, '0')}`;
+
+  return result;
 };

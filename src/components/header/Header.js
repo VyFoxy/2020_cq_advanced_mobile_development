@@ -126,14 +126,14 @@ export const Header = () => {
                 <AntDesign name='setting' size={32} style={styles.navIcon} />
                 <Text style={styles.navText}>Setting ứng dụng</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.menuNav}>
+              {/* <TouchableOpacity style={styles.menuNav}>
                 <MaterialIcons
                   name='calendar-today'
                   size={32}
                   style={styles.navIcon}
                 />
                 <Text style={styles.navText}>Lịch học định kỳ</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity
                 style={styles.menuNav}
                 onPress={() => {

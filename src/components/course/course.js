@@ -13,15 +13,13 @@ export default function CourseCard(props) {
         }}
         style={{ flex: 1 }}
       >
-        <View style={styles.innerContainer}>
-          <Image
-            source={
-              'https://camblycurriculumicons.s3.amazonaws.com/5e0e8b212ac750e7dc9886ac?h=d41d8cd98f00b204e9800998ecf8427e'
-            }
-            style={styles.courseImg}
-          />
-          {props.children}
-        </View>
+        <Image
+          source={{
+            uri: 'https://camblycurriculumicons.s3.amazonaws.com/5e0e8b212ac750e7dc9886ac?h=d41d8cd98f00b204e9800998ecf8427e'
+          }}
+          style={styles.courseImg}
+        />
+        <View style={styles.innerContainer}>{props.children}</View>
       </Pressable>
     </View>
   );
@@ -29,26 +27,30 @@ export default function CourseCard(props) {
 
 const styles = StyleSheet.create({
   courseImg: {
-    width: '100%',
-    height: 150
+    width: 330,
+    height: 240
   },
   gridItem: {
     flex: 1,
-    margin: 5,
-    height: 240,
     borderRadius: 8,
     elevation: 4,
     shadowColor: 'black',
-    shadowOpacity: 0.26,
+    shadowOpacity: 0.18,
     overflow: 'hidden',
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
-    backgroundColor: COLORS.white
+    borderWidth: 0.8,
+    borderColor: '#CCC',
+    shadowRadius: 5,
+    backgroundColor: COLORS.white,
+    marginVertical: 15,
+    borderRadius: 16,
+    marginHorizontal: 10,
+    minHeight: 450
   },
   innerContainer: {
     flex: 1,
     padding: 5,
     justifyContent: 'flex-start',
-    alignItems: 'center'
+    paddingHorizontal: 20
+    //alignItems: 'center'
   }
 });

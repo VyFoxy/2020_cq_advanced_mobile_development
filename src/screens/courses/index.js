@@ -25,16 +25,13 @@ export const CoursesSreeen = () => {
       <View>
         <View style={styles.container}>
           <Image
-            source={
-              'https://sandbox.app.lettutor.com/static/media/course.0bf1bb71.svg'
-            }
+            source={require('../../../assets/img/course.png')}
             style={styles.image}
+            resizeMode='contain'
           ></Image>
-          <Text style={styles.headingParagraph}>Khám phá các khóa học</Text>
-          {/* <View>
+          <View style={styles.headingContainer}>
             <Text style={styles.headingParagraph}>Khám phá các khóa học</Text>
-            <TextField size='small'></TextField>
-          </View> */}
+          </View>
         </View>
 
         <View>
@@ -74,8 +71,8 @@ const styles = StyleSheet.create({
     marginBottom: 30
   },
   image: {
-    width: '30%',
-    aspectRatio: 1
+    width: 100,
+    height: 100
   },
   headingParagraph: {
     fontSize: 25,
@@ -86,7 +83,7 @@ const styles = StyleSheet.create({
   },
   paragraph: {
     fontSize: 14,
-    lineHeight: '1.5rem'
+    lineHeight: 20
   },
   blockquote: {
     borderLeftWidth: 3, // Adjust the width of the grey line as needed
@@ -209,7 +206,9 @@ const styles = StyleSheet.create({
   },
   nameCourse: {
     fontSize: 16,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    marginTop: 30,
+    marginBottom: 10
   },
   subtitle: {
     fontSize: 12,

@@ -10,9 +10,29 @@ import {
 } from 'react-native';
 import { COLORS } from '../../constants';
 import { BookingCard } from '../../components/booking-card/BookingCard';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import AvatarContext from '../../context/AvatarProvider';
+import { getUpcomingBooking } from '../../services/tutorAPI';
+import { ceil } from 'lodash';
+import Pagination from '../../components/pagination/Pagination';
 
 export const BookingStudentScreen = () => {
-  const arr = [1, 2, 3, 4];
+  const { avatar } = useContext(AvatarContext);
+  const [upComingClass, setUpcomingBookingClass] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const scrollRef = useRef();
+  const [totalPages, setTotalPages] = useState(0);
+  const fetchData = async () => {
+    const reponse_upcoming = await getUpcomingBooking({
+      page: currentPage,
+      perPage: 20
+    });
+    setUpcomingBookingClass(reponse_upcoming?.rows);
+    setTotalPages(ceil(reponse_upcoming?.count / 20));
+  };
+  useEffect(() => {
+    fetchData();
+  }, [avatar]);
   return (
     <ScrollView
       style={{
@@ -24,10 +44,9 @@ export const BookingStudentScreen = () => {
     >
       <View>
         <Image
-          source={
-            'https://sandbox.app.lettutor.com/static/media/calendar-check.7cf3b05d.svg'
-          }
+          source={require('../../../assets/img/calendar.png')}
           style={styles.image}
+          resizeMode='contain'
         ></Image>
         <Text style={styles.headingParagraph}>Lịch đã đặt</Text>
         <View style={styles.blockquote}>
@@ -42,11 +61,20 @@ export const BookingStudentScreen = () => {
       </View>
       <View>
         <FlatList
-          data={arr}
-          renderItem={({ item }) => <BookingCard />}
-          keyExtractor={(item) => item.toString()}
+          data={upComingClass}
+          renderItem={({ item }) => <BookingCard item={item} />}
+          keyExtractor={(item, index) => index.toString()}
+          scrollEnabled={false}
         />
       </View>
+      {upComingClass && upComingClass?.length > 0 && (
+        <Pagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          onPageChange={() => {}}
+          setCurrentPage={setCurrentPage}
+        />
+      )}
     </ScrollView>
   );
 };
@@ -58,8 +86,8 @@ const styles = StyleSheet.create({
     marginTop: 30
   },
   image: {
-    width: '40%',
-    aspectRatio: 1
+    width: 150,
+    height: 150
   },
   headingParagraph: {
     fontSize: 30,

@@ -7,8 +7,12 @@ import {
   TouchableOpacity
 } from 'react-native';
 import { COLORS, ROUTES } from '../../constants';
+import { TextInput } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import { ForgotPassword } from '../../services/authentication';
 
 export const ForgotPassWordScreen = () => {
+  const navigation = useNavigation();
   const [mail, setMail] = useState('');
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
@@ -25,7 +29,7 @@ export const ForgotPassWordScreen = () => {
 
     if (emailError === '') {
       setSuccessState(true);
-      //forgotPassword({ email });
+      ForgotPassword({ email });
       navigation.navigate(ROUTES.LOGIN);
     }
   };
@@ -39,9 +43,11 @@ export const ForgotPassWordScreen = () => {
           </Text>
           <Text style={styles.leftText}>Email</Text>
           <TextInput
-            value={mail}
-            onChangeText={(e) => setMail(e.target.value)}
+            style={styles.input}
+            value={email || ''}
+            onChangeText={setEmail}
           />
+          {emailError !== '' && <Text style={styles.error}>{emailError}</Text>}
           <TouchableOpacity
             style={styles.loginButton}
             onPress={() => handleForgotPass()}
@@ -101,5 +107,13 @@ const styles = StyleSheet.create({
     color: 'white',
     alignSelf: 'center',
     fontSize: 15
+  },
+  input: {
+    backgroundColor: '#fff',
+    borderColor: COLORS.grayLight,
+    borderWidth: 1,
+    borderRadius: 5,
+    marginVertical: 10,
+    height: 50
   }
 });
