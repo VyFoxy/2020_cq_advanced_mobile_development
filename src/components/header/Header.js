@@ -186,14 +186,14 @@ export const Header = () => {
                 <MaterialIcons name='school' size={32} style={styles.navIcon} />
                 <Text style={styles.navText}>Khóa học</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.menuNav}>
+              {/* <TouchableOpacity style={styles.menuNav}>
                 <MaterialIcons
                   name='auto-stories'
                   size={32}
                   style={styles.navIcon}
                 />
                 <Text style={styles.navText}>Khóa học của tôi</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity style={styles.menuNav}>
                 <AntDesign name='swap' size={32} style={styles.navIcon} />
                 <Text style={styles.navText}>Đăng ký thành giáo viên</Text>
@@ -319,7 +319,7 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     overflowY: 'auto',
-    paddingVertical: 32
+    paddingVertical: 60
   },
   overlay: {
     position: 'absolute',

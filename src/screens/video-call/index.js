@@ -12,12 +12,19 @@ import React, { useEffect, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { COLORS, IMGS } from '../../constants';
-import { toTimeString, convertSecondsToTime } from '../../utils/func';
+import {
+  toTimeString,
+  convertSecondsToTime,
+  remainingTimeFromTimestamp
+} from '../../utils/func';
 
 export const Video = ({ route, navigation }) => {
-  const { data } = route.params;
-  const { scheduleDetailInfo } = data;
+  const { upComingClass } = route.params;
+  const { scheduleDetailInfo } = upComingClass;
   const startDate = new Date(scheduleDetailInfo.startPeriodTimestamp);
+  const [remaining, setRemainingTime] = useState(
+    scheduleDetailInfo.startPeriodTimestamp
+  );
   const waitTime = startDate - Date.now();
   const [timerCount, setTimer] = useState(parseInt(waitTime / 1000));
   const [timeLearn, setTimeLearn] = useState(0);
@@ -33,9 +40,15 @@ export const Video = ({ route, navigation }) => {
         return lastTimeLearn + 1;
       });
     }, 1000);
+    let count = setInterval(() => {
+      setRemainingTime((lastTimeLearn) => {
+        return lastTimeLearn - 1;
+      });
+    }, 1000);
     return () => {
       clearInterval(countDown);
       clearInterval(countUp);
+      clearInterval(count);
     };
   }, []);
   const handleBack = () => {
@@ -52,15 +65,9 @@ export const Video = ({ route, navigation }) => {
         </View>
       </View>
       <View style={styles.alert}>
-        {waitTime > 0 && (
-          <>
-            <Text style={styles.title}>The lesson will be started after:</Text>
-            <Text style={styles.title}>{toTimeString(timerCount)}</Text>
-            <Text style={styles.title}>
-              ({startDate.toUTCString().substring(0, 22)}) UTC
-            </Text>
-          </>
-        )}
+        <Text style={{ color: COLORS.white }}>
+          {remainingTimeFromTimestamp(remaining)}
+        </Text>
       </View>
       <View style={styles.iconContainer}>
         <View style={styles.iconHolder}>
@@ -81,8 +88,6 @@ export const Video = ({ route, navigation }) => {
           </View>
         </Pressable>
       </View>
-
-      {/* <JitsiMeetView style={styles.meetView} /> */}
     </SafeAreaView>
   );
 };
@@ -90,7 +95,7 @@ export const Video = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'gray',
+    backgroundColor: '#474747',
     justifyContent: 'space-between',
     alignItems: 'center'
   },
@@ -117,11 +122,12 @@ const styles = StyleSheet.create({
     bottom: 0
   },
   alert: {
-    backgroundColor: 'white',
-    opacity: 1,
+    backgroundColor: 'rgba(26, 26, 26,0.6)',
+    width: 200,
+    height: 30,
     borderRadius: 13,
     alignItems: 'center',
-    padding: 10,
+    justifyContent: 'center',
     margin: 10,
     zIndex: 2,
     borderColor: 'black',

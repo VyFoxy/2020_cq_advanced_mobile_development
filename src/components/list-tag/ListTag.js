@@ -7,14 +7,14 @@ import { isEmpty } from 'lodash';
 export const ListTag = ({ tags, handFilterSpecialties }) => {
   return (
     <FlatList
-      listKey={moment().valueOf().toString()}
+      //listKey={moment().valueOf().toString()}
       columnWrapperStyle={styles.listTag}
       numColumns={10}
       data={tags}
       renderItem={({ item }) => (
         <TagItem item={item} handFilterSpecialties={handFilterSpecialties} />
       )}
-      keyExtractor={(item) => item}
+      keyExtractor={(item, index) => index.toString()}
       style={styles.listTag}
       scrollEnabled={false}
     />

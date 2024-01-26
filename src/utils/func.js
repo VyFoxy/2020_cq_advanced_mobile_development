@@ -181,7 +181,6 @@ const formatTime = (hour, minute) => {
 };
 
 export const convertMinutesToHoursAndMinutes = (totalMinutes) => {
-  console.log(totalMinutes);
   const hours = Math.floor(totalMinutes / 60);
   const remainingMinutes = totalMinutes % 60;
 
@@ -196,7 +195,7 @@ export const remainingTimeFromTimestamp = (timestamp) => {
   const currentDate = new Date();
 
   // Calculate the time difference in milliseconds
-  const timeDifference = targetDate - currentDate;
+  const timeDifference = Math.abs(targetDate - currentDate);
   if (timeDifference <= 0) return null;
   // Convert milliseconds to seconds
   const seconds = Math.floor(timeDifference / 1000);

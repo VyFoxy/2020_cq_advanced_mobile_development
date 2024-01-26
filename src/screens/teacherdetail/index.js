@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useRef } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -23,14 +23,15 @@ import { Modal, Portal, Provider, TextInput } from 'react-native-paper';
 import { isEmpty, round } from 'lodash';
 import { mappingLanguage, mappingSpecialties } from '../../utils/mapping';
 //import TimeTable from '@mikezzb/react-native-timetable';
+import AvatarContext from '../../context/AvatarProvider';
 import { Rating } from 'react-native-ratings';
 import {
   GetFeedBack,
   GetTuTorbyID,
   bookTutor,
+  favorAction,
   reportAction
 } from '../../services/tutorAPI';
-import AvatarContext from '../../context/AvatarProvider';
 import { getSchedule } from '../../services/schedule';
 import {
   formatTimestampRange,
@@ -40,7 +41,7 @@ import {
 
 export const TeacherDetail = (props) => {
   const id = props.route?.params?.id;
-  const { setAvatar } = useContext(AvatarContext);
+  const { avatar, setAvatar } = useContext(AvatarContext);
   const [data, setData] = useState({});
   const [review, setReview] = useState([]);
   const [schedule, setSchedule] = React.useState([]);
@@ -75,6 +76,7 @@ export const TeacherDetail = (props) => {
       listLanguages: listLanguages,
       listSpecialties: listSpecialties
     });
+    setFollowStatus(response?.isFavorite);
     const response_feedback = await GetFeedBack(id);
     setReview(response_feedback?.data?.rows);
     //schedule
@@ -86,8 +88,9 @@ export const TeacherDetail = (props) => {
     setIsLoading(false);
   };
   useEffect(() => {
+    setIsLoading(true);
     fetchData();
-  }, []);
+  }, [avatar]);
 
   const [visible, setVisible] = useState(false);
   const [report, setReport] = useState('');
@@ -101,6 +104,11 @@ export const TeacherDetail = (props) => {
     }
     setReport('');
     hideModal();
+  };
+
+  const handleFavorAction = async () => {
+    await favorAction(data?.User.id);
+    setAvatar((prev) => !prev);
   };
 
   const handleSchedule = () => {
@@ -360,6 +368,7 @@ export const TeacherDetail = (props) => {
                       <Pressable
                         onPress={() => {
                           setFollowStatus(!followStatus);
+                          handleFavorAction();
                         }}
                         style={{ alignItems: 'center' }}
                       >

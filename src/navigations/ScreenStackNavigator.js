@@ -8,42 +8,45 @@ import { ForgotPassWordScreen } from '../screens/forgot-password';
 import DrawerNavigator from './DrawerNavigator';
 import { Tutor } from '../screens/tutor';
 import { ROUTES } from '../constants';
+import { AvatarProvider } from '../context/AvatarProvider';
 const Stack = createStackNavigator();
 
 function ScreenStackNavigator() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name={ROUTES.LOGIN}
-        component={LoginScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name={ROUTES.REGISTER}
-        component={RegisterScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name={ROUTES.FORGOT_PASSWORD}
-        component={ForgotPassWordScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name={ROUTES.HOME}
-        component={Tutor}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name={ROUTES.HOME_DRAWER}
-        component={DrawerNavigator}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name={ROUTES.TEACHER_DETAIL}
-        component={TeacherDetail}
-        options={{ headerShown: false }}
-      />
-    </Stack.Navigator>
+    <AvatarProvider>
+      <Stack.Navigator>
+        <Stack.Screen
+          name={ROUTES.LOGIN}
+          component={LoginScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={ROUTES.REGISTER}
+          component={RegisterScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={ROUTES.FORGOT_PASSWORD}
+          component={ForgotPassWordScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={ROUTES.HOME}
+          component={Tutor}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={ROUTES.HOME_DRAWER}
+          component={DrawerNavigator}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={ROUTES.TEACHER_DETAIL}
+          component={TeacherDetail}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    </AvatarProvider>
   );
 }
 

@@ -17,9 +17,11 @@ import { isEmpty, round } from 'lodash';
 import { favorAction } from '../../services/tutorAPI';
 import { useContext } from 'react';
 import AvatarContext from '../../context/AvatarProvider';
+import LocalizationContext from '../../context/LocalizationProvider';
 
 export default function TeacherCard(props) {
   const { item } = props;
+  const { i18n } = useContext(LocalizationContext);
   const { setAvatar } = useContext(AvatarContext);
   const navigation = useNavigation();
   const [value, setValue] = useState(round(item?.rating) || null);
@@ -34,6 +36,7 @@ export default function TeacherCard(props) {
       isFavoriteTutor: !itemState?.isFavoriteTutor
     });
     await favorAction(item?.id);
+    setAvatar((prev) => !prev);
   };
   return (
     <View style={styles.outerContainer}>
@@ -116,7 +119,7 @@ export default function TeacherCard(props) {
             size={24}
             style={{ color: COLORS.primary }}
           />
-          <Text style={styles.ButtonText}>Đặt lịch</Text>
+          <Text style={styles.ButtonText}>{i18n.t('Book')}</Text>
         </TouchableOpacity>
       </View>
     </View>

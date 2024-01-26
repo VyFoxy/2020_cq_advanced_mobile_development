@@ -17,10 +17,12 @@ import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
 import AuthContext from '../../context/AuthContext';
 import { Login } from '../../services/authentication';
+import LocalizationContext from '../../context/LocalizationProvider';
 WebBrowser.maybeCompleteAuthSession();
 
 export const LoginScreen = () => {
   const { setAuth } = useContext(AuthContext);
+  const { i18n } = useContext(LocalizationContext);
   const navigation = useNavigation();
   const [passwordVisible, setPasswordVisible] = useState(true);
   const [username, setUsername] = useState('');
@@ -99,7 +101,6 @@ export const LoginScreen = () => {
         setloginError('Đăng nhập thất bại');
       }
     }
-    navigation.navigate(ROUTES.HOME_DRAWER);
   };
 
   const googleLogin = () => {
@@ -114,14 +115,11 @@ export const LoginScreen = () => {
               source={require('../../../assets/img/login.8d01124a.png')}
               style={styles.image}
             />
-            <Text style={styles.loginText}> Đăng nhập </Text>
+            <Text style={styles.loginText}> {i18n.t('Login')} </Text>
             <View style={styles.loginArea}>
-              <Text style={styles.textIntro}>
-                Phát triển kỹ năng tiếng Anh nhanh nhất bằng cách học 1 kèm 1
-                trực tuyến theo mục tiêu và lộ trình dành cho riêng bạn
-              </Text>
+              <Text style={styles.textIntro}>{i18n.t('IntroLogin')}</Text>
               <View style={styles.formLogin}>
-                <Text style={styles.label}>ĐỊA CHỈ EMAIL</Text>
+                <Text style={styles.label}>{i18n.t('Email')}</Text>
                 <TextInput
                   style={styles.input}
                   placeholder='mail@example.com'
@@ -131,7 +129,7 @@ export const LoginScreen = () => {
                 {emailError !== '' && (
                   <Text style={styles.error}>{emailError}</Text>
                 )}
-                <Text style={styles.label}>MẬT KHẨU</Text>
+                <Text style={styles.label}>{i18n.t('Password')}</Text>
                 <TextInput
                   style={styles.input}
                   value={password}
@@ -147,14 +145,16 @@ export const LoginScreen = () => {
                   style={styles.forgotPass}
                   onPress={() => navigation.navigate(ROUTES.FORGOT_PASSWORD)}
                 >
-                  <Text style={styles.forgotPassText}> Quên mật khẩu? </Text>
+                  <Text style={styles.forgotPassText}>
+                    {i18n.t('ForgotPass')}
+                  </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
                   style={styles.loginButton}
                   onPress={handleLogin}
                 >
-                  <Text style={styles.loginButtonText}> ĐĂNG NHẬP </Text>
+                  <Text style={styles.loginButtonText}>{i18n.t('LOGIN')}</Text>
                 </TouchableOpacity>
                 {loginError !== '' && (
                   <Text style={styles.error}>{loginError}</Text>
@@ -162,7 +162,7 @@ export const LoginScreen = () => {
               </View>
 
               <View style={styles.otherLogin}>
-                <Text>Hoặc tiếp tục với</Text>
+                <Text>{i18n.t('OrContinueWith')}</Text>
                 <View style={styles.otherLoginIcons}>
                   <TouchableOpacity style={styles.otherLoginIcon}>
                     <Image
@@ -182,11 +182,13 @@ export const LoginScreen = () => {
                   </TouchableOpacity>
                 </View>
                 <View style={styles.registerText}>
-                  <Text>Chưa có tài khoản? </Text>
+                  <Text>{i18n.t('NotAMember')}</Text>
                   <TouchableOpacity
                     onPress={() => navigation.navigate(ROUTES.REGISTER)}
                   >
-                    <Text style={styles.forgotPassText}>Đăng ký</Text>
+                    <Text style={styles.forgotPassText}>
+                      {i18n.t('Register')}
+                    </Text>
                   </TouchableOpacity>
                 </View>
               </View>

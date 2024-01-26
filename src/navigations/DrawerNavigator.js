@@ -9,6 +9,7 @@ import { ROUTES, COLORS } from '../constants';
 import { Profile } from '../screens/profile';
 import { Settings } from '../screens/setting';
 import { PDFView } from '../screens/pdf-reader';
+import { Video } from '../screens/video-call';
 
 const Drawer = createDrawerNavigator();
 
@@ -18,6 +19,11 @@ function DrawerNavigator() {
       <Drawer.Screen
         name={ROUTES.HOME}
         component={Tutor}
+        options={{ headerShown: false }}
+      />
+      <Drawer.Screen
+        name={ROUTES.VIDEO_CALL}
+        component={Video}
         options={{ headerShown: false }}
       />
       <Drawer.Screen

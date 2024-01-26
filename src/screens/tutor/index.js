@@ -31,12 +31,15 @@ import {
   formatTimestampRange,
   remainingTimeFromTimestamp
 } from '../../utils/func';
+import LocalizationContext from '../../context/LocalizationProvider';
 
 export const Tutor = ({ navigation }) => {
   const { avatar } = useContext(AvatarContext);
   const [listTutor, setListTutor] = React.useState([]);
+  const { i18n } = useContext(LocalizationContext);
   const [favoriteTutor, setFavoriteTutor] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [isLoadingUpComing, setIsLoadingUpComing] = React.useState(true);
   const [isFavoriteTutor, setIsFavoriteTutor] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const scrollRef = useRef();
@@ -52,6 +55,7 @@ export const Tutor = ({ navigation }) => {
     const reponse_upcoming = await getNextBooking();
     if (reponse_upcoming?.data?.length > 0) {
       setUpComingClass(reponse_upcoming?.data[0]);
+      setIsLoadingUpComing(false);
     }
     setFavoriteTutor(() => {
       const newListID = compact(
@@ -65,24 +69,7 @@ export const Tutor = ({ navigation }) => {
   };
   useEffect(() => {
     fetchData();
-    temp = upComingClass?.scheduleDetailInfo?.startPeriodTimestamp;
   }, [avatar]);
-
-  // const calculateRemainingTime = () => {
-  //   const time = remainingTimeFromTimestamp(temp);
-  //   //console.log(temp);
-  //   setRemainingTime(time);
-  //   if (time <= 0) {
-  //     clearInterval(intervalId);
-  //     setRemainingTime("Time's up!");
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   const intervalId = setInterval(calculateRemainingTime, 1000);
-  //   // Clean up the interval when the component is unmounted
-  //   return () => clearInterval(intervalId);
-  // }, []);
   const initSearchQuery = {
     name: '',
     country: '',
@@ -175,51 +162,70 @@ export const Tutor = ({ navigation }) => {
   return (
     <ScrollView style={styles.container} ref={scrollRef}>
       <View style={styles.banner}>
-        <Text style={styles.welcomeText}>Buổi học sắp diễn ra</Text>
-        <View style={{ marginTop: 20 }}>
-          <View
-            item
-            xs={6}
-            md={6}
-            style={{ textAlign: 'center', alignItems: 'center' }}
-          >
-            {/* {console.log(upComingClass, 'up')} */}
-            {!isEmpty(upComingClass) ? (
-              <Text style={styles.welcomeText}>
-                {formatTimestampRange(
-                  upComingClass?.scheduleDetailInfo?.startPeriodTimestamp,
-                  upComingClass?.scheduleDetailInfo?.endPeriodTimestamp
+        {isLoadingUpComing ? (
+          <ActivityIndicator
+            size='large'
+            color={COLORS.white}
+            style={styles.centerLoading}
+          />
+        ) : (
+          <>
+            <Text style={[styles.welcomeText, { fontSize: 30 }]}>
+              {i18n.t('UpcomingLession')}
+            </Text>
+            <View style={{ marginTop: 20 }}>
+              <View
+                item
+                xs={6}
+                md={6}
+                style={{ textAlign: 'center', alignItems: 'center' }}
+              >
+                {/* {console.log(upComingClass, 'up')} */}
+                {!isEmpty(upComingClass) ? (
+                  <Text style={styles.welcomeText}>
+                    {formatTimestampRange(
+                      upComingClass?.scheduleDetailInfo?.startPeriodTimestamp,
+                      upComingClass?.scheduleDetailInfo?.endPeriodTimestamp
+                    )}
+                  </Text>
+                ) : (
+                  <Text style={styles.welcomeText}>
+                    Không có buổi học nào sắp diễn ra
+                  </Text>
                 )}
-              </Text>
-            ) : (
-              <Text style={styles.welcomeText}>
-                Không có buổi học nào sắp diễn ra
-              </Text>
-            )}
-
-            {/* <Text style={styles.remainingText}>{remainingTime}</Text> */}
-          </View>
-          <View item xs={6} md={6} style={{ alignItems: 'center' }}>
-            <TouchableOpacity style={styles.Button}>
-              <MaterialIcons
-                name='queue-play-next'
-                size={24}
-                color={COLORS.primary}
-              />
-              <Text style={styles.ButtonText}>Vào lớp học</Text>
-            </TouchableOpacity>
-            <View item xs={6} md={6} style={{ alignItems: 'center' }}>
-              <Text
-                style={{ fontSize: 18, color: 'white' }}
-              >{`Tổng số giờ bạn đã học là ${total.hours} giờ ${total.minutes} phút`}</Text>
+              </View>
+              <View item xs={6} md={6} style={{ alignItems: 'center' }}>
+                <TouchableOpacity
+                  style={styles.Button}
+                  onPress={() => {
+                    navigation.navigate(ROUTES.VIDEO_CALL, { upComingClass });
+                  }}
+                >
+                  <MaterialIcons
+                    name='queue-play-next'
+                    size={24}
+                    color={COLORS.primary}
+                  />
+                  <Text style={styles.ButtonText}>
+                    {i18n.t('EnterLessionRoom')}
+                  </Text>
+                </TouchableOpacity>
+                <View item xs={6} md={6} style={{ alignItems: 'center' }}>
+                  <Text style={{ fontSize: 18, color: 'white' }}>{`${i18n.t(
+                    'TotalTimeLearning'
+                  )} ${total.hours} ${i18n.t('Hour')} ${total.minutes} ${i18n.t(
+                    'Minute'
+                  )}`}</Text>
+                </View>
+              </View>
             </View>
-          </View>
-        </View>
+          </>
+        )}
       </View>
       <View style={styles.filterContainer}>
-        <Text style={styles.filterHeader}>Tìm kiếm gia sư</Text>
+        <Text style={styles.filterHeader}>{i18n.t('FindATutor')}</Text>
         <TextInput
-          placeholder={'Nhập tên gia sư'}
+          placeholder={i18n.t('EnterTutorName')}
           style={{
             width: 200,
             height: 40,
@@ -255,7 +261,7 @@ export const Tutor = ({ navigation }) => {
             uniqueKey='id'
             onSelectedItemsChange={(e) => onSelectedItemsChange(e)}
             selectedItems={searchQuery.nationality}
-            selectText='Chọn quốc tịch'
+            selectText={i18n.t('SelectTutorNation')}
             searchInputPlaceholderText='Chọn quốc tịch...'
             //onChangeInput={(text) => console.log(text)}
             tagRemoveIconColor='#fff'
@@ -283,11 +289,8 @@ export const Tutor = ({ navigation }) => {
           />
         </View>
 
-        <TouchableOpacity
-          style={styles.ButtonReset}
-          onPress={() => handleReset()}
-        >
-          <Text style={styles.ButtonText}>Đặt lại bộ tìm kiếm</Text>
+        <TouchableOpacity style={styles.ButtonReset} onPress={handleReset}>
+          <Text style={styles.ButtonText}>{i18n.t('ResetFilter')}</Text>
         </TouchableOpacity>
       </View>
       {isLoading ? (
@@ -299,7 +302,9 @@ export const Tutor = ({ navigation }) => {
       ) : (
         <>
           <View style={styles.filterContainer}>
-            <Text style={styles.teacherHeader}>Gia sư được đề xuất</Text>
+            <Text style={styles.teacherHeader}>
+              {i18n.t('RecommendedTutors')}
+            </Text>
             {mappedTutors && mappedTutors?.length > 0 ? (
               mappedTutors.map((item, index) => (
                 <TeacherCard key={index.toString()} item={item} />
@@ -349,7 +354,7 @@ const styles = StyleSheet.create({
   Button: {
     alignItems: 'center',
     justifyContent: 'space-around',
-    width: 150,
+    width: 170,
     flexDirection: 'row',
     height: 40,
     backgroundColor: COLORS.white,
@@ -411,7 +416,7 @@ const styles = StyleSheet.create({
   },
   teacherHeader: {
     fontSize: 20,
-    fontWeight: 600,
+    fontWeight: '600',
     marginBottom: 10
   },
   checkboxContainer: {
