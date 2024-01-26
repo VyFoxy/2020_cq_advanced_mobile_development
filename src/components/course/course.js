@@ -15,7 +15,7 @@ export default function CourseCard(props) {
       >
         <Image
           source={{
-            uri: 'https://camblycurriculumicons.s3.amazonaws.com/5e0e8b212ac750e7dc9886ac?h=d41d8cd98f00b204e9800998ecf8427e'
+            uri: props?.image
           }}
           style={styles.courseImg}
         />

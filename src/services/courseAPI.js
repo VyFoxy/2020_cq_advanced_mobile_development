@@ -3,15 +3,17 @@ const PATH = {
   GET_COURSE: '/course',
   TOTAL: '/call/total'
 };
-export const getListCourse = async ({ page, search }) => {
+export const getListCourse = async ({ page, size, search }) => {
   try {
     if (search) {
       const response = await api.get(
-        PATH.GET_COURSE + `?page=${page}&size=10&q=${search}`
+        PATH.GET_COURSE + `?page=${page}&size=${size}&q=${search}`
       );
       return response;
     } else {
-      const response = await api.get(PATH.GET_COURSE + `?page=${page}&size=6`);
+      const response = await api.get(
+        PATH.GET_COURSE + `?page=${page}&size=${size}`
+      );
       return response;
     }
   } catch (error) {

@@ -53,3 +53,10 @@ export const mappingSelectCountry = [
   { name: 'Gia sư Việt Nam', id: 'isVietNamese' },
   { name: 'Gia sư Tiếng Trung', id: '' }
 ];
+
+export const mappingLevel = {
+  0: 'Any Level',
+  1: 'Beginner',
+  4: 'Intermediate',
+  7: 'Advanced'
+};

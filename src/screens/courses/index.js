@@ -5,15 +5,71 @@ import {
   FlatList,
   ScrollView,
   Image,
-  TextInput
+  TextInput,
+  ActivityIndicator
 } from 'react-native';
-import React from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import CourseCard from '../../components/course/course';
+import { Searchbar } from 'react-native-paper';
 import { COLORS } from '../../constants';
+import { getListCourse } from '../../services/courseAPI';
+import { mappingLevel } from '../../utils/mapping';
+import { ceil, get, includes } from 'lodash';
+import Pagination from '../../components/pagination/Pagination';
 
 export const CoursesSreeen = () => {
-  const arr = [1, 2, 3, 4, 5];
+  const arr = [0, 1, 4, 7];
+  //const { i18n } = useContext(LocalizationContext);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [dataCourse, setDataCourse] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [totalPages, setTotalPages] = useState(1);
+  const [page, setPage] = useState(1);
+  const scrollRef = useRef();
+  async function fetchData(page) {
+    console.log(page);
+    const response = await getListCourse({ page: page, size: 6, search: '' });
+    setDataCourse(response.data.data.rows);
+    setTotalPages(ceil(response.data?.data.count / 6));
+    setIsLoading(false);
+  }
+  useEffect(() => {
+    fetchData(1);
+  }, []);
 
+  useEffect(() => {
+    handleSearch();
+  }, [searchQuery]);
+  useEffect(() => {
+    fetchData(page);
+    scrollRef.current.scrollTo({
+      y: 30,
+      animated: true
+    });
+  }, [page]);
+  const handleSearch = async () => {
+    setIsLoading(true);
+    const response = await getListCourse({
+      page: 1,
+      size: 6,
+      search: searchQuery
+    });
+    if (response.data.data.rows.length > 0) {
+      setDataCourse(response.data.data.rows);
+    } else {
+      setDataCourse([]);
+    }
+    setIsLoading(false);
+  };
+  const handleClearSearch = async () => {
+    setSearchQuery('');
+    const response = await getListCourse({ page: 1, size: 6, search: '' });
+    if (response.data.data.rows.length > 0) {
+      setDataCourse(response.data.data.rows);
+    } else {
+      setDataCourse([]);
+    }
+  };
   return (
     <ScrollView
       style={{
@@ -22,6 +78,7 @@ export const CoursesSreeen = () => {
         paddingVertical: 40,
         paddingHorizontal: 40
       }}
+      ref={scrollRef}
     >
       <View>
         <View style={styles.container}>
@@ -32,26 +89,14 @@ export const CoursesSreeen = () => {
           ></Image>
           <View style={{ flexShrink: 1 }}>
             <Text style={styles.headingParagraph}>Khám phá các khóa học</Text>
-            <TextInput
-              placeholder={'Khóa học'}
-              style={{
-                width: 200,
-                height: 40,
-                borderColor: 'gray',
-                borderWidth: 1,
-                borderRadius: 20, // Adjust this value as needed
-                paddingLeft: 10,
-                marginBottom: 10
-              }}
-              value={searchQuery.name}
-              // onChangeText={(text) =>
-              //   setSearchQuery({ ...searchQuery, name: text })
-              // }
-              // onKeyPress={(e) => {
-              //   if (e.nativeEvent.key === 'Enter') {
-              //     handleSearch('name');
-              //   }
-              // }}
+
+            <Searchbar
+              placeholder={'Tìm kiếm khóa học'}
+              onChangeText={(text) => setSearchQuery(text)}
+              value={searchQuery}
+              style={styles.searchBar}
+              onIconPress={handleSearch}
+              //onClearIconPress={handleClearSearch}
             />
           </View>
         </View>
@@ -64,25 +109,48 @@ export const CoursesSreeen = () => {
           </Text>
         </View>
       </View>
-      <View>
-        <FlatList
-          data={arr}
-          renderItem={({ item }) => (
-            <CourseCard>
-              <Text style={styles.nameCourse}>CourseCard</Text>
-              <Text style={styles.subtitle}>
-                This is a subtitle pla pla pla pla pla pla pla pla pla pla
-              </Text>
-              <View style={styles.levelContainer}>
-                <Text style={styles.levelText}>Beginner </Text>
-                <Text style={styles.levelText}>9 bài học</Text>
-              </View>
-            </CourseCard>
-          )}
-          keyExtractor={(item, index) => index.toString()}
-          scrollEnabled={false}
+
+      {isLoading ? (
+        <ActivityIndicator
+          size='large'
+          color={COLORS.primary}
+          style={styles.centerLoading}
         />
-      </View>
+      ) : (
+        <View style={{ paddingBottom: 30 }}>
+          <View>
+            <FlatList
+              data={dataCourse}
+              renderItem={({ item }) => (
+                <CourseCard image={item?.imageUrl}>
+                  <Text style={styles.nameCourse}>{item?.name}</Text>
+                  <Text style={styles.subtitle}>{item?.description}</Text>
+                  <View style={styles.levelContainer}>
+                    {includes(arr, item?.level)}
+                    <Text style={styles.levelText}>{`${get(
+                      mappingLevel,
+                      item?.level
+                    )} • `}</Text>
+                    <Text
+                      style={styles.levelText}
+                    >{`${item?.topics.length} bài học`}</Text>
+                  </View>
+                </CourseCard>
+              )}
+              keyExtractor={(item, index) => index.toString()}
+              scrollEnabled={false}
+            />
+          </View>
+          {dataCourse && dataCourse?.length > 0 && (
+            <Pagination
+              totalPages={totalPages}
+              currentPage={page}
+              onPageChange={() => {}}
+              setCurrentPage={setPage}
+            />
+          )}
+        </View>
+      )}
     </ScrollView>
   );
 };
@@ -144,5 +212,14 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     flex: 1,
     paddingVertical: 15
+  },
+  searchBar: {
+    width: '90%',
+    borderRadius: 20,
+    alignSelf: 'center',
+    marginVertical: 10,
+    backgroundColor: '#fff',
+    borderWidth: 0.8,
+    borderColor: '#CCC'
   }
 });
