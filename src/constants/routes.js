@@ -17,7 +17,7 @@ export default {
   COURSE: 'Course',
   PROFILE: 'Profile',
   PDF_VIEW: 'Pdf-View',
-
+  VIDEO_CALL: 'Video-Call',
   TEACHER_DETAIL: 'teacher-detail',
 
   COURSE_DETAIL: 'Course-Detail'

@@ -16,9 +16,9 @@ import { Feather, Octicons, Foundation } from '@expo/vector-icons';
 import { get, includes, isEmpty } from 'lodash';
 import { mappingLevel } from '../../utils/mapping';
 export const CourseDetail = (props) => {
-  const item = props.route?.params?.item;
+  const items = props.route?.params?.item;
   const navigation = useNavigation();
-  const arr = item?.topics;
+  const arr = items?.topics;
   return (
     <View style={styles.container}>
       <ScrollView style={{ flex: 1 }}>
@@ -26,22 +26,15 @@ export const CourseDetail = (props) => {
           <View style={{ flex: 1 }}>
             <Image
               source={{
-                uri: item?.imageUrl
+                uri: items?.imageUrl
               }}
               style={styles.courseImg}
             />
             <View style={styles.innerContainer}>
-              <Text style={styles.nameCourse}>{item?.name}</Text>
-              <Text style={styles.subtitle}>{item?.description}</Text>
+              <Text style={styles.nameCourse}>{items?.name}</Text>
+              <Text style={styles.subtitle}>{items?.description}</Text>
               <View style={{ alignItems: 'flex-end' }}>
-                <TouchableOpacity
-                  style={styles.Button}
-                  onPress={() => {
-                    navigation.navigate(ROUTES.PDF_VIEW, {
-                      id: item?.id
-                    });
-                  }}
-                >
+                <TouchableOpacity style={styles.Button}>
                   <Text style={styles.ButtonText}>Khám phá</Text>
                 </TouchableOpacity>
               </View>
@@ -60,8 +53,8 @@ export const CourseDetail = (props) => {
             Tại sao bạn nên học khóa học này
           </Text>
         </View>
-        {!isEmpty(item?.reason) && (
-          <Text style={styles.paragraph}>{item?.reason}</Text>
+        {!isEmpty(items?.reason) && (
+          <Text style={styles.paragraph}>{items?.reason}</Text>
         )}
 
         <View style={styles.headingContainer}>
@@ -73,8 +66,8 @@ export const CourseDetail = (props) => {
           />
           <Text style={styles.headingParagraph}>Bạn có thể làm gì</Text>
         </View>
-        {!isEmpty(item?.purpose) && (
-          <Text style={styles.paragraph}>{item?.purpose}</Text>
+        {!isEmpty(items?.purpose) && (
+          <Text style={styles.paragraph}>{items?.purpose}</Text>
         )}
         <Text style={styles.headingTitle}>Trình độ yêu cầu</Text>
         <View style={styles.headingContainer}>
@@ -85,7 +78,7 @@ export const CourseDetail = (props) => {
             style={{ alignSelf: 'center' }}
           />
           <Text style={styles.headingParagraph}>
-            {get(mappingLevel, item?.level)}
+            {get(mappingLevel, items?.level)}
           </Text>
         </View>
         <Text style={styles.headingTitle}>Thời lượng khóa học</Text>
@@ -96,7 +89,9 @@ export const CourseDetail = (props) => {
             color='blue'
             style={{ alignSelf: 'center' }}
           />
-          <Text style={styles.headingParagraph}>9 buổi học</Text>
+          <Text
+            style={styles.headingParagraph}
+          >{`${arr.length} buổi học`}</Text>
         </View>
         <Text style={styles.headingTitle}>Danh sách chủ đề</Text>
         <FlatList
@@ -104,7 +99,10 @@ export const CourseDetail = (props) => {
           renderItem={({ item, index }) => (
             <Pressable
               onPress={() => {
-                navigation.navigate(ROUTES.PDF_VIEW, { data: item });
+                navigation.navigate(ROUTES.PDF_VIEW, {
+                  data: item,
+                  item: items
+                });
               }}
             >
               <View style={styles.itemTopic}>

@@ -229,3 +229,27 @@ export const isWithinTwoHours = (timestamp) => {
   // Check if the time difference is less than 2 hours (in milliseconds)
   return timeDifference < 2 * 60 * 60 * 1000; // 2 hours in milliseconds
 };
+export const toTimeString = (time) => {
+  const hour = parseInt((time / 3600) % 24);
+  const strH = hour < 10 ? ` 0${hour}` : ` ${hour}`;
+  const minute = parseInt((time % 3600) / 60);
+  const strM = minute < 10 ? `0${minute}` : minute;
+  const second = (time % 3600) % 60;
+  const strS = second < 10 ? `0${second}` : second;
+  const day = parseInt(time / 3600 / 24);
+  const strDay = day > 1 ? `${day} days` : day > 0 ? `${day} day` : '';
+  return strDay + strH + ' : ' + strM + ' : ' + strS;
+};
+
+export const convertSecondsToTime = (seconds) => {
+  var hour = Math.floor(seconds / 3600);
+  var minute = Math.floor((seconds - hour * 3600) / 60);
+  var second = seconds - hour * 3600 - minute * 60;
+  return (
+    (hour < 10 ? '0' + hour : hour) +
+    ':' +
+    (minute < 10 ? '0' + minute : minute) +
+    ':' +
+    (second < 10 ? '0' + second : second)
+  );
+};
