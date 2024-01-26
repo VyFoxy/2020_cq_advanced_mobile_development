@@ -18,10 +18,12 @@ import * as Google from 'expo-auth-session/providers/google';
 import AuthContext from '../../context/AuthContext';
 import { Login } from '../../services/authentication';
 import LocalizationContext from '../../context/LocalizationProvider';
+import AvatarContext from '../../context/AvatarProvider';
 WebBrowser.maybeCompleteAuthSession();
 
 export const LoginScreen = () => {
   const { setAuth } = useContext(AuthContext);
+  const { avatar, setAvatar } = useContext(AvatarContext);
   const { i18n } = useContext(LocalizationContext);
   const navigation = useNavigation();
   const [passwordVisible, setPasswordVisible] = useState(true);
@@ -45,7 +47,7 @@ export const LoginScreen = () => {
       }
     }
     getAccessToken();
-  }, []);
+  }, [avatar]);
 
   useEffect(() => {
     async function ggLogin() {
@@ -57,7 +59,7 @@ export const LoginScreen = () => {
               accessToken: authentication.accessToken
             });
             setAuth(loginResponse.data);
-            navigation.navigate(ROUTES.HOME);
+            navigation.navigate(ROUTES.HOME_DRAWER);
           } catch (error) {
             setloginError('Đăng nhập thất bại');
           }
@@ -89,7 +91,7 @@ export const LoginScreen = () => {
         const response = await Login({ email: username, password: password });
         if (response.data) {
           setAuth(response.data);
-
+          setAvatar((pre) => !pre);
           navigation.navigate(ROUTES.HOME_DRAWER);
         } else {
           setloginError('Đăng nhập thất bại');

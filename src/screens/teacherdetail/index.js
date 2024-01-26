@@ -22,7 +22,7 @@ import { IMGS } from '../../constants';
 import { Modal, Portal, Provider, TextInput } from 'react-native-paper';
 import { isEmpty, round } from 'lodash';
 import { mappingLanguage, mappingSpecialties } from '../../utils/mapping';
-import TimeTable from '@mikezzb/react-native-timetable';
+//import TimeTable from '@mikezzb/react-native-timetable';
 import AvatarContext from '../../context/AvatarProvider';
 import { Rating } from 'react-native-ratings';
 import {
@@ -38,10 +38,12 @@ import {
   formatTimestampToTimeZone,
   getDayOfWeek
 } from '../../utils/func';
+import LocalizationContext from '../../context/LocalizationProvider';
 
 export const TeacherDetail = (props) => {
   const id = props.route?.params?.id;
   const { avatar, setAvatar } = useContext(AvatarContext);
+  const { i18n } = useContext(LocalizationContext);
   const [data, setData] = useState({});
   const [review, setReview] = useState([]);
   const [schedule, setSchedule] = React.useState([]);
@@ -117,7 +119,7 @@ export const TeacherDetail = (props) => {
     const data = schedule.map((item) =>
       item?.isBooked
         ? {
-            courseId: 'Đã đặt',
+            courseId: i18n.t('Booked'),
             day: getDayOfWeek(item?.startTimestamp),
             startTime: formatTimestampToTimeZone(item?.startTimestamp),
             endTime: formatTimestampToTimeZone(item?.endTimestamp),
@@ -125,7 +127,7 @@ export const TeacherDetail = (props) => {
             canBook: false
           }
         : {
-            courseId: 'Đặt lịch',
+            courseId: i18n.t('Book'),
             eventId: item?.scheduleDetails?.[0]?.id,
             day: getDayOfWeek(item?.startTimestamp),
             startTime: formatTimestampToTimeZone(item?.startTimestamp),
@@ -204,9 +206,9 @@ export const TeacherDetail = (props) => {
                     }}
                   >
                     {!isEmpty(data?.User?.name) && (
-                      <Text style={styles.titleParagraph}>{`Báo cáo ${
-                        data?.User?.name || ''
-                      }`}</Text>
+                      <Text style={styles.titleParagraph}>{`${i18n.t(
+                        'Report'
+                      )} ${data?.User?.name || ''}`}</Text>
                     )}
                   </View>
 
@@ -216,7 +218,7 @@ export const TeacherDetail = (props) => {
                     value={report}
                     onChangeText={setReport}
                     name='Report'
-                    placeholder='Vui lòng điền chi tiết vấn đề bạn gặp phải'
+                    placeholder={i18n.t('PlaceReport')}
                     //multiline={true}
                     //numberOfLines={4}
                   />
@@ -227,7 +229,7 @@ export const TeacherDetail = (props) => {
                       style={styles.Button}
                       onPress={() => hideModal()}
                     >
-                      <Text style={styles.ButtonText}>Hủy</Text>
+                      <Text style={styles.ButtonText}>{i18n.t('Cancel')}</Text>
                     </Pressable>
                     <Pressable
                       disabled={isEmpty(report)}
@@ -243,7 +245,7 @@ export const TeacherDetail = (props) => {
                             : styles.ButtonText
                         }
                       >
-                        Gửi
+                        {i18n.t('Sent')}
                       </Text>
                     </Pressable>
                   </View>
@@ -261,11 +263,13 @@ export const TeacherDetail = (props) => {
                       borderBottomWidth: 0.3
                     }}
                   >
-                    <Text style={styles.titleParagraph}>Chi tiết đặt lịch</Text>
+                    <Text style={styles.titleParagraph}>
+                      {i18n.t('BookingDetails')}
+                    </Text>
                   </View>
 
                   <Text style={styles.headingParagraph}>
-                    Thời gian đặt lịch
+                    {i18n.t('BookingTime')}
                   </Text>
                   <View style={styles.labelTime}>
                     <Text style={styles.labelTimeText}>
@@ -294,14 +298,16 @@ export const TeacherDetail = (props) => {
                       style={styles.Button}
                       onPress={() => setIsOpenBooking(false)}
                     >
-                      <Text style={styles.ButtonText}>Hủy</Text>
+                      <Text style={styles.ButtonText}>{i18n.t('Cancel')}</Text>
                     </Pressable>
                     <Pressable
                       style={styles.bookingBtn}
                       onPress={() => sentBooking()}
                     >
                       <AntDesign name='doubleright' size={18} color='white' />
-                      <Text style={styles.bookingBtnText}>Đặt lịch</Text>
+                      <Text style={styles.bookingBtnText}>
+                        {i18n.t('Book')}
+                      </Text>
                     </Pressable>
                   </View>
                 </View>
@@ -383,7 +389,7 @@ export const TeacherDetail = (props) => {
                             marginVertical: 5
                           }}
                         >
-                          Yêu thích
+                          {i18n.t('Favorite')}
                         </Text>
                       </Pressable>
                     </View>
@@ -401,7 +407,7 @@ export const TeacherDetail = (props) => {
                       >
                         <AntDesign name='message1' size={24} color='blue' />
                         <Text style={{ color: 'blue', marginVertical: 5 }}>
-                          Nhắn tin
+                          {i18n.t('Message')}
                         </Text>
                       </Pressable>
                     </View>
@@ -419,7 +425,7 @@ export const TeacherDetail = (props) => {
                       >
                         <AntDesign name='warning' size={24} color='blue' />
                         <Text style={{ color: 'blue', marginVertical: 5 }}>
-                          Báo cáo
+                          {i18n.t('Report')}
                         </Text>
                       </Pressable>
                     </View>
@@ -439,33 +445,52 @@ export const TeacherDetail = (props) => {
 
                   {/* Profile Content */}
                   <View style={styles.profileContent}>
-                    <Text style={styles.headingParagraph}>Học vấn</Text>
+                    <Text style={styles.headingParagraph}>
+                      {i18n.t('Education')}
+                    </Text>
                     {!isEmpty(data?.education) && (
                       <Text style={styles.paragraph}>
                         {data?.education || ''}
                       </Text>
                     )}
 
-                    <Text style={styles.headingParagraph}>Ngôn ngữ</Text>
+                    <Text style={styles.headingParagraph}>
+                      {i18n.t('Languages')}
+                    </Text>
                     <View style={styles.tagItem}>
                       <ListTag tags={data?.listLanguages} />
                     </View>
-                    <Text style={styles.headingParagraph}>Chuyên ngành</Text>
+                    <Text style={styles.headingParagraph}>
+                      {i18n.t('Specilities')}
+                    </Text>
                     <View style={styles.tagItem}>
                       <ListTag tags={data?.listSpecialties} />
                     </View>
                     <Text style={styles.headingParagraph}>
-                      Khóa học tham khảo
+                      {i18n.t('SuggestedCourses')}
                     </Text>
-                    <Text style={styles.paragraph}>No Data</Text>
-                    <Text style={styles.headingParagraph}>Sở thích</Text>
+                    <View>
+                      {data?.User?.courses?.map((item) => (
+                        <Text
+                          style={[
+                            styles.headingParagraph,
+                            { paddingLeft: 10, fontWeight: '600' }
+                          ]}
+                        >
+                          {item?.name}
+                        </Text>
+                      ))}
+                    </View>
+                    <Text style={styles.headingParagraph}>
+                      {i18n.t('Interests')}
+                    </Text>
                     {!isEmpty(data?.interests) && (
                       <Text style={styles.paragraph}>
                         {data?.interests || ''}
                       </Text>
                     )}
                     <Text style={styles.headingParagraph}>
-                      Kinh nghiệm giảng dạy
+                      {i18n.t('Experience')}
                     </Text>
                     {!isEmpty(data?.experience) && (
                       <Text style={styles.paragraph}>
@@ -473,7 +498,7 @@ export const TeacherDetail = (props) => {
                       </Text>
                     )}
                     <Text style={styles.headingParagraph}>
-                      Người khác đánh giá
+                      {i18n.t('OthersReview')}
                     </Text>
                     <FlatList
                       data={review}
@@ -482,12 +507,14 @@ export const TeacherDetail = (props) => {
                       keyExtractor={(item, index) => index}
                     />
                   </View>
-                  <Text style={styles.headingParagraph}>Thời khóa biểu</Text>
+                  <Text style={styles.headingParagraph}>
+                    {i18n.t('TimeTable')}
+                  </Text>
                   <View style={{ overflow: 'hidden' }}>
-                    <TimeTable
+                    {/* <TimeTable
                       events={isBookedSchedule}
                       eventOnPress={(event) => handleBookingSchedule(event)}
-                    />
+                    /> */}
                   </View>
                 </View>
               </>
@@ -573,7 +600,7 @@ const styles = StyleSheet.create({
   },
   titleParagraph: {
     fontSize: 18,
-    fontWeight: 700,
+    fontWeight: '600',
     color: COLORS.black,
     marginLeft: 15,
     marginVertical: 5

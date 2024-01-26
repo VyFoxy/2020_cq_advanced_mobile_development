@@ -147,7 +147,7 @@ export const Tutor = ({ navigation }) => {
     }
   };
   const handleReset = () => {
-    setSearchQuery({ name: '', country: '' });
+    setSearchQuery(initSearchQuery);
     setSpecialties((prevSpecialties) =>
       prevSpecialties.map((item) => ({
         ...item,

@@ -6,7 +6,7 @@ import {
   View,
   Button
 } from 'react-native';
-import { ROUTES, COLORS } from '../../constants';
+import { ROUTES, COLORS, IMGS } from '../../constants';
 import {
   formatTimestampToTimeZone,
   formatTimestampToVietnamese,
@@ -15,6 +15,8 @@ import {
 import { isEmpty } from 'lodash';
 import { ClassReview } from '../class-review/ClassReview';
 import { Rating } from 'react-native-ratings';
+import { useContext } from 'react';
+import LocalizationContext from '../../context/LocalizationProvider';
 
 export const CourseCard = ({ item }) => {
   const {
@@ -25,6 +27,7 @@ export const CourseCard = ({ item }) => {
     scheduleDetailInfo
   } = item;
   const { scheduleInfo } = scheduleDetailInfo;
+  const { i18n } = useContext(LocalizationContext);
   return (
     <View style={styles.container}>
       <View style={styles.margin}>
@@ -51,19 +54,14 @@ export const CourseCard = ({ item }) => {
             {scheduleInfo?.tutorInfo?.name}
           </Text>
           <View style={styles.row}>
-            <Image
-              source={{
-                uri: 'https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.3/flags/4x3/tn.svg'
-              }}
-              style={styles.flagIcon}
-            />
+            <Image style={styles.flagIcon} />
             <Text>{scheduleInfo?.tutorInfo?.country}</Text>
             <TouchableOpacity></TouchableOpacity>
           </View>
         </View>
       </View>
       <View style={styles.containerContent}>
-        <Text style={{ fontSize: 20 }}>Thời gian học: </Text>
+        <Text style={{ fontSize: 20 }}>{i18n.t('LessonTime')}</Text>
         <Text style={{ fontSize: 20 }}>{`${formatTimestampToTimeZone(
           scheduleInfo?.startTimestamp
         )} - ${formatTimestampToTimeZone(scheduleInfo?.endTimestamp)}`}</Text>
@@ -71,10 +69,10 @@ export const CourseCard = ({ item }) => {
       <View style={styles.containerContentCol}>
         <View style={styles.rowDescription}>
           {isEmpty(studentRequest) ? (
-            <Text style={styles.paragraph}>Không có yêu cầu cho buổi học</Text>
+            <Text style={styles.paragraph}>{i18n.t('NoRequest')}</Text>
           ) : (
             <View>
-              <Text style={styles.paragraph}>Yêu cầu cho buổi học</Text>
+              <Text style={styles.paragraph}>{i18n.t('RequestForLesson')}</Text>
               <Text
                 style={{
                   fontSize: 15,
@@ -88,10 +86,10 @@ export const CourseCard = ({ item }) => {
         </View>
         <View style={styles.rowDescription}>
           {isEmpty(classReview) ? (
-            <Text style={styles.paragraph}>Gia sư chưa có đánh giá</Text>
+            <Text style={styles.paragraph}>{i18n.t('NoTutorReview')}</Text>
           ) : (
             <View>
-              <Text style={styles.paragraph}>Đánh giá từ gia sư</Text>
+              <Text style={styles.paragraph}>{i18n.t('ReviewFromTutor')}</Text>
               <ClassReview
                 label={'Bahavior'}
                 comment={classReview?.behaviorComment}
@@ -145,7 +143,7 @@ export const CourseCard = ({ item }) => {
       <View xs={12} style={styles.buttonContainer}>
         <View />
         <Button
-          title='Vào buổi học'
+          title={i18n.t('EnterLessionRoom')}
           onPress={() => Alert.alert('Cannot press this one')}
           style={styles.buttonIn}
         />
@@ -162,7 +160,7 @@ const styles = StyleSheet.create({
   },
   headingParagraph: {
     fontSize: 24,
-    fontWeight: 700,
+    fontWeight: '600',
     color: COLORS.black
   },
   paragraph: {

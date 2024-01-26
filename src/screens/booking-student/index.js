@@ -23,9 +23,11 @@ import { Provider, Portal, Modal, TextInput } from 'react-native-paper';
 import { formatTimestampToVietnamese } from '../../utils/func';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { ReasonCancleBooking } from '../../utils/constant';
+import LocalizationContext from '../../context/LocalizationProvider';
 
 export const BookingStudentScreen = () => {
   const { avatar, setAvatar } = useContext(AvatarContext);
+  const { i18n } = useContext(LocalizationContext);
   const [upComingClass, setUpcomingBookingClass] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [visible, setVisible] = useState(false);
@@ -177,15 +179,10 @@ export const BookingStudentScreen = () => {
               style={styles.image}
               resizeMode='contain'
             ></Image>
-            <Text style={styles.headingParagraph}>Lịch đã đặt</Text>
+            <Text style={styles.headingParagraph}>{i18n.t('Schedule')}</Text>
             <View style={styles.blockquote}>
-              <Text style={styles.paragraph}>
-                Đây là danh sách những khung giờ bạn đã đặt
-              </Text>
-              <Text style={styles.paragraph}>
-                Bạn có thể theo dõi khi nào buổi học bắt đầu, tham gia buổi học
-                bằng một cú nhấp chuột hoặc có thể hủy buổi học trước 2 tiếng.
-              </Text>
+              <Text style={styles.paragraph}>{i18n.t('IntroSchedule1')}</Text>
+              <Text style={styles.paragraph}>{i18n.t('IntroSchedule2')}</Text>
             </View>
           </View>
           <View>
@@ -228,12 +225,14 @@ const styles = StyleSheet.create({
   },
   headingParagraph: {
     fontSize: 30,
-    fontWeight: 700,
+    fontWeight: '600',
     color: COLORS.black,
-    marginVertical: 10
+    marginVertical: 20
   },
   paragraph: {
-    fontSize: 17
+    fontSize: 17,
+    lineHeight: 25,
+    color: 'rgba(0,0,0,0.85)'
   },
   blockquote: {
     borderLeftWidth: 3, // Adjust the width of the grey line as needed

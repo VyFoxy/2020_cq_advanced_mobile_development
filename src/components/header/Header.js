@@ -34,18 +34,28 @@ export const Header = () => {
   ];
   const [showMenu, setShowMenu] = useState(false);
   const [userInfo, setUserInfo] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
   const getInfo = async () => {
-    const response = await getUserInfo();
     const accessToken = await AsyncStorage.getItem('accessToken');
-    setUserInfo({
-      avatar: response?.user?.avatar,
-      name: response?.user?.name,
-      accessToken: accessToken
-    });
+    if (accessToken) {
+      const response = await getUserInfo();
+      setUserInfo({
+        avatar: response?.user?.avatar || null,
+        name: response?.user?.name || '',
+        accessToken: accessToken
+      });
+    } else {
+      setUserInfo({
+        avatar: null,
+        name: '',
+        accessToken: null
+      });
+    }
   };
   useEffect(() => {
-    setUserInfo();
-  }, []);
+    getInfo();
+    console.log(auth);
+  }, [auth]);
   useEffect(() => {
     getInfo();
   }, [avatar]);
@@ -96,7 +106,7 @@ export const Header = () => {
               );
             }}
           />
-          {!isEmpty(userInfo?.accessToken) && (
+          {!isEmpty(auth?.tokens?.access) && (
             <TouchableOpacity
               style={styles.menuIcon}
               onPress={() => {
@@ -136,7 +146,7 @@ export const Header = () => {
                 }}
               >
                 <AntDesign name='setting' size={32} style={styles.navIcon} />
-                <Text style={styles.navText}>Setting ứng dụng</Text>
+                <Text style={styles.navText}>{i18n.t('Settings')}</Text>
               </TouchableOpacity>
               {/* <TouchableOpacity style={styles.menuNav}>
                 <MaterialIcons
@@ -158,7 +168,7 @@ export const Header = () => {
                   size={32}
                   style={styles.navIcon}
                 />
-                <Text style={styles.navText}>Gia sư</Text>
+                <Text style={styles.navText}>{i18n.t('Tutor')}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.menuNav}
@@ -172,7 +182,7 @@ export const Header = () => {
                   size={32}
                   style={styles.navIcon}
                 />
-                <Text style={styles.navText}>Lịch học</Text>
+                <Text style={styles.navText}>{i18n.t('Schedule')}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.menuNav}
@@ -186,7 +196,7 @@ export const Header = () => {
                   size={32}
                   style={styles.navIcon}
                 />
-                <Text style={styles.navText}>Lịch sử</Text>
+                <Text style={styles.navText}>{i18n.t('History')}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.menuNav}
@@ -196,7 +206,7 @@ export const Header = () => {
                 }}
               >
                 <MaterialIcons name='school' size={32} style={styles.navIcon} />
-                <Text style={styles.navText}>Khóa học</Text>
+                <Text style={styles.navText}>{i18n.t('Course')}</Text>
               </TouchableOpacity>
               {/* <TouchableOpacity style={styles.menuNav}>
                 <MaterialIcons
@@ -208,19 +218,20 @@ export const Header = () => {
               </TouchableOpacity> */}
               <TouchableOpacity style={styles.menuNav}>
                 <AntDesign name='swap' size={32} style={styles.navIcon} />
-                <Text style={styles.navText}>Đăng ký thành giáo viên</Text>
+                <Text style={styles.navText}>{i18n.t('BecomeTeacher')}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.menuNav}
                 onPress={async () => {
-                  await AsyncStorage.removeItem('accessToken');
+                  setAvatar((pre) => !pre);
                   setAuth({});
+                  await AsyncStorage.removeItem('accessToken');
                   navigation.navigate(ROUTES.LOGIN);
                   setShowMenu(!showMenu);
                 }}
               >
                 <MaterialIcons name='logout' size={32} style={styles.navIcon} />
-                <Text style={styles.navText}>Đăng xuất</Text>
+                <Text style={styles.navText}>{i18n.t('Logout')}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -356,7 +367,7 @@ const styles = StyleSheet.create({
   },
   navText: {
     fontSize: 17,
-    fontWeight: 600,
+    fontWeight: '500',
     marginLeft: 15
   },
   dropdown3BtnStyle: {

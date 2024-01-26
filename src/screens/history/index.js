@@ -12,13 +12,15 @@ import {
 import { COLORS } from '../../constants';
 import { CourseCard } from '../../components/course-card/CourseCard';
 import { getHistoryBooking } from '../../services/tutorAPI';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import Pagination from '../../components/pagination/Pagination';
 import { ceil } from 'lodash';
 import { getMinutesAgoTimestamp } from '../../utils/func';
+import LocalizationContext from '../../context/LocalizationProvider';
 
 export const HistoryScreen = () => {
   const [historyBooking, setHistoryBooking] = useState([]);
+  const { i18n } = useContext(LocalizationContext);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
@@ -63,15 +65,10 @@ export const HistoryScreen = () => {
           style={styles.image}
           resizeMode='contain'
         ></Image>
-        <Text style={styles.headingParagraph}>Lịch sử các buổi học</Text>
+        <Text style={styles.headingParagraph}>{i18n.t('HistoryHeading')}</Text>
         <View style={styles.blockquote}>
-          <Text style={styles.paragraph}>
-            Đây là danh sách các bài học bạn đã tham gia
-          </Text>
-          <Text style={styles.paragraph}>
-            Bạn có thể xem lại thông tin chi tiết về các buổi học đã tham gia đã
-            tham gia
-          </Text>
+          <Text style={styles.paragraph}>{i18n.t('IntroHistory1')}</Text>
+          <Text style={styles.paragraph}>{i18n.t('IntroHistory2')}</Text>
         </View>
       </View>
 
@@ -113,19 +110,21 @@ const styles = StyleSheet.create({
   },
   headingParagraph: {
     fontSize: 30,
-    fontWeight: 700,
+    fontWeight: '600',
     color: COLORS.black,
-    marginVertical: 10
+    marginVertical: 20
   },
   paragraph: {
-    fontSize: 17
+    fontSize: 17,
+    lineHeight: 25,
+    color: 'rgba(0,0,0,0.85)'
   },
   blockquote: {
     borderLeftWidth: 3, // Adjust the width of the grey line as needed
     borderLeftColor: '4px solid hsla(0,0%,39.2%,.2)',
     opacity: '0.85',
     paddingLeft: 10, // Adjust the left padding for the text
-    marginBottom: 10 // Adjust the margin between blockquotes
+    marginBottom: 15 // Adjust the margin between blockquotes
   },
   text: {
     fontSize: 25,

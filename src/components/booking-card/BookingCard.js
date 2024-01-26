@@ -16,16 +16,19 @@ import {
 import { Feather } from '@expo/vector-icons';
 import { isEmpty, isNil, times } from 'lodash';
 import CollapseComponent from '../collapse/Collapse';
+import { useContext } from 'react';
+import LocalizationContext from '../../context/LocalizationProvider';
 
 export const BookingCard = ({ item, setCancleBooking, setVisible }) => {
   const { createdAtTimeStamp, scheduleDetailInfo, studentRequest } = item;
+  const { i18n } = useContext(LocalizationContext);
   const { scheduleInfo } = scheduleDetailInfo;
   const text = `
   Hiện tại không có yêu cầu cho lớp học này. Xin vui lòng viết ra bất kỳ yêu cầu nào cho giáo viên nếu có.
 `;
   const items = {
     key: '1',
-    label: 'Yêu cầu cho buổi học',
+    label: '',
     children: (
       <Text style={{ lineHeight: 22 }}>
         {!isEmpty(studentRequest) ? studentRequest : text}
@@ -44,7 +47,7 @@ export const BookingCard = ({ item, setCancleBooking, setVisible }) => {
               )}
             </Text>
 
-            <Text style={styles.paragraph}>1 buổi học</Text>
+            <Text style={styles.paragraph}>{`1 ${i18n.t('Lesson')}`}</Text>
           </View>
           <View style={styles.contentProfile}>
             <Image
@@ -97,18 +100,23 @@ export const BookingCard = ({ item, setCancleBooking, setVisible }) => {
                   }}
                 >
                   <Feather name='x-square' size={20} color='red' />
-                  <Text style={{ color: 'red', marginLeft: 5 }}>Hủy</Text>
+                  <Text style={{ color: 'red', marginLeft: 5 }}>
+                    {i18n.t('Cancle')}
+                  </Text>
                 </Pressable>
               )}
             </View>
-            <CollapseComponent title={items.label} children={items.children} />
+            <CollapseComponent
+              title={i18n.t('RequestForLesson')}
+              children={items.children}
+            />
           </View>
 
           <View xs={12} style={styles.buttonContainer}>
             <View />
             <Button
               disabled={true}
-              title='Vào buổi học'
+              title={i18n.t('EnterLessionRoom')}
               onPress={() => Alert.alert('Cannot press this one')}
               style={styles.buttonIn}
             />
@@ -127,7 +135,7 @@ const styles = StyleSheet.create({
   },
   headingParagraph: {
     fontSize: 24,
-    fontWeight: 700,
+    fontWeight: '600',
     color: COLORS.black
   },
   paragraph: {
