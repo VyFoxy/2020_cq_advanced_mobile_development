@@ -104,7 +104,11 @@ const en = {
   IntroHistory1: 'The following is a list of lessons you have attended',
   IntroHistory2: 'You can review the details of the lessons you have attended',
   NoTutorReview: 'Tutor havent reviewed yet',
-  ReviewFromTutor: 'Review from tutor'
+  ReviewFromTutor: 'Review from tutor',
+  DiscoverCourses: 'Discover Courses',
+  Discover: 'Discover',
+  IntroCourse:
+    'LiveTutor has built the most quality, methodical and scientific courses in the fields of life for those who are in need of improving their knowledge of the fields.'
 };
 const vi = {
   Language: 'Ngôn ngữ',
@@ -147,7 +151,7 @@ const vi = {
   Specilities: 'Chuyên ngành',
   Search: 'Tìm kiếm',
   Overview: 'Tổng quan',
-  ExperienceLevel: 'Trình độ kinh nghiệm',
+  ExperienceLevel: 'Trình độ yêu cầu',
   CourseLength: 'Thời lượng khóa học',
   ListTopics: 'Danh sách chủ đề',
   WhyTakeThisCourse: 'Tại sao nên học khóa học này ?',
@@ -219,7 +223,11 @@ const vi = {
   IntroHistory2:
     'Bạn có thể xem lại thông tin chi tiết về các buổi học đã tham gia đã tham gia',
   NoTutorReview: 'Gia sư chưa có đánh giá',
-  ReviewFromTutor: 'Đánh giá từ gia sư'
+  ReviewFromTutor: 'Đánh giá từ gia sư',
+  DiscoverCourses: 'Khám phá các khóa học',
+  IntroCourse:
+    'LiveTutor đã xây dựng nên các khóa học của các lĩnh vực trong cuộc sống chất lượng, bài bản và khoa học nhất cho những người đang có nhu cầu trau dồi thêm kiến thức về các lĩnh vực.',
+  Discover: 'Khám phá'
 };
 
 export { en, vi };

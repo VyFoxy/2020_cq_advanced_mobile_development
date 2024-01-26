@@ -15,8 +15,10 @@ import { useNavigation } from '@react-navigation/native';
 import { Feather, Octicons, Foundation } from '@expo/vector-icons';
 import { get, includes, isEmpty } from 'lodash';
 import { mappingLevel } from '../../utils/mapping';
+import LocalizationContext from '../../context/LocalizationProvider';
 export const CourseDetail = (props) => {
   const items = props.route?.params?.item;
+  const { i18n } = useContext(LocalizationContext);
   const navigation = useNavigation();
   const arr = items?.topics;
   return (
@@ -35,13 +37,13 @@ export const CourseDetail = (props) => {
               <Text style={styles.subtitle}>{items?.description}</Text>
               <View style={{ alignItems: 'flex-end' }}>
                 <TouchableOpacity style={styles.Button}>
-                  <Text style={styles.ButtonText}>Khám phá</Text>
+                  <Text style={styles.ButtonText}>{i18n.t('Discover')}</Text>
                 </TouchableOpacity>
               </View>
             </View>
           </View>
         </View>
-        <Text style={styles.headingTitle}>Tổng quan</Text>
+        <Text style={styles.headingTitle}>{i18n.t('Overview')}</Text>
         <View style={styles.headingContainer}>
           <Feather
             name='help-circle'
@@ -50,7 +52,7 @@ export const CourseDetail = (props) => {
             style={{ alignSelf: 'center' }}
           />
           <Text style={styles.headingParagraph}>
-            Tại sao bạn nên học khóa học này
+            {i18n.t('WhyTakeThisCourse')}
           </Text>
         </View>
         {!isEmpty(items?.reason) && (
@@ -64,12 +66,14 @@ export const CourseDetail = (props) => {
             color='red'
             style={{ alignSelf: 'center' }}
           />
-          <Text style={styles.headingParagraph}>Bạn có thể làm gì</Text>
+          <Text style={styles.headingParagraph}>
+            {i18n.t('WhatWillYouBeAbleToDo')}
+          </Text>
         </View>
         {!isEmpty(items?.purpose) && (
           <Text style={styles.paragraph}>{items?.purpose}</Text>
         )}
-        <Text style={styles.headingTitle}>Trình độ yêu cầu</Text>
+        <Text style={styles.headingTitle}>{i18n.t('ExperienceLevel')}</Text>
         <View style={styles.headingContainer}>
           <Octicons
             name='people'
@@ -81,7 +85,7 @@ export const CourseDetail = (props) => {
             {get(mappingLevel, items?.level)}
           </Text>
         </View>
-        <Text style={styles.headingTitle}>Thời lượng khóa học</Text>
+        <Text style={styles.headingTitle}>{i18n.t('CourseLength')}</Text>
         <View style={styles.headingContainer}>
           <Foundation
             name='book-bookmark'
@@ -93,7 +97,7 @@ export const CourseDetail = (props) => {
             style={styles.headingParagraph}
           >{`${arr.length} buổi học`}</Text>
         </View>
-        <Text style={styles.headingTitle}>Danh sách chủ đề</Text>
+        <Text style={styles.headingTitle}>{i18n.t('ListTopics')}</Text>
         <FlatList
           data={arr}
           renderItem={({ item, index }) => (

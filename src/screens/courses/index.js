@@ -16,10 +16,10 @@ import { getListCourse } from '../../services/courseAPI';
 import { mappingLevel } from '../../utils/mapping';
 import { ceil, get, includes } from 'lodash';
 import Pagination from '../../components/pagination/Pagination';
+import LocalizationContext from '../../context/LocalizationProvider';
 
 export const CoursesSreeen = () => {
-  const arr = [0, 1, 4, 7];
-  //const { i18n } = useContext(LocalizationContext);
+  const { i18n } = useContext(LocalizationContext);
   const [searchQuery, setSearchQuery] = useState('');
   const [dataCourse, setDataCourse] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -95,10 +95,12 @@ export const CoursesSreeen = () => {
             resizeMode='contain'
           ></Image>
           <View style={{ flexShrink: 1 }}>
-            <Text style={styles.headingParagraph}>Khám phá các khóa học</Text>
+            <Text style={styles.headingParagraph}>
+              {i18n.t('DiscoverCourses')}
+            </Text>
 
             <Searchbar
-              placeholder={'Tìm kiếm khóa học'}
+              placeholder={i18n.t('Course')}
               onChangeText={(text) => setSearchQuery(text)}
               value={searchQuery}
               style={styles.searchBar}
@@ -108,12 +110,8 @@ export const CoursesSreeen = () => {
           </View>
         </View>
 
-        <View>
-          <Text style={styles.paragraph}>
-            LiveTutor đã xây dựng nên các khóa học của các lĩnh vực trong cuộc
-            sống chất lượng, bài bản và khoa học nhất cho những người đang có
-            nhu cầu trau dồi thêm kiến thức về các lĩnh vực.
-          </Text>
+        <View style={{ marginBottom: 10 }}>
+          <Text style={styles.paragraph}>{i18n.t('IntroCourse')}</Text>
         </View>
       </View>
 
@@ -140,7 +138,7 @@ export const CoursesSreeen = () => {
                     )} • `}</Text>
                     <Text
                       style={styles.levelText}
-                    >{`${item?.topics.length} bài học`}</Text>
+                    >{`${item?.topics.length} Lessons`}</Text>
                   </View>
                 </CourseCard>
               )}
@@ -183,7 +181,8 @@ const styles = StyleSheet.create({
   },
   paragraph: {
     fontSize: 14,
-    lineHeight: 20
+    lineHeight: 20,
+    color: 'rgba(0,0,0,0.85)'
   },
   blockquote: {
     borderLeftWidth: 3, // Adjust the width of the grey line as needed
@@ -222,7 +221,7 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     width: '90%',
-    borderRadius: 20,
+    borderRadius: 10,
     alignSelf: 'center',
     marginVertical: 10,
     backgroundColor: '#fff',

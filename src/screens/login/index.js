@@ -35,7 +35,7 @@ export const LoginScreen = () => {
   const [passwordError, setPasswordError] = useState('');
   const [request, response, promptAsync] = Google.useAuthRequest({
     clientId:
-      '237722397720-hkdm7tjfm427d97fnv5d9dqbrh8pgknb.apps.googleusercontent.com',
+      '932790559707-sn5iu7s8e5j2d455tlkvi9hkqlu32v91.apps.googleusercontent.com',
     androidClientId:
       '237722397720-49fdld1mvtihjsg044gjlheljmhgfdru.apps.googleusercontent.com'
   });
