@@ -30,8 +30,8 @@ const Pagination = ({
 
   const renderPageButtons = () => {
     const pageButtons = [];
-    const maxVisibleButtons = 3;
-
+    const maxVisibleButtons = 5;
+    let check = true;
     if (totalPages <= maxVisibleButtons) {
       // If total pages are less than or equal to maxVisibleButtons, show all pages
       for (let i = 1; i <= totalPages; i++) {
@@ -62,7 +62,10 @@ const Pagination = ({
       }
 
       // Always show the last page
-      pageButtons.push(renderPageButton(totalPages));
+      if (check == true) {
+        pageButtons.push(renderPageButton(totalPages));
+        check = false;
+      }
     }
 
     return pageButtons;

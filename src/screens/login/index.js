@@ -59,7 +59,6 @@ export const LoginScreen = () => {
             setAuth(loginResponse.data);
             navigation.navigate(ROUTES.HOME);
           } catch (error) {
-            console.log(error);
             setloginError('Đăng nhập thất bại');
           }
         }

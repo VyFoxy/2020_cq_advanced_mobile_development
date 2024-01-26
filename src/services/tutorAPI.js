@@ -145,13 +145,15 @@ export async function getHistoryBooking({ page, perPage, dateTimeLte }) {
 export async function DeleteCancelBooking(item) {
   try {
     const res = await api.delete(PATH.DELETE_SCHEDULE, {
-      scheduleDetailId: item?.id,
-      cancelInfo: {
-        cancelReasonId: item?.cancelReasonId,
-        note: item?.note || ''
+      data: {
+        scheduleDetailId: item?.id,
+        cancelInfo: {
+          cancelReasonId: item?.cancelReasonId,
+          note: item?.note || ''
+        }
       }
     });
-    console.log(res);
+
     return res.data;
   } catch (error) {
     throw Error(error);

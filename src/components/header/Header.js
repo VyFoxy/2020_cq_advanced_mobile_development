@@ -20,10 +20,13 @@ import { isEmpty } from 'lodash';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LocalizationContext from '../../context/LocalizationProvider';
 import SelectDropdown from 'react-native-select-dropdown';
+import AvatarContext from '../../context/AvatarProvider';
+import { getUserInfo } from '../../services/userAPI';
 
 export const Header = () => {
   const { locale, setLocale, i18n } = useContext(LocalizationContext);
   const { auth, setAuth } = useContext(AuthContext);
+  const { avatar, setAvatar } = useContext(AvatarContext);
   const navigation = useNavigation();
   const countriesWithFlags = [
     { title: 'vi', image: IMGS.vi },
@@ -31,15 +34,21 @@ export const Header = () => {
   ];
   const [showMenu, setShowMenu] = useState(false);
   const [userInfo, setUserInfo] = useState({});
+  const getInfo = async () => {
+    const response = await getUserInfo();
+    const accessToken = await AsyncStorage.getItem('accessToken');
+    setUserInfo({
+      avatar: response?.user?.avatar,
+      name: response?.user?.name,
+      accessToken: accessToken
+    });
+  };
   useEffect(() => {
-    async function getUserInfo() {
-      const avatar = await AsyncStorage.getItem('avatar');
-      const name = await AsyncStorage.getItem('name');
-      const accessToken = await AsyncStorage.getItem('accessToken');
-      setUserInfo({ avatar: avatar, name: name, accessToken: accessToken });
-    }
-    getUserInfo();
-  }, [auth]);
+    setUserInfo();
+  }, []);
+  useEffect(() => {
+    getInfo();
+  }, [avatar]);
   return (
     <>
       <View style={styles.header}>
@@ -68,7 +77,10 @@ export const Header = () => {
                       style={styles.flagIcon}
                     />
                   ) : (
-                    <Image source={IMGS.vi} style={styles.flagIcon} />
+                    <Image
+                      source={locale === 'vi' ? IMGS.vi : IMGS.usa}
+                      style={styles.flagIcon}
+                    />
                   )}
                 </>
               );

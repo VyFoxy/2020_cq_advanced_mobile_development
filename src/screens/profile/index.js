@@ -75,7 +75,7 @@ export const Profile = () => {
 
   useEffect(() => {
     async function getUser() {
-      const { data } = await getUserInfo();
+      const data = await getUserInfo();
       setUser(data.user);
       setValueCountry(data.user.country);
       setName(data.user.name);
@@ -141,6 +141,7 @@ export const Profile = () => {
       level: valueLevel,
       learnTopics: arrLearnTopics
     });
+    setAvatar((prev) => !prev);
     alert('Update successfully');
     if (hasImg) {
       let formData = new FormData();
@@ -151,8 +152,8 @@ export const Profile = () => {
         name: newImageUri.split('/').pop()
       });
       try {
-        await uploadAvatar(formData);
-
+        const response = await uploadAvatar(formData);
+        console.log(response);
         setAvatar((prev) => !prev);
       } catch (err) {
         console.log(err);

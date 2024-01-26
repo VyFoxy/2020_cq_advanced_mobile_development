@@ -10,20 +10,22 @@ import { TeacherDetail } from './src/screens/teacherdetail';
 import { AuthProvider } from './src/context/AuthContext';
 import { LocalizationProvider } from './src/context/LocalizationProvider';
 import { ThemeProvider } from './src/context/ThemeProvider';
-
+import { AvatarProvider } from './src/context/AvatarProvider';
 export default function App() {
   return (
     <LocalizationProvider>
       <AuthProvider>
         <ThemeProvider>
-          <NavigationContainer>
-            <Header />
-            {/* <CourseDetail /> */}
-            {/* <CoursesSreeen /> */}
-            {/* <Tutor /> */}
-            <ScreenStackNavigator />
-            {/* <TeacherDetail /> */}
-          </NavigationContainer>
+          <AvatarProvider>
+            <NavigationContainer>
+              <Header />
+              {/* <CourseDetail /> */}
+              {/* <CoursesSreeen /> */}
+              {/* <Tutor /> */}
+              <ScreenStackNavigator />
+              {/* <TeacherDetail /> */}
+            </NavigationContainer>
+          </AvatarProvider>
         </ThemeProvider>
       </AuthProvider>
     </LocalizationProvider>

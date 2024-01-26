@@ -24,13 +24,14 @@ export const CoursesSreeen = () => {
   const [dataCourse, setDataCourse] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
+  let count = 0;
   const [page, setPage] = useState(1);
   const scrollRef = useRef();
   async function fetchData(page) {
-    console.log(page);
     const response = await getListCourse({ page: page, size: 6, search: '' });
     setDataCourse(response.data.data.rows);
-    setTotalPages(ceil(response.data?.data.count / 6));
+    count = response.data?.data.count;
+    setTotalPages(ceil(count / 6));
     setIsLoading(false);
   }
   useEffect(() => {
@@ -38,9 +39,14 @@ export const CoursesSreeen = () => {
   }, []);
 
   useEffect(() => {
-    handleSearch();
+    if (searchQuery == '') {
+      fetchData(page);
+    } else {
+      handleSearch();
+    }
   }, [searchQuery]);
   useEffect(() => {
+    setIsLoading(true);
     fetchData(page);
     scrollRef.current.scrollTo({
       y: 30,
@@ -56,6 +62,7 @@ export const CoursesSreeen = () => {
     });
     if (response.data.data.rows.length > 0) {
       setDataCourse(response.data.data.rows);
+      setTotalPages(ceil(response.data.data.rows.length / 6));
     } else {
       setDataCourse([]);
     }

@@ -25,7 +25,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { ReasonCancleBooking } from '../../utils/constant';
 
 export const BookingStudentScreen = () => {
-  const { avatar } = useContext(AvatarContext);
+  const { avatar, setAvatar } = useContext(AvatarContext);
   const [upComingClass, setUpcomingBookingClass] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [visible, setVisible] = useState(false);
@@ -55,12 +55,14 @@ export const BookingStudentScreen = () => {
         cancelReasonId: valueReason,
         note: itemCancle
       });
-      if (response.message == 'Book successful') {
-        alert('Đặt lịch thành công');
+      setAvatar((pre) => !pre);
+      if (response.message == 'Cancel booking successful') {
+        alert('Hủy thành công');
+
         setVisible(false);
       }
     } catch (error) {
-      alert('Đặt lịch thất bại');
+      alert('Hủy thất bại');
     }
   };
 
