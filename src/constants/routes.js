@@ -12,11 +12,13 @@ export default {
   BECOME_TEACHER: 'Become Teacher',
   SETTINGS: 'Settings',
   LOGOUT: 'Logout',
-  HISTORY: 'history',
-  BOOKINGSTUDENT: 'bookingstudent',
-  COURSE: 'course',
-  COURSE_DETAIL: 'course-detail',
+  HISTORY: 'History',
+  BOOKINGSTUDENT: 'Booking-Student',
+  COURSE: 'Course',
   PROFILE: 'Profile',
+  PDF_VIEW: 'Pdf-View',
 
-  TEACHER_DETAIL: 'teacher-detail'
+  TEACHER_DETAIL: 'teacher-detail',
+
+  COURSE_DETAIL: 'Course-Detail'
 };

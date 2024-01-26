@@ -9,7 +9,9 @@ export default function CourseCard(props) {
     <View style={styles.gridItem}>
       <Pressable
         onPress={() => {
-          navigation.navigate(ROUTES.COURSE_DETAIL);
+          navigation.navigate(ROUTES.COURSE_DETAIL, {
+            item: props?.item || {}
+          });
         }}
         style={{ flex: 1 }}
       >

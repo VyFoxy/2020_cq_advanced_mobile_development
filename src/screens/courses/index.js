@@ -122,14 +122,14 @@ export const CoursesSreeen = () => {
             <FlatList
               data={dataCourse}
               renderItem={({ item }) => (
-                <CourseCard image={item?.imageUrl}>
+                <CourseCard image={item?.imageUrl} item={item}>
                   <Text style={styles.nameCourse}>{item?.name}</Text>
                   <Text style={styles.subtitle}>{item?.description}</Text>
                   <View style={styles.levelContainer}>
-                    {includes(arr, item?.level)}
                     <Text style={styles.levelText}>{`${get(
                       mappingLevel,
-                      item?.level
+                      item?.level,
+                      ''
                     )} • `}</Text>
                     <Text
                       style={styles.levelText}
