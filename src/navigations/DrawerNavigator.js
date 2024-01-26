@@ -8,6 +8,7 @@ import { CourseDetail } from '../screens/courses/detail';
 import { ROUTES, COLORS } from '../constants';
 import { Profile } from '../screens/profile';
 import { Settings } from '../screens/setting';
+import { PDFView } from '../screens/pdf-reader';
 
 const Drawer = createDrawerNavigator();
 
@@ -37,6 +38,11 @@ function DrawerNavigator() {
       <Drawer.Screen
         name={ROUTES.COURSE_DETAIL}
         component={CourseDetail}
+        options={{ headerShown: false }}
+      />
+      <Drawer.Screen
+        name={ROUTES.PDF_VIEW}
+        component={PDFView}
         options={{ headerShown: false }}
       />
       <Drawer.Screen

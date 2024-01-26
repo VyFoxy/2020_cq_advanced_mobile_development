@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import PDFReader from 'rn-pdf-reader-js';
 
-export default function PDFView({ route }) {
+export const PDFView = ({ route }) => {
   const { data } = route.params;
   return (
     <View style={styles.container}>
@@ -13,7 +13,7 @@ export default function PDFView({ route }) {
       />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

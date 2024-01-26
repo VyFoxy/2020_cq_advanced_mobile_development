@@ -18,7 +18,7 @@ import { mappingLevel } from '../../utils/mapping';
 export const CourseDetail = (props) => {
   const item = props.route?.params?.item;
   const navigation = useNavigation();
-  const arr = item?.topics.map((item) => item?.name);
+  const arr = item?.topics;
   return (
     <View style={styles.container}>
       <ScrollView style={{ flex: 1 }}>
@@ -104,14 +104,14 @@ export const CourseDetail = (props) => {
           renderItem={({ item, index }) => (
             <Pressable
               onPress={() => {
-                navigation.navigate(ROUTES.PDF_VIEW);
+                navigation.navigate(ROUTES.PDF_VIEW, { data: item });
               }}
             >
               <View style={styles.itemTopic}>
                 <Text style={[styles.headingParagraph, { fontWeight: '300' }]}>
                   {index + 1} .
                 </Text>
-                <Text style={styles.headingParagraph}>{item}</Text>
+                <Text style={styles.headingParagraph}>{item.name}</Text>
               </View>
             </Pressable>
           )}
