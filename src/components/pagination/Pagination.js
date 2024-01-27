@@ -98,7 +98,7 @@ const Pagination = ({
     <View style={styles.paginationContainer}>
       <TouchableOpacity onPress={handlePrevious} disabled={currentPage === 1}>
         <Text style={[styles.paginationButton]}>
-          <Entypo name='chevron-thin-left' size={15} color='black' />
+          <Entypo name='chevron-thin-left' size={15} color={COLORS.primary} />
         </Text>
       </TouchableOpacity>
 
@@ -109,7 +109,7 @@ const Pagination = ({
         disabled={currentPage === totalPages}
       >
         <Text style={[styles.paginationButton]}>
-          <Entypo name='chevron-thin-right' size={15} color='black' />
+          <Entypo name='chevron-thin-right' size={15} color={COLORS.primary} />
         </Text>
       </TouchableOpacity>
     </View>
@@ -131,11 +131,12 @@ const styles = StyleSheet.create({
     borderColor: COLORS.primary
   },
   paginationButtonText: {
-    color: 'black'
+    color: COLORS.primary
   },
   activePage: {
     backgroundColor: COLORS.primary,
-    color: COLORS.white
+    color: COLORS.white,
+    borderRadius: 10
   }
 });
 

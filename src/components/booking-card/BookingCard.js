@@ -23,14 +23,12 @@ export const BookingCard = ({ item, setCancleBooking, setVisible }) => {
   const { createdAtTimeStamp, scheduleDetailInfo, studentRequest } = item;
   const { i18n } = useContext(LocalizationContext);
   const { scheduleInfo } = scheduleDetailInfo;
-  const text = `
-  Hiện tại không có yêu cầu cho lớp học này. Xin vui lòng viết ra bất kỳ yêu cầu nào cho giáo viên nếu có.
-`;
+  const text = i18n.t('NoRequestSchedule');
   const items = {
     key: '1',
     label: '',
     children: (
-      <Text style={{ lineHeight: 22 }}>
+      <Text style={{ lineHeight: 22, color: '#8399a7' }}>
         {!isEmpty(studentRequest) ? studentRequest : text}
       </Text>
     )
@@ -101,7 +99,7 @@ export const BookingCard = ({ item, setCancleBooking, setVisible }) => {
                 >
                   <Feather name='x-square' size={20} color='red' />
                   <Text style={{ color: 'red', marginLeft: 5 }}>
-                    {i18n.t('Cancle')}
+                    {i18n.t('Cancel')}
                   </Text>
                 </Pressable>
               )}

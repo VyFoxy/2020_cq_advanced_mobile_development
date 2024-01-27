@@ -91,7 +91,7 @@ export const Profile = () => {
       setIsLoading(false);
     }
     getUser();
-  }, []);
+  }, [avatar]);
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };
@@ -194,7 +194,7 @@ export const Profile = () => {
               value={name}
               onChangeText={setName}
               name='name'
-              label='Tên'
+              label={i18n.t('Name')}
               defaultValue='Nguyen Van Ar'
               left={<TextInput.Icon icon='account' />}
             />
@@ -204,7 +204,7 @@ export const Profile = () => {
                 style={styles.input}
                 value={moment(birthDate).format('DD MMMM, YYYY')}
                 name='dob'
-                label='Ngày sinh'
+                label={i18n.t('Birth')}
                 editable={false}
                 left={<TextInput.Icon icon='calendar' />}
               />

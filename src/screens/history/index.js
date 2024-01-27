@@ -84,7 +84,9 @@ export const HistoryScreen = () => {
             {/* <CourseCard /> */}
             <FlatList
               data={historyBooking}
-              renderItem={({ item }) => <CourseCard item={item} />}
+              renderItem={({ item, index }) => (
+                <CourseCard key={index} item={item} />
+              )}
               keyExtractor={(item, index) => index.toString()}
               scrollEnabled={false}
             />

@@ -2,6 +2,7 @@ const en = {
   Language: 'Language',
   Languages: 'Languages',
   English: 'English',
+  Name: 'Name',
   Vietnamese: 'Vietnamese',
   SelectLanguage: 'Select Language',
   SelectTheme: 'Select Theme',
@@ -26,6 +27,7 @@ const en = {
   Country: 'Country',
   SelectLevel: 'Select Level',
   Beginner: 'Beginner',
+  ReasonCancel: 'What was the reason you cancel?',
   HigherBeginner: 'Higher Beginner',
   Intermediate: 'Intermediate',
   Advanced: 'Advanced',
@@ -107,6 +109,13 @@ const en = {
   ReviewFromTutor: 'Review from tutor',
   DiscoverCourses: 'Discover Courses',
   Discover: 'Discover',
+  Birth: 'Birthdays',
+  AdditionalNotes: 'Additional Notes',
+  Submit: 'Submit',
+  Later: 'Later',
+  LessonTimeCancel: 'Lesson Time',
+  NoRequestSchedule:
+    'Currently there are no requests for this class. Please write down any requests for the teacher.',
   IntroCourse:
     'LiveTutor has built the most quality, methodical and scientific courses in the fields of life for those who are in need of improving their knowledge of the fields.'
 };
@@ -187,6 +196,7 @@ const vi = {
     'Bạn đã hoàn thành các bước để trở thành giáo viên, vui lòng chờ duyệt',
   TotalTimeLearning: 'Tổng thời gian bạn đã học là',
   UpcomingLession: 'Buổi học sắp diễn ra',
+  LessonTimeCancel: 'Thời gian bài học',
   Cancel: 'Hủy',
   EnterLessionRoom: 'Vào lớp học',
   Report: 'Báo cáo',
@@ -227,7 +237,15 @@ const vi = {
   DiscoverCourses: 'Khám phá các khóa học',
   IntroCourse:
     'LiveTutor đã xây dựng nên các khóa học của các lĩnh vực trong cuộc sống chất lượng, bài bản và khoa học nhất cho những người đang có nhu cầu trau dồi thêm kiến thức về các lĩnh vực.',
-  Discover: 'Khám phá'
+  Discover: 'Khám phá',
+  Name: 'Tên',
+  Birth: 'Ngày sinh',
+  ReasonCancel: 'Lý do bạn hủy buổi học này là gì',
+  AdditionalNotes: 'Ghi chú thêm',
+  Submit: 'Xác nhận hủy',
+  Later: 'Bỏ qua',
+  NoRequestSchedule:
+    'Hiện tại không có yêu cầu cho lớp học này. Xin vui lòng viết ra bất kỳ yêu cầu nào cho giáo viên nếu có.'
 };
 
 export { en, vi };

@@ -115,7 +115,7 @@ export const BookingStudentScreen = () => {
                 <View style={{ flexDirection: 'row', marginVertical: 15 }}>
                   <Text style={{ color: 'red' }}>*</Text>
                   <Text style={styles.teacherName}>
-                    Lý do bạn hủy buổi học này là gì
+                    {i18n.t('ReasonCancel')}
                   </Text>
                 </View>
 
@@ -125,7 +125,7 @@ export const BookingStudentScreen = () => {
                   value={itemCancle}
                   onChangeText={setItemCancle}
                   name='Report'
-                  placeholder='Ghi chú thêm'
+                  placeholder={i18n.t('AdditionalNotes')}
                   //multiline={true}
                   //numberOfLines={4}
                 />
@@ -138,6 +138,7 @@ export const BookingStudentScreen = () => {
                   setValue={setValueReason}
                   setItems={setItemsReason}
                   theme='LIGHT'
+                  placeholder=''
                 />
               </View>
 
@@ -153,13 +154,13 @@ export const BookingStudentScreen = () => {
                   style={{ justifyContent: 'center' }}
                   onPress={() => setVisible(false)}
                 >
-                  <Text style={{ color: COLORS.gray }}>Bỏ qua</Text>
+                  <Text style={{ color: COLORS.gray }}>{i18n.t('Later')}</Text>
                 </Pressable>
                 <Pressable
                   style={styles.Button}
                   onPress={() => handleCancleBooking()}
                 >
-                  <Text style={styles.ButtonText}>Xác nhận hủy</Text>
+                  <Text style={styles.ButtonText}>{i18n.t('Submit')}</Text>
                 </Pressable>
               </View>
             </View>
@@ -272,7 +273,7 @@ const styles = StyleSheet.create({
   },
   teacherName: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: '600',
     color: COLORS.black,
     marginVertical: 5
   },

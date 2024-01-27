@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import React, { useContext } from 'react';
 import { COLORS, ROUTES } from '../../constants';
-import Icon from 'react-native-vector-icons/Ionicons';
 import { ScrollView } from 'react-native-virtualized-view';
 import { useNavigation } from '@react-navigation/native';
 import { Feather, Octicons, Foundation } from '@expo/vector-icons';
@@ -93,9 +92,9 @@ export const CourseDetail = (props) => {
             color='blue'
             style={{ alignSelf: 'center' }}
           />
-          <Text
-            style={styles.headingParagraph}
-          >{`${arr.length} buổi học`}</Text>
+          <Text style={styles.headingParagraph}>{`${arr.length} ${i18n.t(
+            'Lesson'
+          )}`}</Text>
         </View>
         <Text style={styles.headingTitle}>{i18n.t('ListTopics')}</Text>
         <FlatList

@@ -110,7 +110,6 @@ export const Header = () => {
             <TouchableOpacity
               style={styles.menuIcon}
               onPress={() => {
-                setLocale('en');
                 setShowMenu(!showMenu);
               }}
             >
